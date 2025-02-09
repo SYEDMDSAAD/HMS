@@ -221,3 +221,22 @@ export const logoutPatient = catchAsyncErrors(async (req, res, next) => {
       message: "Patient Logged Out Successfully.",
     });
 });
+
+export const deleteDoctor = async (req, res, next) => {
+  try {
+    const doctorId = req.params.id; // Ensure we are correctly reading the ID
+    if (!doctorId) {
+      return res.status(400).json({ message: "Doctor ID is required" });
+    }
+
+    const doctor = await User.findById(doctorId);
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+
+    await User.findByIdAndDelete(doctorId);
+    return res.status(200).json({ message: "Doctor deleted successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal Server Error", error });
+  }
+};

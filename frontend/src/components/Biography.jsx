@@ -11,26 +11,31 @@ const Biography = ({imageUrl}) => {
           <p>Biography</p>
           <h3>Who We Are</h3>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus
-            blanditiis sequi aperiam. Debitis fugiat harum ex maxime illo
-            consequatur mollitia voluptatem omnis nihil nesciunt beatae esse
-            ipsam, sapiente totam aspernatur porro ducimus aperiam nisi. Ex
-            magnam voluptatum consectetur reprehenderit fugiat recusandae aut
-            similique illum natus velit, praesentium nostrum nesciunt. Deleniti,
-            nesciunt laboriosam totam iusto!
-          </p>
-          <p>We are all in 2024!</p>
-          <p>We are working on a MERN STACK PROJECT.</p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores
-            assumenda exercitationem accusamus sit repellendus quo optio dolorum
-            corporis corrupti. Quas similique vel minima veniam tenetur
-            obcaecati atque magni suscipit laboriosam! Veniam vitae minus nihil
-            cupiditate natus provident. Ex illum quasi pariatur odit nisi
-            voluptas illo qui ipsum mollitia. Libero, assumenda?
-          </p>
-          <p>Lorem ipsum dolor sit amet!</p>
-          <p>Coding is fun!</p>
+          <strong>Care Medical Institute</strong> is a premier healthcare facility dedicated 
+          to providing high-quality medical services to patients. Our institute is equipped 
+          with state-of-the-art technology and a team of experienced doctors, nurses, and 
+          medical staff committed to delivering compassionate and effective healthcare.
+        </p>
+        <p>
+          We offer a wide range of medical services, including general consultations, 
+          specialized treatments, emergency care, and diagnostic services. Our mission is 
+          to ensure that every patient receives the best possible care in a safe and 
+          comfortable environment.
+        </p>
+        <p>
+          At <strong>Care Medical Institute</strong>, we prioritize patient well-being by 
+          combining advanced medical expertise with personalized treatment plans. Our 
+          departments include cardiology, orthopedics, pediatrics, neurology, and more, 
+          ensuring comprehensive medical attention for individuals of all ages.
+        </p>
+        <p>
+          We are committed to innovation and excellence, continuously working on enhancing 
+          our medical services to meet the evolving healthcare needs of our patients. 
+          Whether it’s preventive care, routine checkups, or complex procedures, our team 
+          is dedicated to promoting health and improving lives.
+        </p>
+        <p><strong>Your health is our priority!</strong></p>
+
         </div>
       </div>
     </>

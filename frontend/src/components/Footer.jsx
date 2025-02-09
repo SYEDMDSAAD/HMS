@@ -7,33 +7,18 @@ const Footer = () => {
   const hours = [
     {
       id: 1,
-      day: "Monday",
-      time: "9:00 AM - 11:00 PM",
+      day: "Monday to Saturday",
+      time: "9:00 AM - 1:00 AM",
     },
     {
       id: 2,
-      day: "Tuesday",
+      day: "Sunday",
       time: "12:00 PM - 12:00 AM",
     },
     {
       id: 3,
-      day: "Wednesday",
-      time: "10:00 AM - 10:00 PM",
-    },
-    {
-      id: 4,
-      day: "Thursday",
-      time: "9:00 AM - 9:00 PM",
-    },
-    {
-      id: 5,
-      day: "Monday",
-      time: "3:00 PM - 9:00 PM",
-    },
-    {
-      id: 6,
-      day: "Saturday",
-      time: "9:00 AM - 3:00 PM",
+      day: "Emergency",
+      time: "24 x 7",
     },
   ];
 
@@ -68,15 +53,15 @@ const Footer = () => {
             <h4>Contact</h4>
             <div>
               <FaPhone />
-              <span>999-999-9999</span>
+              <span>7887398671</span>
             </div>
             <div>
               <MdEmail />
-              <span>zeelab@gmail.com</span>
+              <span>mdsaadsyed29@gmail.com</span>
             </div>
             <div>
               <FaLocationArrow />
-              <span>Karachi, Pakistan</span>
+              <span>Pune, India</span>
             </div>
           </div>
         </div>

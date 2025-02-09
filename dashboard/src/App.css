@@ -574,3 +574,19 @@ input[type="time"]:before {
   color: #444;
   margin-right: 0.5em;
 }
+
+.delete-container {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.delete-icon {
+  color: red;
+  cursor: pointer;
+  font-size: 1.5rem;
+  transition: transform 0.2s ease-in-out;
+}
+
+.delete-icon:hover {
+  transform: scale(1.2);
+}

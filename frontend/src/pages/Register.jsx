@@ -58,8 +58,7 @@ const Register = () => {
         <h2>Sign Up</h2>
         <p>Please Sign Up To Continue</p>
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat culpa
-          voluptas expedita itaque ex, totam ad quod error?
+        Your information is safe with us – privacy and confidentiality are our top priorities.
         </p>
         <form onSubmit={handleRegistration}>
           <div>
@@ -92,24 +91,18 @@ const Register = () => {
           </div>
           <div>
             <input
-              type="number"
-              placeholder="NIC"
-              value={nic}
-              onChange={(e) => setNic(e.target.value)}
-            />
-            <input
               type={"date"}
               placeholder="Date of Birth"
               value={dob}
               onChange={(e) => setDob(e.target.value)}
             />
-          </div>
-          <div>
             <select value={gender} onChange={(e) => setGender(e.target.value)}>
               <option value="">Select Gender</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
             </select>
+          </div>
+          <div>
             <input
               type="password"
               placeholder="Password"
