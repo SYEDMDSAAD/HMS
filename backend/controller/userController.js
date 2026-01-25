@@ -1,18 +1,49 @@
+import fs from "fs/promises";
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import { User } from "../models/userSchema.js";
 import ErrorHandler from "../middlewares/error.js";
 import { generateToken } from "../utils/jwtToken.js";
 import cloudinary from "cloudinary";
 
+// Whatever we hand back to a client, never the password hash. `select: false`
+// on the schema only covers queries — a document returned by User.create()
+// still carries the hash, so it has to be stripped explicitly.
+const publicProfile = (user) => ({
+  _id: user._id,
+  firstName: user.firstName,
+  lastName: user.lastName,
+  email: user.email,
+  phone: user.phone,
+  gender: user.gender,
+  dob: user.dob,
+  role: user.role,
+  doctorDepartment: user.doctorDepartment,
+  docAvatar: user.docAvatar,
+});
+
+const normalizeEmail = (email) =>
+  typeof email === "string" ? email.trim().toLowerCase() : email;
+
+const removeTempFile = async (filePath) => {
+  if (!filePath) return;
+  try {
+    await fs.unlink(filePath);
+  } catch {
+    // The upload already succeeded; a leftover temp file is not worth failing on.
+  }
+};
+
 export const patientRegister = catchAsyncErrors(async (req, res, next) => {
-  const { firstName, lastName, email, phone, nic, dob, gender, password } =
+  const { firstName, lastName, phone, aadhaar, dob, gender, password } =
     req.body;
+  const email = normalizeEmail(req.body.email);
+
   if (
     !firstName ||
     !lastName ||
     !email ||
     !phone ||
-    !nic ||
+    !aadhaar ||
     !dob ||
     !gender ||
     !password
@@ -30,26 +61,29 @@ export const patientRegister = catchAsyncErrors(async (req, res, next) => {
     lastName,
     email,
     phone,
-    nic,
+    aadhaar,
     dob,
     gender,
     password,
     role: "Patient",
   });
-  generateToken(user, "User Registered!", 200, res);
+
+  user.password = undefined;
+  generateToken(user, "User Registered!", 201, res);
 });
 
 export const login = catchAsyncErrors(async (req, res, next) => {
-  const { email, password, confirmPassword, role } = req.body;
-  if (!email || !password || !confirmPassword || !role) {
+  const { password, role } = req.body;
+  const email = normalizeEmail(req.body.email);
+
+  if (!email || !password || !role) {
     return next(new ErrorHandler("Please Fill Full Form!", 400));
   }
-  if (password !== confirmPassword) {
-    return next(
-      new ErrorHandler("Password & Confirm Password Do Not Match!", 400)
-    );
-  }
-  const user = await User.findOne({ email }).select("+password");
+
+  // Matching the role in the query means a wrong-portal login fails with the
+  // same generic message as a wrong password, rather than confirming that the
+  // account exists.
+  const user = await User.findOne({ email, role }).select("+password");
   if (!user) {
     return next(new ErrorHandler("Invalid Email Or Password!", 400));
   }
@@ -58,21 +92,22 @@ export const login = catchAsyncErrors(async (req, res, next) => {
   if (!isPasswordMatch) {
     return next(new ErrorHandler("Invalid Email Or Password!", 400));
   }
-  if (role !== user.role) {
-    return next(new ErrorHandler(`User Not Found With This Role!`, 400));
-  }
-  generateToken(user, "Login Successfully!", 201, res);
+
+  user.password = undefined;
+  generateToken(user, "Login Successfully!", 200, res);
 });
 
 export const addNewAdmin = catchAsyncErrors(async (req, res, next) => {
-  const { firstName, lastName, email, phone, nic, dob, gender, password } =
+  const { firstName, lastName, phone, aadhaar, dob, gender, password } =
     req.body;
+  const email = normalizeEmail(req.body.email);
+
   if (
     !firstName ||
     !lastName ||
     !email ||
     !phone ||
-    !nic ||
+    !aadhaar ||
     !dob ||
     !gender ||
     !password
@@ -90,16 +125,17 @@ export const addNewAdmin = catchAsyncErrors(async (req, res, next) => {
     lastName,
     email,
     phone,
-    nic,
+    aadhaar,
     dob,
     gender,
     password,
     role: "Admin",
   });
-  res.status(200).json({
+
+  res.status(201).json({
     success: true,
     message: "New Admin Registered",
-    admin,
+    admin: publicProfile(admin),
   });
 });
 
@@ -112,55 +148,63 @@ export const addNewDoctor = catchAsyncErrors(async (req, res, next) => {
   if (!allowedFormats.includes(docAvatar.mimetype)) {
     return next(new ErrorHandler("File Format Not Supported!", 400));
   }
+
   const {
     firstName,
     lastName,
-    email,
     phone,
-    nic,
+    aadhaar,
     dob,
     gender,
     password,
     doctorDepartment,
   } = req.body;
+  const email = normalizeEmail(req.body.email);
+
   if (
     !firstName ||
     !lastName ||
     !email ||
     !phone ||
-    !nic ||
+    !aadhaar ||
     !dob ||
     !gender ||
     !password ||
-    !doctorDepartment ||
-    !docAvatar
+    !doctorDepartment
   ) {
+    await removeTempFile(docAvatar.tempFilePath);
     return next(new ErrorHandler("Please Fill Full Form!", 400));
   }
+
   const isRegistered = await User.findOne({ email });
   if (isRegistered) {
+    await removeTempFile(docAvatar.tempFilePath);
     return next(
       new ErrorHandler("Doctor With This Email Already Exists!", 400)
     );
   }
-  const cloudinaryResponse = await cloudinary.uploader.upload(
-    docAvatar.tempFilePath
-  );
-  if (!cloudinaryResponse || cloudinaryResponse.error) {
-    console.error(
-      "Cloudinary Error:",
-      cloudinaryResponse.error || "Unknown Cloudinary error"
+
+  let cloudinaryResponse;
+  try {
+    cloudinaryResponse = await cloudinary.v2.uploader.upload(
+      docAvatar.tempFilePath,
+      { folder: "hms/doctors" }
     );
+  } catch (error) {
+    console.error("Cloudinary Error:", error);
     return next(
       new ErrorHandler("Failed To Upload Doctor Avatar To Cloudinary", 500)
     );
+  } finally {
+    await removeTempFile(docAvatar.tempFilePath);
   }
+
   const doctor = await User.create({
     firstName,
     lastName,
     email,
     phone,
-    nic,
+    aadhaar,
     dob,
     gender,
     password,
@@ -171,15 +215,20 @@ export const addNewDoctor = catchAsyncErrors(async (req, res, next) => {
       url: cloudinaryResponse.secure_url,
     },
   });
-  res.status(200).json({
+
+  res.status(201).json({
     success: true,
     message: "New Doctor Registered",
-    doctor,
+    doctor: publicProfile(doctor),
   });
 });
 
+// Public endpoint (no auth) — it feeds the patient-facing doctor picker, so it
+// must not expose Aadhaar numbers or dates of birth.
 export const getAllDoctors = catchAsyncErrors(async (req, res, next) => {
-  const doctors = await User.find({ role: "Doctor" });
+  const doctors = await User.find({ role: "Doctor" }).select(
+    "firstName lastName email phone gender doctorDepartment docAvatar"
+  );
   res.status(200).json({
     success: true,
     doctors,
@@ -187,17 +236,16 @@ export const getAllDoctors = catchAsyncErrors(async (req, res, next) => {
 });
 
 export const getUserDetails = catchAsyncErrors(async (req, res, next) => {
-  const user = req.user;
   res.status(200).json({
     success: true,
-    user,
+    user: req.user,
   });
 });
 
 // Logout function for dashboard admin
 export const logoutAdmin = catchAsyncErrors(async (req, res, next) => {
   res
-    .status(201)
+    .status(200)
     .cookie("adminToken", "", {
       httpOnly: true,
       expires: new Date(Date.now()),
@@ -211,7 +259,7 @@ export const logoutAdmin = catchAsyncErrors(async (req, res, next) => {
 // Logout function for frontend patient
 export const logoutPatient = catchAsyncErrors(async (req, res, next) => {
   res
-    .status(201)
+    .status(200)
     .cookie("patientToken", "", {
       httpOnly: true,
       expires: new Date(Date.now()),
