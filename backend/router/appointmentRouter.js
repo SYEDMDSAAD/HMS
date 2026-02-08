@@ -1,4 +1,5 @@
 import express from "express";
+import mongoose from "mongoose";
 import {
   deleteAppointment,
   getAllAppointments,
@@ -9,8 +10,18 @@ import {
   isAdminAuthenticated,
   isPatientAuthenticated,
 } from "../middlewares/auth.js";
+import ErrorHandler from "../middlewares/error.js";
 
 const router = express.Router();
+
+// Reject malformed ids up front. Without this a bad id reaches Mongoose and
+// comes back as a CastError reading "Invalid _id", which means nothing to a user.
+router.param("id", (req, res, next, value) => {
+  if (!mongoose.isValidObjectId(value)) {
+    return next(new ErrorHandler("Invalid appointment ID.", 400));
+  }
+  next();
+});
 
 router.post("/post", isPatientAuthenticated, postAppointment);
 router.get("/getall", isAdminAuthenticated, getAllAppointments);
