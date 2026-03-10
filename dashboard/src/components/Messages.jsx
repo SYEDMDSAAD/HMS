@@ -1,22 +1,58 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { Context } from "../main";
 import { Navigate } from "react-router-dom";
+import { MdEmail } from "react-icons/md";
+import { FaPhone } from "react-icons/fa6";
+
+const API_BASE =
+  import.meta.env.VITE_API_URL || "http://localhost:4000/api/v1";
+
+// 9876543210 -> +91 98765 43210
+const formatPhone = (phone) => {
+  if (!phone) return "—";
+  const digits = String(phone).replace(/\D/g, "").slice(-10);
+  if (digits.length !== 10) return phone;
+  return `+91 ${digits.slice(0, 5)} ${digits.slice(5)}`;
+};
+
+// Pinned to IST so the timestamp reads the same regardless of where the
+// server or the admin's machine is set.
+const formatReceived = (value) => {
+  if (!value) return null;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  return date.toLocaleString("en-IN", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    timeZone: "Asia/Kolkata",
+  });
+};
 
 const Messages = () => {
-  const [messages, setMessages] = useState([]);
   const { isAuthenticated } = useContext(Context);
+
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
+
   useEffect(() => {
     const fetchMessages = async () => {
+      setLoading(true);
+      setLoadError("");
       try {
-        const { data } = await axios.get(
-          "http://localhost:4000/api/v1/message/getall",
-          { withCredentials: true }
-        );
-        setMessages(data.messages);
+        const { data } = await axios.get(`${API_BASE}/message/getall`, {
+          withCredentials: true,
+        });
+        setMessages(data.messages || []);
       } catch (error) {
-        console.log(error.response.data.message);
+        setMessages([]);
+        setLoadError(
+          error.response?.data?.message ||
+            "Could not load messages. Please refresh."
+        );
+      } finally {
+        setLoading(false);
       }
     };
     fetchMessages();
@@ -27,35 +63,80 @@ const Messages = () => {
   }
 
   return (
-    <section className="page messages">
-      <h1>MESSAGE</h1>
-      <div className="banner">
-        {messages && messages.length > 0 ? (
-          messages.map((element) => {
-            return (
-              <div className="card" key={element._id}>
-                <div className="details">
-                  <p>
-                    First Name: <span>{element.firstName}</span>
-                  </p>
-                  <p>
-                    Last Name: <span>{element.lastName}</span>
-                  </p>
-                  <p>
-                    Email: <span>{element.email}</span>
-                  </p>
-                  <p>
-                    Phone: <span>{element.phone}</span>
-                  </p>
-                  <p>
-                    Message: <span>{element.message}</span>
-                  </p>
-                </div>
-              </div>
-            );
-          })
+    <section className="min-h-screen bg-slate-50 px-4 py-8 md:pl-28">
+      <div className="mx-auto w-full max-w-5xl">
+        <header className="mb-6">
+          <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
+            Patient Enquiries
+          </h1>
+          <p className="mt-1 text-sm text-slate-500">
+            {loading
+              ? "Loading…"
+              : `${messages.length} ${
+                  messages.length === 1 ? "message" : "messages"
+                } from the website contact form`}
+          </p>
+        </header>
+
+        {loadError ? (
+          <div className="rounded-2xl border border-rose-200 bg-rose-50 px-6 py-10 text-center text-sm text-rose-700">
+            {loadError}
+          </div>
+        ) : loading ? (
+          <div className="rounded-2xl border border-slate-200 bg-white px-6 py-10 text-center text-sm text-slate-500">
+            Loading messages…
+          </div>
+        ) : messages.length === 0 ? (
+          <div className="rounded-2xl border border-slate-200 bg-white px-6 py-12 text-center">
+            <p className="text-sm font-medium text-slate-900">No messages yet</p>
+            <p className="mt-1 text-sm text-slate-500">
+              Enquiries sent from the website contact form will appear here.
+            </p>
+          </div>
         ) : (
-          <h1>No Messages!</h1>
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+            {messages.map((message) => {
+              const received = formatReceived(message.createdAt);
+              return (
+                <article
+                  key={message._id}
+                  className="flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <h2 className="text-base font-semibold text-slate-900">
+                      {message.firstName} {message.lastName}
+                    </h2>
+                    {received && (
+                      <time className="shrink-0 text-xs text-slate-400">
+                        {received}
+                      </time>
+                    )}
+                  </div>
+
+                  <p className="mt-4 whitespace-pre-line break-words text-sm leading-relaxed text-slate-700">
+                    {message.message}
+                  </p>
+
+                  <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 border-t border-slate-100 pt-4 text-sm">
+                    <a
+                      href={`mailto:${message.email}`}
+                      className="inline-flex min-w-0 items-center gap-2 text-slate-600 transition hover:text-teal-700"
+                    >
+                      <MdEmail className="shrink-0 text-slate-400" />
+                      <span className="truncate">{message.email}</span>
+                    </a>
+                    <a
+                      href={`tel:+91${String(message.phone || "").slice(-10)}`}
+                      className="inline-flex items-center gap-2 text-slate-600 transition hover:text-teal-700"
+                    >
+                      <FaPhone className="shrink-0 text-slate-400" />
+                      {formatPhone(message.phone)}
+                    </a>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
         )}
       </div>
     </section>
