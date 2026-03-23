@@ -8,7 +8,6 @@ import {
   logoutAdmin,
   logoutPatient,
   patientRegister,
-  deleteDoctor,
 } from "../controller/userController.js";
 import {
   isAdminAuthenticated,
@@ -26,6 +25,5 @@ router.get("/patient/me", isPatientAuthenticated, getUserDetails);
 router.get("/admin/me", isAdminAuthenticated, getUserDetails);
 router.get("/patient/logout", isPatientAuthenticated, logoutPatient);
 router.get("/admin/logout", isAdminAuthenticated, logoutAdmin);
-router.delete("/doctor/delete/:id", isAdminAuthenticated, deleteDoctor);
 
 export default router;
