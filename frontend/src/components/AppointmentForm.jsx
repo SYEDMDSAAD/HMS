@@ -1,67 +1,128 @@
 import axios from "axios";
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
+import { Context } from "../main";
+
+const API_BASE =
+  import.meta.env.VITE_API_URL || "http://localhost:4000/api/v1";
+
+// Must stay in step with DEPARTMENTS in backend/models/appointmentSchema.js.
+const DEPARTMENTS = [
+  "General Medicine",
+  "Pediatrics",
+  "Orthopedics",
+  "Cardiology",
+  "Neurology",
+  "Oncology",
+  "Radiology",
+  "Physical Therapy",
+  "Dermatology",
+  "Gynaecology",
+  "Dentistry",
+  "Psychiatry",
+  "ENT",
+];
+
+const GENDERS = ["Male", "Female", "Other"];
+
+const initialForm = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  aadhaar: "",
+  dob: "",
+  gender: "",
+  appointmentDate: "",
+  department: "",
+  doctorId: "",
+  address: "",
+  hasVisited: false,
+};
+
+const today = () => new Date().toISOString().split("T")[0];
+
+const labelClass = "block text-sm font-medium text-slate-700 mb-1.5";
+const fieldClass =
+  "w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-slate-900 " +
+  "placeholder:text-slate-400 shadow-sm transition " +
+  "focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600/20 " +
+  "disabled:cursor-not-allowed disabled:bg-slate-50";
 
 const AppointmentForm = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [nic, setNic] = useState("");
-  const [dob, setDob] = useState("");
-  const [gender, setGender] = useState("");
-  const [appointmentDate, setAppointmentDate] = useState("");
-  const [department, setDepartment] = useState("Pediatrics");
-  const [doctorFirstName, setDoctorFirstName] = useState("");
-  const [doctorLastName, setDoctorLastName] = useState("");
-  const [address, setAddress] = useState("");
-  const [hasVisited, setHasVisited] = useState(false);
+  const { isAuthenticated } = useContext(Context);
 
-  const departmentsArray = [
-    "Pediatrics",
-    "Orthopedics",
-    "Cardiology",
-    "Neurology",
-    "Oncology",
-    "Radiology",
-    "Physical Therapy",
-    "Dermatology",
-    "ENT",
-  ];
-
+  const [form, setForm] = useState(initialForm);
   const [doctors, setDoctors] = useState([]);
+  const [doctorsError, setDoctorsError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
   useEffect(() => {
     const fetchDoctors = async () => {
-      const { data } = await axios.get(
-        "http://localhost:5000/api/v1/user/doctors",
-        { withCredentials: true }
-      );
-      setDoctors(data.doctors);
-      console.log(data.doctors);
+      // The original had no try/catch at all, so a failed request became an
+      // unhandled rejection and the picker stayed silently empty.
+      try {
+        const { data } = await axios.get(`${API_BASE}/user/doctors`, {
+          withCredentials: true,
+        });
+        setDoctors(data.doctors || []);
+      } catch (error) {
+        setDoctorsError(
+          error.response?.data?.message ||
+            "Could not load our doctors right now. Please refresh the page."
+        );
+      }
     };
     fetchDoctors();
   }, []);
+
+  const departmentDoctors = useMemo(
+    () => doctors.filter((doctor) => doctor.doctorDepartment === form.department),
+    [doctors, form.department]
+  );
+
+  const update = (field) => (e) =>
+    setForm((prev) => ({ ...prev, [field]: e.target.value }));
+
+  const updateDigits = (field, maxLength) => (e) =>
+    setForm((prev) => ({
+      ...prev,
+      [field]: e.target.value.replace(/\D/g, "").slice(0, maxLength),
+    }));
+
+  const handleDepartmentChange = (e) =>
+    // Clear the doctor too — the previous pick belongs to another department.
+    setForm((prev) => ({ ...prev, department: e.target.value, doctorId: "" }));
+
   const handleAppointment = async (e) => {
     e.preventDefault();
+    if (submitting) return;
+
+    const doctor = doctors.find((entry) => entry._id === form.doctorId);
+    if (!doctor) {
+      toast.error("Please select a doctor.");
+      return;
+    }
+
+    setSubmitting(true);
     try {
-      const hasVisitedBool = Boolean(hasVisited);
       const { data } = await axios.post(
-        "http://localhost:5000/api/v1/appointment/post",
+        `${API_BASE}/appointment/post`,
         {
-          firstName,
-          lastName,
-          email,
-          phone,
-          nic,
-          dob,
-          gender,
-          appointment_date: appointmentDate,
-          department,
-          doctor_firstName: doctorFirstName,
-          doctor_lastName: doctorLastName,
-          hasVisited: hasVisitedBool,
-          address,
+          firstName: form.firstName,
+          lastName: form.lastName,
+          email: form.email,
+          phone: form.phone,
+          aadhaar: form.aadhaar,
+          dob: form.dob,
+          gender: form.gender,
+          appointment_date: form.appointmentDate,
+          department: form.department,
+          doctor_firstName: doctor.firstName,
+          doctor_lastName: doctor.lastName,
+          hasVisited: form.hasVisited,
+          address: form.address,
         },
         {
           withCredentials: true,
@@ -69,175 +130,293 @@ const AppointmentForm = () => {
         }
       );
       toast.success(data.message);
-      setFirstName(""),
-        setLastName(""),
-        setEmail(""),
-        setPhone(""),
-        setNic(""),
-        setDob(""),
-        setGender(""),
-        setAppointmentDate(""),
-        setDepartment(""),
-        setDoctorFirstName(""),
-        setDoctorLastName(""),
-        setHasVisited(""),
-        setAddress("");
+      setForm(initialForm);
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(
+        error.response?.data?.message ||
+          "Could not book your appointment. Please try again."
+      );
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
-    <>
-      <div className="container form-component appointment-form">
-        <h2>Appointment</h2>
-        <form onSubmit={handleAppointment}>
-          <div>
-            <input
-              type="text"
-              placeholder="First Name"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder="Last Name"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-            />
+    <section className="bg-slate-50 px-4 py-16">
+      <div className="mx-auto w-full max-w-4xl">
+        <div className="mb-8 text-center">
+          <h2 className="text-3xl font-semibold tracking-tight text-slate-900">
+            Book an Appointment
+          </h2>
+          <p className="mx-auto mt-3 max-w-xl text-slate-600">
+            Choose a department and doctor, and our front desk will confirm your
+            slot shortly.
+          </p>
+        </div>
+
+        {!isAuthenticated && (
+          <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900">
+            Please{" "}
+            <Link to="/login" className="font-semibold underline">
+              sign in
+            </Link>{" "}
+            before booking so we can attach the appointment to your record.
           </div>
-          <div>
-            <input
-              type="text"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <input
-              type="number"
-              placeholder="Mobile Number"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
+        )}
+
+        {doctorsError && (
+          <div className="mb-6 rounded-xl border border-rose-200 bg-rose-50 px-5 py-4 text-sm text-rose-800">
+            {doctorsError}
           </div>
-          <div>
-            <input
-              type="number"
-              placeholder="NIC"
-              value={nic}
-              onChange={(e) => setNic(e.target.value)}
-            />
-            <input
-              type="date"
-              placeholder="Date of Birth"
-              value={dob}
-              onChange={(e) => setDob(e.target.value)}
-            />
-          </div>
-          <div>
-            <select value={gender} onChange={(e) => setGender(e.target.value)}>
-              <option value="">Select Gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-            </select>
-            <input
-              type="date"
-              placeholder="Appointment Date"
-              value={appointmentDate}
-              onChange={(e) => setAppointmentDate(e.target.value)}
-            />
-          </div>
-          <div>
-            <select
-              value={department}
-              onChange={(e) => {
-                setDepartment(e.target.value);
-                setDoctorFirstName("");
-                setDoctorLastName("");
-              }}
-            >
-              {departmentsArray.map((depart, index) => {
-                return (
-                  <option value={depart} key={index}>
-                    {depart}
-                  </option>
-                );
-              })}
-            </select>
-            {/* <select
-              value={`${doctorFirstName} ${doctorLastName}`}
-              onChange={(e) => {
-                const [firstName, lastName] = e.target.value.split(" ");
-                setDoctorFirstName(firstName);
-                setDoctorLastName(lastName);
-              }}
-              disabled={!department}
-            >
-              <option value="">Select Doctor</option>
-              {doctors
-                .filter((doctor) => doctor.doctorDepartment === department)
-                .map((doctor, index) => (
-                  <option
-                    value={`${doctor.firstName} ${doctor.lastName}`}
-                    key={index}
-                  >
-                    {doctor.firstName} {doctor.lastName}
+        )}
+
+        <form
+          onSubmit={handleAppointment}
+          className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"
+        >
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <div>
+              <label className={labelClass} htmlFor="firstName">
+                First name
+              </label>
+              <input
+                id="firstName"
+                className={fieldClass}
+                type="text"
+                placeholder="Ananya"
+                value={form.firstName}
+                onChange={update("firstName")}
+                minLength={3}
+                required
+                disabled={submitting}
+              />
+            </div>
+
+            <div>
+              <label className={labelClass} htmlFor="lastName">
+                Last name
+              </label>
+              <input
+                id="lastName"
+                className={fieldClass}
+                type="text"
+                placeholder="Sharma"
+                value={form.lastName}
+                onChange={update("lastName")}
+                minLength={3}
+                required
+                disabled={submitting}
+              />
+            </div>
+
+            <div>
+              <label className={labelClass} htmlFor="email">
+                Email
+              </label>
+              <input
+                id="email"
+                className={fieldClass}
+                type="email"
+                placeholder="ananya.sharma@example.in"
+                value={form.email}
+                onChange={update("email")}
+                required
+                disabled={submitting}
+              />
+            </div>
+
+            <div>
+              <label className={labelClass} htmlFor="phone">
+                Mobile number
+              </label>
+              <div className="flex">
+                <span className="inline-flex select-none items-center rounded-l-lg border border-r-0 border-slate-300 bg-slate-50 px-3 text-sm text-slate-600">
+                  +91
+                </span>
+                <input
+                  id="phone"
+                  className={`${fieldClass} rounded-l-none`}
+                  type="tel"
+                  inputMode="numeric"
+                  placeholder="98765 43210"
+                  value={form.phone}
+                  onChange={updateDigits("phone", 10)}
+                  pattern="[6-9][0-9]{9}"
+                  title="10-digit Indian mobile number starting with 6-9"
+                  required
+                  disabled={submitting}
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className={labelClass} htmlFor="aadhaar">
+                Aadhaar number
+              </label>
+              <input
+                id="aadhaar"
+                className={fieldClass}
+                type="text"
+                inputMode="numeric"
+                placeholder="12 digits"
+                value={form.aadhaar}
+                onChange={updateDigits("aadhaar", 12)}
+                pattern="[2-9][0-9]{11}"
+                title="12-digit Aadhaar number"
+                required
+                disabled={submitting}
+              />
+            </div>
+
+            <div>
+              <label className={labelClass} htmlFor="dob">
+                Date of birth
+              </label>
+              <input
+                id="dob"
+                className={fieldClass}
+                type="date"
+                value={form.dob}
+                onChange={update("dob")}
+                max={today()}
+                required
+                disabled={submitting}
+              />
+            </div>
+
+            <div>
+              <label className={labelClass} htmlFor="gender">
+                Gender
+              </label>
+              <select
+                id="gender"
+                className={fieldClass}
+                value={form.gender}
+                onChange={update("gender")}
+                required
+                disabled={submitting}
+              >
+                <option value="">Select gender</option>
+                {GENDERS.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
                   </option>
                 ))}
-            </select> */}
-            <select
-              value={JSON.stringify({
-                firstName: doctorFirstName,
-                lastName: doctorLastName,
-              })}
-              onChange={(e) => {
-                const { firstName, lastName } = JSON.parse(e.target.value);
-                setDoctorFirstName(firstName);
-                setDoctorLastName(lastName);
-              }}
-              disabled={!department}
-            >
-              <option value="">Select Doctor</option>
-              {doctors
-                .filter((doctor) => doctor.doctorDepartment === department)
-                .map((doctor, index) => (
-                  <option
-                    key={index}
-                    value={JSON.stringify({
-                      firstName: doctor.firstName,
-                      lastName: doctor.lastName,
-                    })}
-                  >
-                    {doctor.firstName} {doctor.lastName}
+              </select>
+            </div>
+
+            <div>
+              <label className={labelClass} htmlFor="appointmentDate">
+                Preferred date
+              </label>
+              <input
+                id="appointmentDate"
+                className={fieldClass}
+                type="date"
+                value={form.appointmentDate}
+                onChange={update("appointmentDate")}
+                min={today()}
+                required
+                disabled={submitting}
+              />
+            </div>
+
+            <div>
+              <label className={labelClass} htmlFor="department">
+                Department
+              </label>
+              <select
+                id="department"
+                className={fieldClass}
+                value={form.department}
+                onChange={handleDepartmentChange}
+                required
+                disabled={submitting}
+              >
+                <option value="">Select department</option>
+                {DEPARTMENTS.map((department) => (
+                  <option key={department} value={department}>
+                    {department}
                   </option>
                 ))}
-            </select>
+              </select>
+            </div>
+
+            <div>
+              <label className={labelClass} htmlFor="doctorId">
+                Doctor
+              </label>
+              <select
+                id="doctorId"
+                className={fieldClass}
+                value={form.doctorId}
+                onChange={update("doctorId")}
+                required
+                disabled={submitting || !form.department}
+              >
+                <option value="">
+                  {!form.department
+                    ? "Select a department first"
+                    : departmentDoctors.length === 0
+                    ? "No doctors in this department yet"
+                    : "Select doctor"}
+                </option>
+                {departmentDoctors.map((doctor) => (
+                  <option key={doctor._id} value={doctor._id}>
+                    Dr. {doctor.firstName} {doctor.lastName}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="sm:col-span-2">
+              <label className={labelClass} htmlFor="address">
+                Address
+              </label>
+              <textarea
+                id="address"
+                className={fieldClass}
+                rows={4}
+                placeholder="House / street, area, city, state, PIN code"
+                value={form.address}
+                onChange={update("address")}
+                required
+                disabled={submitting}
+              />
+            </div>
           </div>
-          <textarea
-            rows="10"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            placeholder="Address"
-          />
-          <div
-            style={{
-              gap: "10px",
-              justifyContent: "flex-end",
-              flexDirection: "row",
-            }}
-          >
-            <p style={{ marginBottom: 0 }}>Have you visited before?</p>
+
+          <div className="mt-6 flex items-center gap-3">
             <input
+              id="hasVisited"
               type="checkbox"
-              checked={hasVisited}
-              onChange={(e) => setHasVisited(e.target.checked)}
-              style={{ flex: "none", width: "25px" }}
+              className="h-4 w-4 rounded border-slate-300 text-teal-700 focus:ring-teal-600"
+              checked={form.hasVisited}
+              onChange={(e) =>
+                setForm((prev) => ({ ...prev, hasVisited: e.target.checked }))
+              }
+              disabled={submitting}
             />
+            <label htmlFor="hasVisited" className="text-sm text-slate-700">
+              I have visited Care Medical Institute before
+            </label>
           </div>
-          <button style={{ margin: "0 auto" }}>GET APPOINTMENT</button>
+
+          <div className="mt-8">
+            <button
+              type="submit"
+              disabled={submitting}
+              className="w-full rounded-lg bg-teal-700 px-6 py-3 text-sm font-semibold text-white
+                shadow-sm transition hover:bg-teal-800 focus:outline-none focus:ring-2
+                focus:ring-teal-600 focus:ring-offset-2 disabled:cursor-not-allowed
+                disabled:opacity-60 sm:w-auto"
+            >
+              {submitting ? "Booking appointment…" : "Get appointment"}
+            </button>
+          </div>
         </form>
       </div>
-    </>
+    </section>
   );
 };
 
