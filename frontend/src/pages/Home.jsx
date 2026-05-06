@@ -1,20 +1,23 @@
-import React, { useContext } from "react";
+import React, { useEffect } from "react";
 import Hero from "../components/Hero";
 import Biography from "../components/Biography";
 import MessageForm from "../components/MessageForm";
 import Departments from "../components/Departments";
 
 const Home = () => {
+  useEffect(() => {
+    document.title =
+      "Care Medical Institute · Multi-Speciality Hospital & Online Appointments";
+  }, []);
+
   return (
     <>
       <Hero
-        title={
-          "Welcome to Care Medical Institute | Your Trusted Healthcare Provider"
-        }
-        imageUrl={"/hero.png"}
+        title="Expert care, when you need it most"
+        imageUrl="/hero.png"
       />
-      <Biography imageUrl={"/about.png"} />
       <Departments />
+      <Biography imageUrl="/about.png" />
       <MessageForm />
     </>
   );
