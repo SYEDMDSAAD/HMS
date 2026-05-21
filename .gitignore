@@ -1,1 +1,20 @@
 node_modules
+
+# Build output
+dist
+build
+
+# Secrets — never commit real credentials.
+# Copy backend/config/config.env.example to backend/config/config.env locally.
+config.env
+.env
+.env.*
+!.env.example
+!config.env.example
+
+# Logs and editor cruft
+*.log
+npm-debug.log*
+.DS_Store
+.vscode/
+.idea/
