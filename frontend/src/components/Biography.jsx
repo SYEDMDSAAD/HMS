@@ -1,5 +1,3 @@
-import React from "react";
-
 // Placeholder figures — replace with the hospital's real numbers before launch.
 const STATS = [
   { value: "2004", label: "Serving since" },

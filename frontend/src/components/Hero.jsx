@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { FaClock, FaUserDoctor } from "react-icons/fa6";
 import { MdLocalHospital } from "react-icons/md";

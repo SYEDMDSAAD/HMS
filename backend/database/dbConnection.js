@@ -30,4 +30,20 @@ export const dbConnection = async () => {
   mongoose.connection.on("disconnected", () => {
     console.warn("Database disconnected. Mongoose will retry automatically.");
   });
+
+  // Mongoose builds indexes in the background and reports failures on each
+  // model's "index" event. With no listener those errors go nowhere — which is
+  // how a `unique` constraint can silently fail to exist (e.g. a unique index on
+  // a field that is null in more than one existing document).
+  for (const modelName of mongoose.modelNames()) {
+    mongoose.model(modelName).on("index", (error) => {
+      if (error) {
+        console.error(
+          `Index build FAILED for model "${modelName}": ${error.message}\n` +
+            "  -> The affected constraint is NOT active. Look for existing " +
+            "documents that violate it, fix them, then restart."
+        );
+      }
+    });
+  }
 };
