@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Context } from "../main";
+import { Context } from "../context/AppContext";
 import axios from "axios";
 
 const API_BASE =

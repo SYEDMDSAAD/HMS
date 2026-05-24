@@ -2,7 +2,7 @@ import axios from "axios";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-import { Context } from "../main";
+import { Context } from "../context/AppContext";
 
 const API_BASE =
   import.meta.env.VITE_API_URL || "http://localhost:4000/api/v1";

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { Context } from "../main";
+import { Context } from "../context/AppContext";
 import { Navigate } from "react-router-dom";
 import { MdEmail } from "react-icons/md";
 import { FaPhone } from "react-icons/fa6";

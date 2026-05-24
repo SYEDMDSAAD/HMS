@@ -18,7 +18,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
-import { Context } from "./main";
+import { Context } from "./context/AppContext";
 
 const API_BASE =
   import.meta.env.VITE_API_URL || "http://localhost:4000/api/v1";
@@ -92,7 +92,7 @@ const App = () => {
     <Router>
       <div className="flex min-h-screen flex-col">
         <Navbar />
-        <div className="flex-1">
+        <main className="flex-1">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/appointment" element={<Appointment />} />
@@ -101,7 +101,7 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </div>
+        </main>
         <Footer />
       </div>
       <ToastContainer position="top-center" theme="light" />

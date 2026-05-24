@@ -47,6 +47,12 @@ export default [
     },
   },
   {
+    // Entry point: it renders the app and exports nothing, so React Fast
+    // Refresh does not apply to it.
+    files: ["src/main.jsx"],
+    rules: { "react-refresh/only-export-components": "off" },
+  },
+  {
     // Config files run in Node, not the browser.
     files: ['*.config.js', 'vite.config.js', 'eslint.config.js'],
     languageOptions: { globals: globals.node },

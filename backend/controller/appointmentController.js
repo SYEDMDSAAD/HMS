@@ -1,9 +1,10 @@
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import ErrorHandler from "../middlewares/error.js";
-import { Appointment } from "../models/appointmentSchema.js";
+import {
+  Appointment,
+  APPOINTMENT_STATUSES,
+} from "../models/appointmentSchema.js";
 import { User } from "../models/userSchema.js";
-
-const APPOINTMENT_STATUSES = ["Pending", "Accepted", "Rejected"];
 
 export const postAppointment = catchAsyncErrors(async (req, res, next) => {
   const {

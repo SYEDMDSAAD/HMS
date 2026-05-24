@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { Context } from "../main";
+import { Context } from "../context/AppContext";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 
@@ -85,7 +85,7 @@ const Register = () => {
   }
 
   return (
-    <main className="bg-slate-50 px-4 py-16">
+    <div className="bg-slate-50 px-4 py-16">
       <div className="mx-auto w-full max-w-2xl">
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
           <div className="text-center">
@@ -295,7 +295,7 @@ const Register = () => {
           </p>
         </div>
       </div>
-    </main>
+    </div>
   );
 };
 

@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Context } from "../main";
+import { Context } from "../context/AppContext";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import axios from "axios";
 
@@ -59,7 +59,7 @@ const Login = () => {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12">
       <div className="w-full max-w-md">
         <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="flex flex-col items-center text-center">
@@ -136,7 +136,7 @@ const Login = () => {
           Patients should book appointments on the main website.
         </p>
       </div>
-    </main>
+    </div>
   );
 };
 

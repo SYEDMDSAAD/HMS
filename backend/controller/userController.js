@@ -2,7 +2,7 @@ import fs from "fs/promises";
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import { User } from "../models/userSchema.js";
 import ErrorHandler from "../middlewares/error.js";
-import { generateToken } from "../utils/jwtToken.js";
+import { authCookieOptions, generateToken } from "../utils/jwtToken.js";
 import cloudinary from "cloudinary";
 
 // Whatever we hand back to a client, never the password hash. `select: false`
@@ -246,10 +246,9 @@ export const getUserDetails = catchAsyncErrors(async (req, res, next) => {
 export const logoutAdmin = catchAsyncErrors(async (req, res, next) => {
   res
     .status(200)
-    .cookie("adminToken", "", {
-      httpOnly: true,
-      expires: new Date(Date.now()),
-    })
+    // Same attributes the cookie was set with — a cookie is only replaced when
+    // name, path and domain all match.
+    .cookie("adminToken", "", { ...authCookieOptions(), expires: new Date(0) })
     .json({
       success: true,
       message: "Admin Logged Out Successfully.",
@@ -261,8 +260,8 @@ export const logoutPatient = catchAsyncErrors(async (req, res, next) => {
   res
     .status(200)
     .cookie("patientToken", "", {
-      httpOnly: true,
-      expires: new Date(Date.now()),
+      ...authCookieOptions(),
+      expires: new Date(0),
     })
     .json({
       success: true,

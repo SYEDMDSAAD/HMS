@@ -4,7 +4,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { FaXmark } from "react-icons/fa6";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { Context } from "../main";
+import { Context } from "../context/AppContext";
 
 const API_BASE =
   import.meta.env.VITE_API_URL || "http://localhost:4000/api/v1";

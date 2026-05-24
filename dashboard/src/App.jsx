@@ -11,7 +11,7 @@ import Login from "./components/Login";
 import AddNewDoctor from "./components/AddNewDoctor";
 import Messages from "./components/Messages";
 import Doctors from "./components/Doctors";
-import { Context } from "./main";
+import { Context } from "./context/AppContext";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -87,7 +87,8 @@ const App = () => {
   return (
     <Router>
       <Sidebar />
-      <Routes>
+      <main>
+        <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/login" element={<Login />} />
         <Route path="/doctor/addnew" element={<AddNewDoctor />} />
@@ -96,8 +97,9 @@ const App = () => {
         <Route path="/doctors" element={<Doctors />} />
         {/* Legacy path — the sidebar used to link here. */}
         <Route path="/admin/me" element={<Navigate to="/" replace />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
       <ToastContainer position="top-center" theme="light" />
     </Router>
   );

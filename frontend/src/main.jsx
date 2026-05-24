@@ -1,15 +1,7 @@
-import React, { createContext, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
-
-// Full default shape, so a consumer rendered outside the provider gets no-op
-// setters instead of "setIsAuthenticated is not a function".
-export const Context = createContext({
-  isAuthenticated: false,
-  setIsAuthenticated: () => {},
-  user: {},
-  setUser: () => {},
-});
+import { Context } from "./context/AppContext.js";
 
 const AppWrapper = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -22,7 +14,11 @@ const AppWrapper = () => {
     [isAuthenticated, user]
   );
 
-  return <Context.Provider value={value}>{<App />}</Context.Provider>;
+  return (
+    <Context.Provider value={value}>
+      <App />
+    </Context.Provider>
+  );
 };
 
 const rootElement = document.getElementById("root");
