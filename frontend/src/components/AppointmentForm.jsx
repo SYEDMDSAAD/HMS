@@ -1,11 +1,8 @@
-import axios from "axios";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { Context } from "../context/AppContext";
-
-const API_BASE =
-  import.meta.env.VITE_API_URL || "http://localhost:4000/api/v1";
+import { api } from "../lib/api";
 
 // Must stay in step with DEPARTMENTS in backend/models/appointmentSchema.js.
 const DEPARTMENTS = [
@@ -63,9 +60,7 @@ const AppointmentForm = () => {
       // The original had no try/catch at all, so a failed request became an
       // unhandled rejection and the picker stayed silently empty.
       try {
-        const { data } = await axios.get(`${API_BASE}/user/doctors`, {
-          withCredentials: true,
-        });
+        const { data } = await api.get("/user/doctors");
         setDoctors(data.doctors || []);
       } catch (error) {
         setDoctorsError(
@@ -107,8 +102,8 @@ const AppointmentForm = () => {
 
     setSubmitting(true);
     try {
-      const { data } = await axios.post(
-        `${API_BASE}/appointment/post`,
+      const { data } = await api.post(
+        "/appointment/post",
         {
           firstName: form.firstName,
           lastName: form.lastName,
@@ -124,10 +119,7 @@ const AppointmentForm = () => {
           hasVisited: form.hasVisited,
           address: form.address,
         },
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "application/json" },
-        }
+        { headers: { "Content-Type": "application/json" } }
       );
       toast.success(data.message);
       setForm(initialForm);

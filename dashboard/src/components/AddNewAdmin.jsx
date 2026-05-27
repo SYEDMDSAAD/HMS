@@ -2,10 +2,7 @@ import { useContext, useState } from "react";
 import { Context } from "../context/AppContext";
 import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import axios from "axios";
-
-const API_BASE =
-  import.meta.env.VITE_API_URL || "http://localhost:4000/api/v1";
+import { api } from "../lib/api";
 
 const GENDERS = ["Male", "Female", "Other"];
 
@@ -51,8 +48,7 @@ const AddNewAdmin = () => {
 
     setSubmitting(true);
     try {
-      const { data } = await axios.post(`${API_BASE}/user/admin/addnew`, form, {
-        withCredentials: true,
+      const { data } = await api.post("/user/admin/addnew", form, {
         headers: { "Content-Type": "application/json" },
       });
       toast.success(data.message);

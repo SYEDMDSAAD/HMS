@@ -6,7 +6,6 @@ import {
   Route,
   Link,
 } from "react-router-dom";
-import axios from "axios";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // Directory is lowercase "pages" — the old "./Pages/..." specifiers resolved on
@@ -19,9 +18,7 @@ import Login from "./pages/Login";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import { Context } from "./context/AppContext";
-
-const API_BASE =
-  import.meta.env.VITE_API_URL || "http://localhost:4000/api/v1";
+import { api } from "./lib/api";
 
 const NotFound = () => {
   useEffect(() => {
@@ -61,9 +58,7 @@ const App = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const { data } = await axios.get(`${API_BASE}/user/patient/me`, {
-          withCredentials: true,
-        });
+        const { data } = await api.get("/user/patient/me");
         setIsAuthenticated(true);
         setUser(data.user);
       } catch {

@@ -2,10 +2,7 @@ import { useContext, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Context } from "../context/AppContext";
-import axios from "axios";
-
-const API_BASE =
-  import.meta.env.VITE_API_URL || "http://localhost:4000/api/v1";
+import { api } from "../lib/api";
 
 // Must stay in step with DEPARTMENTS in backend/models/appointmentSchema.js —
 // the schema enum rejects anything not on that list.
@@ -111,11 +108,7 @@ const AddNewDoctor = () => {
       );
       formData.append("docAvatar", avatar);
 
-      const { data } = await axios.post(
-        `${API_BASE}/user/doctor/addnew`,
-        formData,
-        { withCredentials: true }
-      );
+      const { data } = await api.post("/user/doctor/addnew", formData);
 
       toast.success(data.message);
       setForm(initialForm);

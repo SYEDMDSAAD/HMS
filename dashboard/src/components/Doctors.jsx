@@ -1,12 +1,9 @@
-import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { Context } from "../context/AppContext";
 import { Navigate } from "react-router-dom";
 import { MdEmail } from "react-icons/md";
 import { FaPhone } from "react-icons/fa6";
-
-const API_BASE =
-  import.meta.env.VITE_API_URL || "http://localhost:4000/api/v1";
+import { api } from "../lib/api";
 
 // 9876543210 -> +91 98765 43210
 const formatPhone = (phone) => {
@@ -28,9 +25,7 @@ const Doctors = () => {
       setLoading(true);
       setLoadError("");
       try {
-        const { data } = await axios.get(`${API_BASE}/user/doctors`, {
-          withCredentials: true,
-        });
+        const { data } = await api.get("/user/doctors");
         setDoctors(data.doctors || []);
       } catch (error) {
         setDoctors([]);

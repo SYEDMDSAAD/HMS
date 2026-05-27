@@ -1,12 +1,9 @@
-import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Context } from "../context/AppContext";
 import { Link, useNavigate, Navigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
-
-const API_BASE =
-  import.meta.env.VITE_API_URL || "http://localhost:4000/api/v1";
+import { api } from "../lib/api";
 
 const labelClass = "block text-sm font-medium text-slate-700 mb-1.5";
 const fieldClass =
@@ -35,13 +32,10 @@ const Login = () => {
 
     setSubmitting(true);
     try {
-      const { data } = await axios.post(
-        `${API_BASE}/user/login`,
+      const { data } = await api.post(
+        "/user/login",
         { email, password, role: "Patient" },
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "application/json" },
-        }
+        { headers: { "Content-Type": "application/json" } }
       );
       toast.success(data.message);
       setEmail("");

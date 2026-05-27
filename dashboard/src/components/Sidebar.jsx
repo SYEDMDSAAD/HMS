@@ -6,13 +6,10 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { FaUserDoctor, FaXmark } from "react-icons/fa6";
 import { MdAddModerator } from "react-icons/md";
 import { IoPersonAddSharp } from "react-icons/io5";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { Context } from "../context/AppContext";
 import { NavLink, useNavigate } from "react-router-dom";
-
-const API_BASE =
-  import.meta.env.VITE_API_URL || "http://localhost:4000/api/v1";
+import { api } from "../lib/api";
 
 const NAV_ITEMS = [
   { to: "/", label: "Dashboard", icon: TiHome, end: true },
@@ -50,11 +47,7 @@ const Sidebar = () => {
     try {
       // POST, not GET — a state-changing endpoint reachable by GET can be
       // triggered by any third-party page.
-      const { data } = await axios.post(
-        `${API_BASE}/user/admin/logout`,
-        {},
-        { withCredentials: true }
-      );
+      const { data } = await api.post("/user/admin/logout", {});
       toast.success(data.message);
     } catch (error) {
       toast.error(

@@ -2,12 +2,9 @@ import { useContext, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { FaXmark } from "react-icons/fa6";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { Context } from "../context/AppContext";
-
-const API_BASE =
-  import.meta.env.VITE_API_URL || "http://localhost:4000/api/v1";
+import { api } from "../lib/api";
 
 const NAV_LINKS = [
   { to: "/", label: "Home", end: true },
@@ -38,11 +35,7 @@ const Navbar = () => {
     try {
       // POST — the backend route is POST-only so a third-party page cannot
       // force a logout with an <img> tag.
-      const { data } = await axios.post(
-        `${API_BASE}/user/patient/logout`,
-        {},
-        { withCredentials: true }
-      );
+      const { data } = await api.post("/user/patient/logout", {});
       toast.success(data.message);
     } catch (error) {
       toast.error(

@@ -1,12 +1,9 @@
-import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Context } from "../context/AppContext";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
-
-const API_BASE =
-  import.meta.env.VITE_API_URL || "http://localhost:4000/api/v1";
+import { api } from "../lib/api";
 
 const GENDERS = ["Male", "Female", "Other"];
 
@@ -58,14 +55,9 @@ const Register = () => {
 
     setSubmitting(true);
     try {
-      const { data } = await axios.post(
-        `${API_BASE}/user/patient/register`,
-        form,
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      const { data } = await api.post("/user/patient/register", form, {
+        headers: { "Content-Type": "application/json" },
+      });
       toast.success(data.message);
       setForm(initialForm);
       setIsAuthenticated(true);

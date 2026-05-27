@@ -1,13 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { Context } from "../context/AppContext";
 import { Navigate } from "react-router-dom";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { GoCheckCircleFill } from "react-icons/go";
 import { AiFillCloseCircle } from "react-icons/ai";
-
-const API_BASE =
-  import.meta.env.VITE_API_URL || "http://localhost:4000/api/v1";
+import { api } from "../lib/api";
 
 const STATUSES = ["Pending", "Accepted", "Rejected"];
 
@@ -54,10 +51,8 @@ const Dashboard = () => {
       setLoadError("");
       try {
         const [appointmentsRes, doctorsRes] = await Promise.all([
-          axios.get(`${API_BASE}/appointment/getall`, {
-            withCredentials: true,
-          }),
-          axios.get(`${API_BASE}/user/doctors`, { withCredentials: true }),
+          api.get("/appointment/getall"),
+          api.get("/user/doctors"),
         ]);
         setAppointments(appointmentsRes.data.appointments || []);
         setDoctorCount((doctorsRes.data.doctors || []).length);
@@ -78,11 +73,9 @@ const Dashboard = () => {
   const handleUpdateStatus = async (appointmentId, status) => {
     setUpdatingId(appointmentId);
     try {
-      const { data } = await axios.put(
-        `${API_BASE}/appointment/update/${appointmentId}`,
-        { status },
-        { withCredentials: true }
-      );
+      const { data } = await api.put(`/appointment/update/${appointmentId}`, {
+        status,
+      });
       // Prefer the document the server returned over patching local state by hand.
       setAppointments((previous) =>
         previous.map((appointment) =>

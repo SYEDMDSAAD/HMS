@@ -12,15 +12,12 @@ import AddNewDoctor from "./components/AddNewDoctor";
 import Messages from "./components/Messages";
 import Doctors from "./components/Doctors";
 import { Context } from "./context/AppContext";
-import axios from "axios";
+import { api } from "./lib/api";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Sidebar from "./components/Sidebar";
 import AddNewAdmin from "./components/AddNewAdmin";
 import "./App.css";
-
-const API_BASE =
-  import.meta.env.VITE_API_URL || "http://localhost:4000/api/v1";
 
 const NotFound = () => (
   <section className="flex min-h-screen items-center justify-center px-4 md:pl-28">
@@ -54,9 +51,7 @@ const App = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const { data } = await axios.get(`${API_BASE}/user/admin/me`, {
-          withCredentials: true,
-        });
+        const { data } = await api.get("/user/admin/me");
         setIsAuthenticated(true);
         setAdmin(data.user);
       } catch {

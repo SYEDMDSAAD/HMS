@@ -1,9 +1,6 @@
-import axios from "axios";
 import { useState } from "react";
 import { toast } from "react-toastify";
-
-const API_BASE =
-  import.meta.env.VITE_API_URL || "http://localhost:4000/api/v1";
+import { api } from "../lib/api";
 
 const initialForm = {
   firstName: "",
@@ -39,8 +36,7 @@ const MessageForm = () => {
 
     setSubmitting(true);
     try {
-      const { data } = await axios.post(`${API_BASE}/message/send`, form, {
-        withCredentials: true,
+      const { data } = await api.post("/message/send", form, {
         headers: { "Content-Type": "application/json" },
       });
       toast.success(data.message);
