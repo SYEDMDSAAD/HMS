@@ -7,7 +7,7 @@ import Departments from "../components/Departments";
 const Home = () => {
   useEffect(() => {
     document.title =
-      "Care Medical Institute · Multi-Speciality Hospital & Online Appointments";
+      "UC Healthcare · Multi-Speciality Hospital & Online Appointments";
   }, []);
 
   return (

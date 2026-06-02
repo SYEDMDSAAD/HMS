@@ -18,7 +18,7 @@ const Hero = ({ title, imageUrl, showActions = true }) => {
           </h1>
 
           <p className="mt-5 text-lg leading-relaxed text-slate-600">
-            Care Medical Institute brings specialists, diagnostics and emergency
+            UC Healthcare brings specialists, diagnostics and emergency
             services together in one place. Book a consultation online and our
             front desk will confirm your slot — no queueing, no paperwork before
             you arrive.

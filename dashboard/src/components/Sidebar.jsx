@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { Context } from "../context/AppContext";
 import { NavLink, useNavigate } from "react-router-dom";
 import { api } from "../lib/api";
+import { Logo, LogoMark } from "./Logo";
 
 const NAV_ITEMS = [
   { to: "/", label: "Dashboard", icon: TiHome, end: true },
@@ -74,7 +75,7 @@ const Sidebar = () => {
         className="fixed inset-y-0 left-0 z-30 hidden w-20 flex-col items-center gap-2
           border-r border-slate-200 bg-white py-6 md:flex"
       >
-        <img src="/logo.png" alt="Care Medical Institute" className="mb-4 h-9" />
+        <LogoMark className="mb-4 h-9 w-9" title="UC Healthcare" />
 
         {NAV_ITEMS.map(({ to, label, icon: Icon, end }) => (
           <NavLink key={to} to={to} end={end} className={railLink} title={label}>
@@ -141,11 +142,7 @@ const Sidebar = () => {
               border-r border-slate-200 bg-white p-4 shadow-xl"
           >
             <div className="mb-6 flex items-center justify-between">
-              <img
-                src="/logo.png"
-                alt="Care Medical Institute"
-                className="h-9"
-              />
+              <Logo size="sm" />
               <button
                 type="button"
                 onClick={() => setOpen(false)}

@@ -3,6 +3,7 @@ import { Context } from "../context/AppContext";
 import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { api } from "../lib/api";
+import { Logo } from "./Logo";
 
 const GENDERS = ["Male", "Female", "Other"];
 
@@ -74,7 +75,7 @@ const AddNewAdmin = () => {
       <div className="mx-auto w-full max-w-3xl">
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
           <header className="mb-8 flex flex-col items-center text-center">
-            <img src="/logo.png" alt="Care Medical Institute" className="h-14" />
+            <Logo size="lg" />
             <h1 className="mt-4 text-2xl font-semibold tracking-tight text-slate-900">
               Add New Admin
             </h1>

@@ -56,7 +56,7 @@ const Doctors = () => {
               ? "Loading…"
               : `${doctors.length} ${
                   doctors.length === 1 ? "doctor" : "doctors"
-                } registered at Care Medical Institute`}
+                } registered at UC Healthcare`}
           </p>
         </header>
 

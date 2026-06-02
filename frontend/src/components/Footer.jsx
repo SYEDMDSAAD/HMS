@@ -1,13 +1,14 @@
 import { Link } from "react-router-dom";
 import { FaLocationDot, FaPhone } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
+import { Logo } from "./Logo";
 
 // PLACEHOLDER CONTACT DETAILS — replace all of these with the hospital's real
 // address, phone numbers and email before this goes live.
 const CONTACT = {
   phone: "+91 40 4567 8900",
   emergency: "+91 40 4567 8911",
-  email: "info@caremedical.in",
+  email: "info@uchealthcare.in",
   address: [
     "Plot 42, Road No. 12",
     "Banjara Hills, Hyderabad",
@@ -34,11 +35,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div>
-            <img
-              src="/logo.png"
-              alt="Care Medical Institute"
-              className="h-12"
-            />
+            <Logo size="lg" />
             <p className="mt-4 text-sm leading-relaxed text-slate-600">
               A multi-speciality hospital offering thirteen departments,
               in-house diagnostics and round-the-clock emergency care.
@@ -142,7 +139,7 @@ const Footer = () => {
 
         <div className="mt-12 border-t border-slate-200 pt-6">
           <p className="text-center text-xs text-slate-500">
-            © {new Date().getFullYear()} Care Medical Institute. All rights
+            © {new Date().getFullYear()} UC Healthcare. All rights
             reserved.
           </p>
         </div>

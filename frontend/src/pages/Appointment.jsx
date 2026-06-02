@@ -4,7 +4,7 @@ import AppointmentForm from "../components/AppointmentForm";
 
 const Appointment = () => {
   useEffect(() => {
-    document.title = "Book an Appointment · Care Medical Institute";
+    document.title = "Book an Appointment · UC Healthcare";
   }, []);
 
   return (

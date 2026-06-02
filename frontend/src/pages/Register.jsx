@@ -37,7 +37,7 @@ const Register = () => {
   const navigateTo = useNavigate();
 
   useEffect(() => {
-    document.title = "Create an Account · Care Medical Institute";
+    document.title = "Create an Account · UC Healthcare";
   }, []);
 
   const update = (field) => (e) =>
@@ -261,7 +261,7 @@ const Register = () => {
 
             <p className="mt-6 text-xs text-slate-500">
               Your details are used only to manage your appointments and medical
-              records at Care Medical Institute.
+              records at UC Healthcare.
             </p>
 
             <button

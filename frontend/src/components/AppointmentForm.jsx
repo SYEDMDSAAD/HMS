@@ -390,7 +390,7 @@ const AppointmentForm = () => {
               disabled={submitting}
             />
             <label htmlFor="hasVisited" className="text-sm text-slate-700">
-              I have visited Care Medical Institute before
+              I have visited UC Healthcare before
             </label>
           </div>
 

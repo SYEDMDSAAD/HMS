@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { Context } from "../context/AppContext";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import { api } from "../lib/api";
+import { Logo } from "./Logo";
 
 const labelClass = "block text-sm font-medium text-slate-700 mb-1.5";
 const fieldClass =
@@ -57,12 +58,12 @@ const Login = () => {
       <div className="w-full max-w-md">
         <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="flex flex-col items-center text-center">
-            <img src="/logo.png" alt="Care Medical Institute" className="h-14" />
+            <Logo size="lg" />
             <h1 className="mt-5 text-2xl font-semibold tracking-tight text-slate-900">
               Admin Dashboard
             </h1>
             <p className="mt-2 text-sm text-slate-500">
-              Care Medical Institute · staff access only
+              UC Healthcare · staff access only
             </p>
           </div>
 

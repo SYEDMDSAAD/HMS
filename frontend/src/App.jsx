@@ -22,7 +22,7 @@ import { api } from "./lib/api";
 
 const NotFound = () => {
   useEffect(() => {
-    document.title = "Page Not Found · Care Medical Institute";
+    document.title = "Page Not Found · UC Healthcare";
   }, []);
 
   return (

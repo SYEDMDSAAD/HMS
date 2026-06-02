@@ -13,7 +13,7 @@ const Biography = ({ imageUrl }) => {
         <div className="order-2 lg:order-1">
           <img
             src={imageUrl}
-            alt="The care team at Care Medical Institute"
+            alt="The care team at UC Healthcare"
             loading="lazy"
             className="w-full rounded-2xl object-cover shadow-sm ring-1 ring-slate-200"
           />
@@ -29,7 +29,7 @@ const Biography = ({ imageUrl }) => {
 
           <div className="mt-6 space-y-4 text-slate-600">
             <p>
-              Care Medical Institute is a multi-speciality hospital built around
+              UC Healthcare is a multi-speciality hospital built around
               a simple idea: good healthcare should be thorough, affordable and
               easy to reach. From routine check-ups to complex procedures, our
               teams work together so that patients and their families are never

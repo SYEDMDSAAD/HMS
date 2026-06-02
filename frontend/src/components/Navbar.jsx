@@ -5,6 +5,7 @@ import { FaXmark } from "react-icons/fa6";
 import { toast } from "react-toastify";
 import { Context } from "../context/AppContext";
 import { api } from "../lib/api";
+import { Logo } from "./Logo";
 
 const NAV_LINKS = [
   { to: "/", label: "Home", end: true },
@@ -57,8 +58,8 @@ const Navbar = () => {
         aria-label="Main navigation"
         className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3"
       >
-        <Link to="/" className="shrink-0" aria-label="Care Medical Institute home">
-          <img src="/logo.png" alt="Care Medical Institute" className="h-10" />
+        <Link to="/" className="shrink-0" aria-label="UC Healthcare home">
+          <Logo size="md" />
         </Link>
 
         {/* Desktop */}

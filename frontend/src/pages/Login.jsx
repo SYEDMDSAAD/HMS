@@ -23,7 +23,7 @@ const Login = () => {
   const navigateTo = useNavigate();
 
   useEffect(() => {
-    document.title = "Sign In · Care Medical Institute";
+    document.title = "Sign In · UC Healthcare";
   }, []);
 
   const handleLogin = async (e) => {

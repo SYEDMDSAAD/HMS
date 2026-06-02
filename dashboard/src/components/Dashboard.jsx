@@ -122,7 +122,7 @@ const Dashboard = () => {
                 {adminName || "Admin"}
               </h1>
               <p className="mt-1 text-sm text-slate-500">
-                Care Medical Institute
+                UC Healthcare
               </p>
             </div>
           </div>

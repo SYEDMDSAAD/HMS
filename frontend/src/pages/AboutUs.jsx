@@ -6,13 +6,13 @@ import Biography from "../components/Biography";
 const AboutUs = () => {
   // Every route shared the one <title> from index.html; set it per page.
   useEffect(() => {
-    document.title = "About Us · Care Medical Institute";
+    document.title = "About Us · UC Healthcare";
   }, []);
 
   return (
     <>
       <Hero
-        title="About Care Medical Institute"
+        title="About UC Healthcare"
         imageUrl="/about.png"
         showActions={false}
       />
