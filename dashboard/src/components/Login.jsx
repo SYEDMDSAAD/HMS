@@ -6,12 +6,12 @@ import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import { api } from "../lib/api";
 import { Logo } from "./Logo";
 
-const labelClass = "block text-sm font-medium text-slate-700 mb-1.5";
+const labelClass = "block text-sm font-medium text-ink-700 mb-1.5";
 const fieldClass =
-  "w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-slate-900 " +
-  "placeholder:text-slate-400 shadow-sm transition " +
-  "focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600/20 " +
-  "disabled:cursor-not-allowed disabled:bg-slate-50";
+  "w-full rounded-lg border border-line-control bg-white px-3.5 py-2.5 text-ink-900 " +
+  "placeholder:text-fg-placeholder shadow-e1 transition " +
+  "focus:border-accent-600 focus:outline-none focus:ring-2 focus:ring-accent-600/20 " +
+  "disabled:cursor-not-allowed disabled:bg-ink-50";
 
 const Login = () => {
   const { isAuthenticated, setIsAuthenticated } = useContext(Context);
@@ -54,15 +54,15 @@ const Login = () => {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12">
+    <div className="flex min-h-screen items-center justify-center bg-ink-50 px-4 py-12">
       <div className="w-full max-w-md">
-        <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+        <div className="rounded-2xl border border-line bg-white p-8 shadow-e1">
           <div className="flex flex-col items-center text-center">
             <Logo size="lg" />
-            <h1 className="mt-5 text-2xl font-semibold tracking-tight text-slate-900">
+            <h1 className="mt-5 text-2xl font-semibold tracking-tight text-ink-900">
               Admin Dashboard
             </h1>
-            <p className="mt-2 text-sm text-slate-500">
+            <p className="mt-2 text-sm text-ink-500">
               UC Healthcare · staff access only
             </p>
           </div>
@@ -105,9 +105,9 @@ const Login = () => {
                   type="button"
                   onClick={() => setShowPassword((visible) => !visible)}
                   aria-label={showPassword ? "Hide password" : "Show password"}
-                  className="absolute inset-y-0 right-0 flex items-center px-3.5 text-slate-400
-                    transition hover:text-slate-600 focus:outline-none focus:ring-2
-                    focus:ring-teal-600/30 rounded-r-lg"
+                  className="absolute inset-y-0 right-0 flex items-center px-3.5 text-ink-400
+                    transition hover:text-ink-600 focus:outline-none focus:ring-2
+                    focus:ring-accent-600/30 rounded-r-lg"
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
@@ -117,9 +117,9 @@ const Login = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full rounded-lg bg-teal-700 px-6 py-3 text-sm font-semibold text-white
-                shadow-sm transition hover:bg-teal-800 focus:outline-none focus:ring-2
-                focus:ring-teal-600 focus:ring-offset-2 disabled:cursor-not-allowed
+              className="w-full rounded-lg bg-accent-700 px-6 py-3 text-sm font-semibold text-white
+                shadow-e1 transition hover:bg-accent-800 focus:outline-none focus:ring-2
+                focus:ring-accent-600 focus:ring-offset-2 disabled:cursor-not-allowed
                 disabled:opacity-60"
             >
               {submitting ? "Signing in…" : "Sign in"}
@@ -127,7 +127,7 @@ const Login = () => {
           </form>
         </div>
 
-        <p className="mt-6 text-center text-xs text-slate-500">
+        <p className="mt-6 text-center text-xs text-ink-500">
           Patients should book appointments on the main website.
         </p>
       </div>

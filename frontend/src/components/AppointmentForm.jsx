@@ -40,12 +40,12 @@ const initialForm = {
 
 const today = () => new Date().toISOString().split("T")[0];
 
-const labelClass = "block text-sm font-medium text-slate-700 mb-1.5";
+const labelClass = "block text-sm font-medium text-ink-700 mb-1.5";
 const fieldClass =
-  "w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-slate-900 " +
-  "placeholder:text-slate-400 shadow-sm transition " +
-  "focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600/20 " +
-  "disabled:cursor-not-allowed disabled:bg-slate-50";
+  "w-full rounded-lg border border-line-control bg-white px-3.5 py-2.5 text-ink-900 " +
+  "placeholder:text-fg-placeholder shadow-e1 transition " +
+  "focus:border-accent-600 focus:outline-none focus:ring-2 focus:ring-accent-600/20 " +
+  "disabled:cursor-not-allowed disabled:bg-ink-50";
 
 const AppointmentForm = () => {
   const { isAuthenticated } = useContext(Context);
@@ -134,20 +134,20 @@ const AppointmentForm = () => {
   };
 
   return (
-    <section className="bg-slate-50 px-4 py-16">
+    <section className="bg-ink-50 px-4 py-16">
       <div className="mx-auto w-full max-w-4xl">
         <div className="mb-8 text-center">
-          <h2 className="text-3xl font-semibold tracking-tight text-slate-900">
+          <h2 className="text-3xl font-semibold tracking-tight text-ink-900">
             Book an Appointment
           </h2>
-          <p className="mx-auto mt-3 max-w-xl text-slate-600">
+          <p className="mx-auto mt-3 max-w-xl text-ink-600">
             Choose a department and doctor, and our front desk will confirm your
             slot shortly.
           </p>
         </div>
 
         {!isAuthenticated && (
-          <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900">
+          <div className="mb-6 rounded-xl border border-warning-200 bg-warning-50 px-5 py-4 text-sm text-warning-900">
             Please{" "}
             <Link to="/login" className="font-semibold underline">
               sign in
@@ -157,14 +157,14 @@ const AppointmentForm = () => {
         )}
 
         {doctorsError && (
-          <div className="mb-6 rounded-xl border border-rose-200 bg-rose-50 px-5 py-4 text-sm text-rose-800">
+          <div className="mb-6 rounded-xl border border-danger-200 bg-danger-50 px-5 py-4 text-sm text-danger-800">
             {doctorsError}
           </div>
         )}
 
         <form
           onSubmit={handleAppointment}
-          className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"
+          className="rounded-2xl border border-line bg-white p-6 shadow-e1 sm:p-8"
         >
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <div>
@@ -222,7 +222,7 @@ const AppointmentForm = () => {
                 Mobile number
               </label>
               <div className="flex">
-                <span className="inline-flex select-none items-center rounded-l-lg border border-r-0 border-slate-300 bg-slate-50 px-3 text-sm text-slate-600">
+                <span className="inline-flex select-none items-center rounded-l-lg border border-r-0 border-line-control bg-ink-50 px-3 text-sm text-ink-600">
                   +91
                 </span>
                 <input
@@ -382,14 +382,14 @@ const AppointmentForm = () => {
             <input
               id="hasVisited"
               type="checkbox"
-              className="h-4 w-4 rounded border-slate-300 text-teal-700 focus:ring-teal-600"
+              className="h-4 w-4 rounded border-line-control text-accent-700 focus:ring-accent-600"
               checked={form.hasVisited}
               onChange={(e) =>
                 setForm((prev) => ({ ...prev, hasVisited: e.target.checked }))
               }
               disabled={submitting}
             />
-            <label htmlFor="hasVisited" className="text-sm text-slate-700">
+            <label htmlFor="hasVisited" className="text-sm text-ink-700">
               I have visited UC Healthcare before
             </label>
           </div>
@@ -398,9 +398,9 @@ const AppointmentForm = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full rounded-lg bg-teal-700 px-6 py-3 text-sm font-semibold text-white
-                shadow-sm transition hover:bg-teal-800 focus:outline-none focus:ring-2
-                focus:ring-teal-600 focus:ring-offset-2 disabled:cursor-not-allowed
+              className="w-full rounded-lg bg-accent-700 px-6 py-3 text-sm font-semibold text-white
+                shadow-e1 transition hover:bg-accent-800 focus:outline-none focus:ring-2
+                focus:ring-accent-600 focus:ring-offset-2 disabled:cursor-not-allowed
                 disabled:opacity-60 sm:w-auto"
             >
               {submitting ? "Booking appointment…" : "Get appointment"}

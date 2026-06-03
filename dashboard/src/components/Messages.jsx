@@ -58,13 +58,13 @@ const Messages = () => {
   }
 
   return (
-    <section className="min-h-screen bg-slate-50 px-4 py-8 md:pl-28">
+    <section className="min-h-screen bg-ink-50 px-4 py-8 md:pl-28">
       <div className="mx-auto w-full max-w-5xl">
         <header className="mb-6">
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
+          <h1 className="text-2xl font-semibold tracking-tight text-ink-900">
             Patient Enquiries
           </h1>
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-sm text-ink-500">
             {loading
               ? "Loading…"
               : `${messages.length} ${
@@ -74,17 +74,17 @@ const Messages = () => {
         </header>
 
         {loadError ? (
-          <div className="rounded-2xl border border-rose-200 bg-rose-50 px-6 py-10 text-center text-sm text-rose-700">
+          <div className="rounded-2xl border border-danger-200 bg-danger-50 px-6 py-10 text-center text-sm text-danger-700">
             {loadError}
           </div>
         ) : loading ? (
-          <div className="rounded-2xl border border-slate-200 bg-white px-6 py-10 text-center text-sm text-slate-500">
+          <div className="rounded-2xl border border-line bg-white px-6 py-10 text-center text-sm text-ink-500">
             Loading messages…
           </div>
         ) : messages.length === 0 ? (
-          <div className="rounded-2xl border border-slate-200 bg-white px-6 py-12 text-center">
-            <p className="text-sm font-medium text-slate-900">No messages yet</p>
-            <p className="mt-1 text-sm text-slate-500">
+          <div className="rounded-2xl border border-line bg-white px-6 py-12 text-center">
+            <p className="text-sm font-medium text-ink-900">No messages yet</p>
+            <p className="mt-1 text-sm text-ink-500">
               Enquiries sent from the website contact form will appear here.
             </p>
           </div>
@@ -95,36 +95,36 @@ const Messages = () => {
               return (
                 <article
                   key={message._id}
-                  className="flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md"
+                  className="flex flex-col rounded-2xl border border-line bg-white p-6 shadow-e1 transition hover:shadow-e2"
                 >
                   <div className="flex items-start justify-between gap-4">
-                    <h2 className="text-base font-semibold text-slate-900">
+                    <h2 className="text-base font-semibold text-ink-900">
                       {message.firstName} {message.lastName}
                     </h2>
                     {received && (
-                      <time className="shrink-0 text-xs text-slate-400">
+                      <time className="shrink-0 text-xs text-ink-400">
                         {received}
                       </time>
                     )}
                   </div>
 
-                  <p className="mt-4 whitespace-pre-line break-words text-sm leading-relaxed text-slate-700">
+                  <p className="mt-4 whitespace-pre-line break-words text-sm leading-relaxed text-ink-700">
                     {message.message}
                   </p>
 
-                  <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 border-t border-slate-100 pt-4 text-sm">
+                  <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 border-t border-ink-100 pt-4 text-sm">
                     <a
                       href={`mailto:${message.email}`}
-                      className="inline-flex min-w-0 items-center gap-2 text-slate-600 transition hover:text-teal-700"
+                      className="inline-flex min-w-0 items-center gap-2 text-ink-600 transition hover:text-accent-700"
                     >
-                      <MdEmail className="shrink-0 text-slate-400" />
+                      <MdEmail className="shrink-0 text-ink-400" />
                       <span className="truncate">{message.email}</span>
                     </a>
                     <a
                       href={`tel:+91${String(message.phone || "").slice(-10)}`}
-                      className="inline-flex items-center gap-2 text-slate-600 transition hover:text-teal-700"
+                      className="inline-flex items-center gap-2 text-ink-600 transition hover:text-accent-700"
                     >
-                      <FaPhone className="shrink-0 text-slate-400" />
+                      <FaPhone className="shrink-0 text-ink-400" />
                       {formatPhone(message.phone)}
                     </a>
                   </div>

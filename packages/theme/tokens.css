@@ -1,0 +1,272 @@
+/* UC Healthcare design tokens.
+ *
+ * Two layers, and the distinction matters:
+ *
+ *   1. RAMPS (--color-accent-*, --color-ink-*, ...) are fixed values. They
+ *      never change between light and dark. They are the raw material.
+ *   2. SEMANTIC tokens (--color-surface, --color-fg, ...) name a *role*, and
+ *      their value is swapped by theme. Components should reach for these.
+ *
+ * Anything a component styles — page background, body copy, card edges — has a
+ * semantic token. If you find yourself writing `bg-ink-50` for a surface, the
+ * token you want is `bg-surface-muted`; using the ramp step directly is what
+ * makes a dark mode retrofit expensive later.
+ *
+ * Contrast: every pair this file commits to is checked by
+ * `node packages/theme/check-contrast.mjs`, which parses this file rather than
+ * a copy of it. Run it after changing any value here.
+ */
+
+/* -------------------------------------------------------------------------
+ * Dark mode
+ *
+ * Opt-in only, keyed on <html data-theme="dark">. Deliberately NOT wired to
+ * prefers-color-scheme yet: most components still hard-code ramp steps
+ * (text-ink-900, bg-white), so a system-dark user would get a half-converted
+ * screen. Part 7 moves components onto the semantic tokens and turns the
+ * media query on. The values below are defined now so that is a switch, not a
+ * retrofit.
+ * ---------------------------------------------------------------------- */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme {
+  /* Drop Tailwind's default palette entirely. This is load-bearing: the app
+     previously read as "a Tailwind tutorial" largely because it was painted in
+     stock slate + teal. With these cleared, `bg-slate-200` compiles to nothing,
+     so the system cannot quietly drift back. */
+  --color-*: initial;
+
+  --color-inherit: inherit;
+  --color-current: currentColor;
+  --color-transparent: transparent;
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  /* --- Accent -----------------------------------------------------------
+     600 is locked at #0d9488 — the logo mark and public/favicon.svg are drawn
+     in it, and favicon.svg is a standalone file with no access to this theme.
+     Changing 600 means changing both favicons by hand.
+
+     600 is a *graphic* fill (3.7:1 on white — fine for a mark, not for text on
+     top of it). Anything carrying white text uses 700 or darker. */
+  --color-accent-50: #f0fbf9;
+  --color-accent-100: #ccf3ee;
+  --color-accent-200: #9ce6de;
+  --color-accent-300: #62d2c8;
+  --color-accent-400: #2fb8ad;
+  --color-accent-500: #14a094;
+  --color-accent-600: #0d9488;
+  --color-accent-700: #0b7168;
+  --color-accent-800: #0d5a54;
+  --color-accent-900: #0f4a46;
+  --color-accent-950: #02302e;
+
+  /* --- Ink --------------------------------------------------------------
+     Text, borders and neutral surfaces. Near-neutral with a slight cool cast —
+     noticeably less blue than Tailwind's slate, which is what gives the palette
+     a paper/clinical feel rather than a dashboard-template one.
+
+     400 is the lightest step that clears 3:1 against both page canvases, which
+     is what an input border has to hit to be a perceivable control boundary
+     (WCAG 1.4.11). It is therefore darker than you might expect for a "400";
+     that is deliberate. 500 is the lightest step usable for text on the muted
+     canvas. */
+  --color-ink-50: #f7f8f8;
+  --color-ink-100: #eff1f1;
+  --color-ink-200: #e2e5e6;
+  --color-ink-300: #cbd0d2;
+  --color-ink-400: #889195;
+  --color-ink-500: #697378;
+  --color-ink-600: #545e63;
+  --color-ink-700: #434c50;
+  --color-ink-800: #353c40;
+  --color-ink-900: #1f2528;
+  --color-ink-950: #12171a;
+
+  /* --- Status -----------------------------------------------------------
+     Never the only signal for a state: pair with an icon or a word. Roughly 8%
+     of men have a red/green colour deficiency, and this app shows appointment
+     status to patients. */
+  --color-success-50: #eefbf3;
+  --color-success-100: #d6f5e3;
+  --color-success-200: #b0eacb;
+  --color-success-300: #7ad9ab;
+  --color-success-400: #43c087;
+  --color-success-500: #1fa66d;
+  --color-success-600: #128657;
+  --color-success-700: #0f6b48;
+  --color-success-800: #10553b;
+  --color-success-900: #0e4632;
+  --color-success-950: #04271b;
+
+  --color-warning-50: #fffaeb;
+  --color-warning-100: #fff1c6;
+  --color-warning-200: #ffe088;
+  --color-warning-300: #ffc94a;
+  --color-warning-400: #ffb020;
+  --color-warning-500: #f99307;
+  --color-warning-600: #dd6d02;
+  --color-warning-700: #b74c06;
+  --color-warning-800: #943b0c;
+  --color-warning-900: #7a320d;
+  --color-warning-950: #461702;
+
+  --color-danger-50: #fef2f3;
+  --color-danger-100: #fde3e5;
+  --color-danger-200: #fbccd0;
+  --color-danger-300: #f7a5ac;
+  --color-danger-400: #f17683;
+  --color-danger-500: #e54a5c;
+  --color-danger-600: #d02b43;
+  --color-danger-700: #af1e37;
+  --color-danger-800: #931c34;
+  --color-danger-900: #7e1b31;
+  --color-danger-950: #460915;
+
+  /* --- Type -------------------------------------------------------------
+     System stack: no webfont request, no flash of unstyled text.
+
+     Only the display sizes are retuned. Large text set at default tracking is
+     the single most common reason a competent layout still reads amateur —
+     headings need negative tracking to hold together, body copy does not. */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji";
+
+  --text-2xl--letter-spacing: -0.012em;
+  --text-3xl--letter-spacing: -0.018em;
+  --text-4xl--letter-spacing: -0.022em;
+  --text-5xl--letter-spacing: -0.026em;
+  --text-6xl--letter-spacing: -0.03em;
+  --text-7xl--letter-spacing: -0.032em;
+
+  /* --- Radius -----------------------------------------------------------
+     Retuned, not renamed, so existing `rounded-lg` / `rounded-2xl` markup
+     keeps working. Controls sit on lg, cards on 2xl. */
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.625rem;
+  --radius-xl: 0.875rem;
+  --radius-2xl: 1.125rem;
+  --radius-3xl: 1.5rem;
+
+  /* --- Elevation --------------------------------------------------------
+     Three named steps replace Tailwind's shadow scale, so "how raised is this"
+     becomes a decision with three answers instead of a free-form one. Two
+     layers each — a tight contact shadow plus a wider ambient one — and tinted
+     with the ink hue rather than pure black, which is what stops shadows
+     looking like grey smudges on a coloured surface.
+
+       e1  resting    cards, inputs, the navbar
+       e2  raised     hover states, dropdowns, popovers
+       e3  overlay    modals, drawers
+
+     Shadows do not read on dark backgrounds, so the dark theme conveys the
+     same hierarchy with surface lightness instead — see --ui-surface-raised. */
+  --shadow-*: initial;
+  --shadow-e1: 0 1px 2px -1px rgb(18 23 26 / 0.08), 0 1px 3px 0 rgb(18 23 26 / 0.06);
+  --shadow-e2: 0 2px 4px -2px rgb(18 23 26 / 0.1), 0 6px 12px -2px rgb(18 23 26 / 0.08);
+  --shadow-e3: 0 8px 12px -6px rgb(18 23 26 / 0.12), 0 24px 40px -8px rgb(18 23 26 / 0.16);
+  --inset-shadow-*: initial;
+  --drop-shadow-*: initial;
+}
+
+/* -------------------------------------------------------------------------
+ * Semantic tokens
+ *
+ * `@theme inline` matters here: it makes the generated utilities resolve to
+ * var(--ui-surface) rather than to a copy of its value, so redefining --ui-*
+ * further down the cascade actually repaints the UI. Without `inline`, the
+ * dark block below would do nothing.
+ * ---------------------------------------------------------------------- */
+@theme inline {
+  /* Backgrounds, lightest role to heaviest */
+  --color-canvas: var(--ui-canvas);
+  --color-surface: var(--ui-surface);
+  --color-surface-muted: var(--ui-surface-muted);
+  --color-surface-raised: var(--ui-surface-raised);
+  --color-surface-inverted: var(--ui-surface-inverted);
+
+  /* Text */
+  --color-fg: var(--ui-fg);
+  --color-fg-muted: var(--ui-fg-muted);
+  --color-fg-subtle: var(--ui-fg-subtle);
+  --color-fg-placeholder: var(--ui-fg-placeholder);
+  --color-fg-inverted: var(--ui-fg-inverted);
+
+  /* Lines. `line` is decorative (card edges, dividers) and has no contrast
+     floor. `line-control` is the edge of an input or checkbox — it identifies
+     the control, so it is held to 3:1 against the surface behind it. */
+  --color-line: var(--ui-line);
+  --color-line-strong: var(--ui-line-strong);
+  --color-line-control: var(--ui-line-control);
+
+  /* Accent in its three jobs: a fill with text on it, text on a plain
+     surface, and a wash behind text. */
+  --color-accent-solid: var(--ui-accent-solid);
+  --color-accent-solid-hover: var(--ui-accent-solid-hover);
+  --color-accent-on-solid: var(--ui-accent-on-solid);
+  --color-accent-text: var(--ui-accent-text);
+  --color-accent-tint: var(--ui-accent-tint);
+
+  --color-focus: var(--ui-focus);
+}
+
+:root {
+  --ui-canvas: #ffffff;
+  --ui-surface: #ffffff;
+  --ui-surface-muted: var(--color-ink-50);
+  --ui-surface-raised: #ffffff;
+  --ui-surface-inverted: var(--color-ink-900);
+
+  --ui-fg: var(--color-ink-900);
+  --ui-fg-muted: var(--color-ink-600);
+  --ui-fg-subtle: var(--color-ink-500);
+  --ui-fg-placeholder: var(--color-ink-500);
+  --ui-fg-inverted: #ffffff;
+
+  --ui-line: var(--color-ink-200);
+  --ui-line-strong: var(--color-ink-300);
+  --ui-line-control: var(--color-ink-400);
+
+  --ui-accent-solid: var(--color-accent-700);
+  --ui-accent-solid-hover: var(--color-accent-800);
+  --ui-accent-on-solid: #ffffff;
+  --ui-accent-text: var(--color-accent-700);
+  --ui-accent-tint: var(--color-accent-50);
+
+  --ui-focus: var(--color-accent-600);
+}
+
+[data-theme="dark"] {
+  /* Not an inversion of the light values. Pure black crushes shadow detail and
+     raises halation on text, so the canvas is a very dark ink rather than #000,
+     and cards sit *above* it by getting lighter — which is how depth reads when
+     drop shadows have nothing to fall on. */
+  --ui-canvas: #0e1416;
+  --ui-surface: #171e21;
+  --ui-surface-muted: #1f272a;
+  --ui-surface-raised: #232b2f;
+  --ui-surface-inverted: var(--color-ink-100);
+
+  --ui-fg: var(--color-ink-100);
+  --ui-fg-muted: #a8b1b5;
+  --ui-fg-subtle: #8b9498;
+  --ui-fg-placeholder: #8b9498;
+  --ui-fg-inverted: var(--color-ink-950);
+
+  --ui-line: #2c3438;
+  --ui-line-strong: #3b4448;
+  --ui-line-control: #6c7477;
+
+  /* A 700 fill disappears into a dark canvas, so the solid accent moves up the
+     ramp and carries dark text instead of white. */
+  --ui-accent-solid: var(--color-accent-400);
+  --ui-accent-solid-hover: var(--color-accent-300);
+  --ui-accent-on-solid: var(--color-ink-950);
+  --ui-accent-text: var(--color-accent-400);
+  --ui-accent-tint: #10312f;
+
+  --ui-focus: var(--color-accent-400);
+}

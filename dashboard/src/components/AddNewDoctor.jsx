@@ -42,12 +42,12 @@ const initialForm = {
   doctorDepartment: "",
 };
 
-const labelClass = "block text-sm font-medium text-slate-700 mb-1.5";
+const labelClass = "block text-sm font-medium text-ink-700 mb-1.5";
 const fieldClass =
-  "w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-slate-900 " +
-  "placeholder:text-slate-400 shadow-sm transition " +
-  "focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600/20 " +
-  "disabled:cursor-not-allowed disabled:bg-slate-50";
+  "w-full rounded-lg border border-line-control bg-white px-3.5 py-2.5 text-ink-900 " +
+  "placeholder:text-fg-placeholder shadow-e1 transition " +
+  "focus:border-accent-600 focus:outline-none focus:ring-2 focus:ring-accent-600/20 " +
+  "disabled:cursor-not-allowed disabled:bg-ink-50";
 
 const AddNewDoctor = () => {
   const { isAuthenticated } = useContext(Context);
@@ -131,15 +131,15 @@ const AddNewDoctor = () => {
   }
 
   return (
-    <section className="min-h-screen bg-slate-50 px-4 py-10 md:pl-28">
+    <section className="min-h-screen bg-ink-50 px-4 py-10 md:pl-28">
       <div className="mx-auto w-full max-w-4xl">
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+        <div className="rounded-2xl border border-line bg-white p-6 shadow-e1 sm:p-8">
           <header className="mb-8 flex flex-col items-center text-center">
             <Logo size="lg" />
-            <h1 className="mt-4 text-2xl font-semibold tracking-tight text-slate-900">
+            <h1 className="mt-4 text-2xl font-semibold tracking-tight text-ink-900">
               Register a New Doctor
             </h1>
-            <p className="mt-1.5 text-sm text-slate-500">
+            <p className="mt-1.5 text-sm text-ink-500">
               Doctors appear in the patient booking form for their department.
             </p>
           </header>
@@ -151,12 +151,12 @@ const AddNewDoctor = () => {
                 <img
                   src={avatarPreview || "/docHolder.jpg"}
                   alt="Doctor avatar preview"
-                  className="h-40 w-40 rounded-full border-4 border-white object-cover shadow-md ring-1 ring-slate-200"
+                  className="h-40 w-40 rounded-full border-4 border-white object-cover shadow-e2 ring-1 ring-ink-200"
                 />
                 <label
-                  className="mt-4 cursor-pointer rounded-lg border border-teal-700 px-4 py-2 text-sm
-                    font-medium text-teal-700 transition hover:bg-teal-50
-                    focus-within:ring-2 focus-within:ring-teal-600 focus-within:ring-offset-2"
+                  className="mt-4 cursor-pointer rounded-lg border border-accent-700 px-4 py-2 text-sm
+                    font-medium text-accent-700 transition hover:bg-accent-50
+                    focus-within:ring-2 focus-within:ring-accent-600 focus-within:ring-offset-2"
                 >
                   {avatar ? "Change photo" : "Choose photo"}
                   <input
@@ -167,7 +167,7 @@ const AddNewDoctor = () => {
                     disabled={submitting}
                   />
                 </label>
-                <p className="mt-2 text-center text-xs text-slate-500">
+                <p className="mt-2 text-center text-xs text-ink-500">
                   PNG, JPEG or WEBP · up to 5MB
                 </p>
               </div>
@@ -229,7 +229,7 @@ const AddNewDoctor = () => {
                     Mobile number
                   </label>
                   <div className="flex">
-                    <span className="inline-flex select-none items-center rounded-l-lg border border-r-0 border-slate-300 bg-slate-50 px-3 text-sm text-slate-600">
+                    <span className="inline-flex select-none items-center rounded-l-lg border border-r-0 border-line-control bg-ink-50 px-3 text-sm text-ink-600">
                       +91
                     </span>
                     <input
@@ -348,9 +348,9 @@ const AddNewDoctor = () => {
               <button
                 type="submit"
                 disabled={submitting}
-                className="inline-flex w-full items-center justify-center rounded-lg bg-teal-700 px-6 py-3
-                  text-sm font-semibold text-white shadow-sm transition hover:bg-teal-800
-                  focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-offset-2
+                className="inline-flex w-full items-center justify-center rounded-lg bg-accent-700 px-6 py-3
+                  text-sm font-semibold text-white shadow-e1 transition hover:bg-accent-800
+                  focus:outline-none focus:ring-2 focus:ring-accent-600 focus:ring-offset-2
                   disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
               >
                 {submitting ? "Registering doctor…" : "Register new doctor"}

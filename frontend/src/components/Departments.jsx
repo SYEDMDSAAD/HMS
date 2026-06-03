@@ -73,16 +73,16 @@ const DEPARTMENTS = [
 
 const Departments = () => {
   return (
-    <section className="bg-slate-50 px-4 py-16 sm:py-20">
+    <section className="bg-ink-50 px-4 py-16 sm:py-20">
       <div className="mx-auto w-full max-w-6xl">
         <div className="mb-10 max-w-2xl">
-          <p className="text-sm font-semibold uppercase tracking-wider text-teal-700">
+          <p className="text-sm font-semibold uppercase tracking-wider text-accent-700">
             Our departments
           </p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+          <h2 className="mt-3 text-3xl font-semibold tracking-tight text-ink-900 sm:text-4xl">
             Thirteen specialities under one roof
           </h2>
-          <p className="mt-4 text-slate-600">
+          <p className="mt-4 text-ink-600">
             Book a consultation with any of our departments and our front desk
             will confirm your slot.
           </p>
@@ -93,12 +93,12 @@ const Departments = () => {
             <li key={name}>
               <Link
                 to="/appointment"
-                className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200
-                  bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md
-                  focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-600
+                className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line
+                  bg-white shadow-e1 transition hover:-translate-y-0.5 hover:shadow-e2
+                  focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600
                   focus-visible:ring-offset-2"
               >
-                <div className="aspect-[16/10] overflow-hidden bg-teal-50">
+                <div className="aspect-[16/10] overflow-hidden bg-accent-50">
                   {imageUrl ? (
                     <img
                       src={imageUrl}
@@ -109,7 +109,7 @@ const Departments = () => {
                   ) : (
                     <div
                       className="flex h-full w-full items-center justify-center bg-gradient-to-br
-                        from-teal-600 to-teal-800"
+                        from-accent-600 to-accent-800"
                       aria-hidden="true"
                     >
                       <span className="text-4xl font-semibold text-white/90">
@@ -120,11 +120,11 @@ const Departments = () => {
                 </div>
 
                 <div className="flex flex-1 flex-col p-5">
-                  <h3 className="text-base font-semibold text-slate-900 group-hover:text-teal-700">
+                  <h3 className="text-base font-semibold text-ink-900 group-hover:text-accent-700">
                     {name}
                   </h3>
-                  <p className="mt-1.5 text-sm text-slate-600">{description}</p>
-                  <span className="mt-4 text-sm font-medium text-teal-700">
+                  <p className="mt-1.5 text-sm text-ink-600">{description}</p>
+                  <span className="mt-4 text-sm font-medium text-accent-700">
                     Book appointment →
                   </span>
                 </div>

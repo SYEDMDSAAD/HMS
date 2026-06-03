@@ -15,12 +15,12 @@ const NAV_LINKS = [
 
 const linkClass = ({ isActive }) =>
   `text-sm font-medium transition ${
-    isActive ? "text-teal-700" : "text-slate-600 hover:text-teal-700"
+    isActive ? "text-accent-700" : "text-ink-600 hover:text-accent-700"
   }`;
 
 const mobileLinkClass = ({ isActive }) =>
   `rounded-lg px-4 py-3 text-sm font-medium transition ${
-    isActive ? "bg-teal-50 text-teal-700" : "text-slate-700 hover:bg-slate-100"
+    isActive ? "bg-accent-50 text-accent-700" : "text-ink-700 hover:bg-ink-100"
   }`;
 
 const Navbar = () => {
@@ -53,7 +53,7 @@ const Navbar = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur">
       <nav
         aria-label="Main navigation"
         className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3"
@@ -75,9 +75,9 @@ const Navbar = () => {
               type="button"
               onClick={handleLogout}
               disabled={loggingOut}
-              className="rounded-lg border border-slate-300 px-5 py-2 text-sm font-semibold
-                text-slate-700 transition hover:bg-slate-50 focus:outline-none
-                focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2
+              className="rounded-lg border border-line-control px-5 py-2 text-sm font-semibold
+                text-ink-700 transition hover:bg-ink-50 focus:outline-none
+                focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2
                 disabled:opacity-60"
             >
               {loggingOut ? "Logging out…" : "Logout"}
@@ -85,9 +85,9 @@ const Navbar = () => {
           ) : (
             <Link
               to="/login"
-              className="rounded-lg bg-teal-700 px-5 py-2 text-sm font-semibold text-white
-                transition hover:bg-teal-800 focus:outline-none focus-visible:ring-2
-                focus-visible:ring-teal-600 focus-visible:ring-offset-2"
+              className="rounded-lg bg-accent-700 px-5 py-2 text-sm font-semibold text-white
+                transition hover:bg-accent-800 focus:outline-none focus-visible:ring-2
+                focus-visible:ring-accent-600 focus-visible:ring-offset-2"
             >
               Login
             </Link>
@@ -100,9 +100,9 @@ const Navbar = () => {
           onClick={() => setOpen((value) => !value)}
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
-          className="flex h-10 w-10 items-center justify-center rounded-lg text-slate-700
-            transition hover:bg-slate-100 focus:outline-none focus-visible:ring-2
-            focus-visible:ring-teal-600 md:hidden"
+          className="flex h-10 w-10 items-center justify-center rounded-lg text-ink-700
+            transition hover:bg-ink-100 focus:outline-none focus-visible:ring-2
+            focus-visible:ring-accent-600 md:hidden"
         >
           {open ? <FaXmark /> : <GiHamburgerMenu />}
         </button>
@@ -110,7 +110,7 @@ const Navbar = () => {
 
       {/* Mobile panel */}
       {open && (
-        <div className="border-t border-slate-200 bg-white md:hidden">
+        <div className="border-t border-line bg-white md:hidden">
           <div className="mx-auto flex w-full max-w-6xl flex-col gap-1 px-4 py-3">
             {NAV_LINKS.map(({ to, label, end }) => (
               <NavLink
@@ -129,9 +129,9 @@ const Navbar = () => {
                 type="button"
                 onClick={handleLogout}
                 disabled={loggingOut}
-                className="mt-2 rounded-lg border border-slate-300 px-4 py-3 text-sm font-semibold
-                  text-slate-700 transition hover:bg-slate-50 focus:outline-none
-                  focus-visible:ring-2 focus-visible:ring-teal-600 disabled:opacity-60"
+                className="mt-2 rounded-lg border border-line-control px-4 py-3 text-sm font-semibold
+                  text-ink-700 transition hover:bg-ink-50 focus:outline-none
+                  focus-visible:ring-2 focus-visible:ring-accent-600 disabled:opacity-60"
               >
                 {loggingOut ? "Logging out…" : "Logout"}
               </button>
@@ -139,9 +139,9 @@ const Navbar = () => {
               <Link
                 to="/login"
                 onClick={() => setOpen(false)}
-                className="mt-2 rounded-lg bg-teal-700 px-4 py-3 text-center text-sm font-semibold
-                  text-white transition hover:bg-teal-800 focus:outline-none
-                  focus-visible:ring-2 focus-visible:ring-teal-600"
+                className="mt-2 rounded-lg bg-accent-700 px-4 py-3 text-center text-sm font-semibold
+                  text-white transition hover:bg-accent-800 focus:outline-none
+                  focus-visible:ring-2 focus-visible:ring-accent-600"
               >
                 Login
               </Link>

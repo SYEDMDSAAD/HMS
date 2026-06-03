@@ -5,12 +5,40 @@ admin dashboard.
 
 | Package     | What it is                                                  | Dev port |
 | ----------- | ----------------------------------------------------------- | -------- |
-| `backend`   | Express + Mongoose REST API                                 | 4000     |
-| `frontend`  | Patient site — register, sign in, book an appointment       | 5173     |
-| `dashboard` | Admin portal — appointments, doctors, admins, messages      | 5174     |
+| `backend`        | Express + Mongoose REST API                            | 4000     |
+| `frontend`       | Patient site — register, sign in, book an appointment  | 5173     |
+| `dashboard`      | Admin portal — appointments, doctors, admins, messages | 5174     |
+| `packages/theme` | Design tokens and base styles, shared by both apps     | —        |
 
 Both front ends are React 18 + Vite 6 + Tailwind 4. The backend is ESM
 (`"type": "module"`), so every local import needs its `.js` extension.
+
+## Design tokens
+
+`packages/theme` is the single source for colour, type, radius and elevation.
+Each app's `src/App.css` imports it by relative path; there is no build step and
+no `package.json` (making it a real npm workspace is a separate, unmade
+decision). Tailwind's default palette is switched off in `tokens.css`, so
+`bg-slate-200` compiles to nothing — reach for a token instead.
+
+Two layers, and the difference matters:
+
+- **Ramps** — `accent-*`, `ink-*`, `success-*`, `warning-*`, `danger-*`. Fixed
+  values, identical in light and dark. Use for brand marks and fixed graphics.
+- **Semantic** — `surface`, `fg`, `fg-muted`, `line`, `line-control`,
+  `accent-solid`, `focus`, … Named by role, swapped by theme. Use these for
+  anything a component paints.
+
+Dark mode is defined and opt-in via `<html data-theme="dark">`. It is
+deliberately not wired to `prefers-color-scheme` yet: most components still name
+ramp steps directly, so a system-dark visitor would get a half-converted page.
+
+After changing any colour, run the contrast check — it parses `tokens.css`
+directly and exits non-zero on a regression:
+
+```bash
+node packages/theme/check-contrast.mjs
+```
 
 ## Prerequisites
 

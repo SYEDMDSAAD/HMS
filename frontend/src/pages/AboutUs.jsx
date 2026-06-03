@@ -19,22 +19,22 @@ const AboutUs = () => {
 
       <Biography imageUrl="/whoweare.png" />
 
-      <section className="bg-teal-800 px-4 py-14">
+      <section className="bg-accent-800 px-4 py-14">
         <div className="mx-auto flex w-full max-w-4xl flex-col items-center gap-6 text-center sm:flex-row sm:justify-between sm:text-left">
           <div>
             <h2 className="text-2xl font-semibold tracking-tight text-white">
               Ready to see a specialist?
             </h2>
-            <p className="mt-2 text-teal-100">
+            <p className="mt-2 text-accent-100">
               Book online and our front desk will confirm your slot.
             </p>
           </div>
           <Link
             to="/appointment"
-            className="shrink-0 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-teal-800
-              shadow-sm transition hover:bg-teal-50 focus:outline-none focus-visible:ring-2
+            className="shrink-0 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-accent-800
+              shadow-e1 transition hover:bg-accent-50 focus:outline-none focus-visible:ring-2
               focus-visible:ring-white focus-visible:ring-offset-2
-              focus-visible:ring-offset-teal-800"
+              focus-visible:ring-offset-accent-800"
           >
             Book an appointment
           </Link>

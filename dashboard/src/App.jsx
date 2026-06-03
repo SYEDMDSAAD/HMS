@@ -22,18 +22,18 @@ import "./App.css";
 const NotFound = () => (
   <section className="flex min-h-screen items-center justify-center px-4 md:pl-28">
     <div className="text-center">
-      <p className="text-sm font-semibold text-teal-700">404</p>
-      <h1 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">
+      <p className="text-sm font-semibold text-accent-700">404</p>
+      <h1 className="mt-2 text-2xl font-semibold tracking-tight text-ink-900">
         Page not found
       </h1>
-      <p className="mt-2 text-sm text-slate-500">
+      <p className="mt-2 text-sm text-ink-500">
         That page does not exist in the dashboard.
       </p>
       <Link
         to="/"
-        className="mt-6 inline-flex items-center justify-center rounded-lg bg-teal-700 px-5 py-2.5
-          text-sm font-semibold text-white transition hover:bg-teal-800
-          focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-offset-2"
+        className="mt-6 inline-flex items-center justify-center rounded-lg bg-accent-700 px-5 py-2.5
+          text-sm font-semibold text-white transition hover:bg-accent-800
+          focus:outline-none focus:ring-2 focus:ring-accent-600 focus:ring-offset-2"
       >
         Back to dashboard
       </Link>
@@ -66,14 +66,14 @@ const App = () => {
 
   if (checkingSession) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50">
+      <div className="flex min-h-screen items-center justify-center bg-ink-50">
         <div className="flex flex-col items-center gap-4">
           <div
-            className="h-9 w-9 animate-spin rounded-full border-2 border-slate-200 border-t-teal-700"
+            className="h-9 w-9 animate-spin rounded-full border-2 border-line border-t-accent-solid"
             role="status"
             aria-label="Loading"
           />
-          <p className="text-sm text-slate-500">Loading dashboard…</p>
+          <p className="text-sm text-ink-500">Loading dashboard…</p>
         </div>
       </div>
     );

@@ -30,13 +30,13 @@ const OPD_HOURS = [
 
 const Footer = () => {
   return (
-    <footer className="border-t border-slate-200 bg-white">
+    <footer className="border-t border-line bg-white">
       <div className="mx-auto w-full max-w-6xl px-4 py-14">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div>
             <Logo size="lg" />
-            <p className="mt-4 text-sm leading-relaxed text-slate-600">
+            <p className="mt-4 text-sm leading-relaxed text-ink-600">
               A multi-speciality hospital offering thirteen departments,
               in-house diagnostics and round-the-clock emergency care.
             </p>
@@ -44,7 +44,7 @@ const Footer = () => {
 
           {/* Quick links */}
           <div>
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-900">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-ink-900">
               Quick Links
             </h2>
             <ul className="mt-4 space-y-2.5">
@@ -52,7 +52,7 @@ const Footer = () => {
                 <li key={to}>
                   <Link
                     to={to}
-                    className="text-sm text-slate-600 transition hover:text-teal-700"
+                    className="text-sm text-ink-600 transition hover:text-accent-700"
                   >
                     {label}
                   </Link>
@@ -63,45 +63,45 @@ const Footer = () => {
 
           {/* OPD hours */}
           <div>
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-900">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-ink-900">
               OPD Hours
             </h2>
             <ul className="mt-4 space-y-2.5">
               {OPD_HOURS.map(({ day, time }) => (
                 <li key={day} className="text-sm">
-                  <span className="block text-slate-900">{day}</span>
-                  <span className="text-slate-600">{time}</span>
+                  <span className="block text-ink-900">{day}</span>
+                  <span className="text-ink-600">{time}</span>
                 </li>
               ))}
             </ul>
-            <p className="mt-4 inline-flex rounded-full bg-teal-50 px-3 py-1 text-xs font-medium text-teal-800 ring-1 ring-inset ring-teal-200">
+            <p className="mt-4 inline-flex rounded-full bg-accent-50 px-3 py-1 text-xs font-medium text-accent-800 ring-1 ring-inset ring-accent-200">
               Emergency open 24×7
             </p>
           </div>
 
           {/* Contact */}
           <div>
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-900">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-ink-900">
               Contact
             </h2>
             <ul className="mt-4 space-y-3 text-sm">
               <li className="flex items-start gap-2.5">
                 <FaPhone
-                  className="mt-1 shrink-0 text-slate-400"
+                  className="mt-1 shrink-0 text-ink-400"
                   aria-hidden="true"
                 />
                 <span>
                   <a
                     href={`tel:${CONTACT.phone.replace(/\s/g, "")}`}
-                    className="text-slate-600 transition hover:text-teal-700"
+                    className="text-ink-600 transition hover:text-accent-700"
                   >
                     {CONTACT.phone}
                   </a>
-                  <span className="block text-slate-500">
+                  <span className="block text-ink-500">
                     Emergency:{" "}
                     <a
                       href={`tel:${CONTACT.emergency.replace(/\s/g, "")}`}
-                      className="transition hover:text-teal-700"
+                      className="transition hover:text-accent-700"
                     >
                       {CONTACT.emergency}
                     </a>
@@ -110,22 +110,22 @@ const Footer = () => {
               </li>
               <li className="flex items-start gap-2.5">
                 <MdEmail
-                  className="mt-1 shrink-0 text-slate-400"
+                  className="mt-1 shrink-0 text-ink-400"
                   aria-hidden="true"
                 />
                 <a
                   href={`mailto:${CONTACT.email}`}
-                  className="break-all text-slate-600 transition hover:text-teal-700"
+                  className="break-all text-ink-600 transition hover:text-accent-700"
                 >
                   {CONTACT.email}
                 </a>
               </li>
               <li className="flex items-start gap-2.5">
                 <FaLocationDot
-                  className="mt-1 shrink-0 text-slate-400"
+                  className="mt-1 shrink-0 text-ink-400"
                   aria-hidden="true"
                 />
-                <address className="not-italic text-slate-600">
+                <address className="not-italic text-ink-600">
                   {CONTACT.address.map((line) => (
                     <span key={line} className="block">
                       {line}
@@ -137,8 +137,8 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-slate-200 pt-6">
-          <p className="text-center text-xs text-slate-500">
+        <div className="mt-12 border-t border-line pt-6">
+          <p className="text-center text-xs text-ink-500">
             © {new Date().getFullYear()} UC Healthcare. All rights
             reserved.
           </p>

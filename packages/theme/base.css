@@ -1,0 +1,64 @@
+/* Element-level defaults. Everything here is a decision about the document,
+ * not about any one component. */
+
+@layer base {
+  /* Tells the browser which way the UI leans, so native widgets — scrollbars,
+     the date picker panel, form control chrome — follow the theme instead of
+     staying light on a dark page. */
+  :root {
+    color-scheme: light;
+  }
+  [data-theme="dark"] {
+    color-scheme: dark;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-canvas font-sans text-fg antialiased;
+  }
+
+  /* Was `:focus-visible { outline: none }`, which removed the browser's focus
+     indicator from every element and replaced it on only the ones that happened
+     to declare a ring utility. Anything else — skip links, nav items, the
+     password toggle — became invisible to keyboard users. This restores a
+     baseline; components that draw their own ring still opt out with
+     `outline-none` and are unaffected. */
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    @apply bg-accent-tint text-accent-text;
+  }
+
+  /* Make the native date picker icon match the rest of the form controls. */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    @apply cursor-pointer opacity-60;
+  }
+  input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    @apply opacity-100;
+  }
+
+  /* Respect the OS "reduce motion" setting. This is a vestibular accessibility
+     requirement, not a preference: for some people scroll-hijacking and large
+     transitions cause actual nausea. Kept as a blanket rule so no future
+     component has to remember it. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

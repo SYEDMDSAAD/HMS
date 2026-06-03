@@ -10,12 +10,12 @@ const initialForm = {
   message: "",
 };
 
-const labelClass = "block text-sm font-medium text-slate-700 mb-1.5";
+const labelClass = "block text-sm font-medium text-ink-700 mb-1.5";
 const fieldClass =
-  "w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-slate-900 " +
-  "placeholder:text-slate-400 shadow-sm transition " +
-  "focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600/20 " +
-  "disabled:cursor-not-allowed disabled:bg-slate-50";
+  "w-full rounded-lg border border-line-control bg-white px-3.5 py-2.5 text-ink-900 " +
+  "placeholder:text-fg-placeholder shadow-e1 transition " +
+  "focus:border-accent-600 focus:outline-none focus:ring-2 focus:ring-accent-600/20 " +
+  "disabled:cursor-not-allowed disabled:bg-ink-50";
 
 const MessageForm = () => {
   const [form, setForm] = useState(initialForm);
@@ -55,13 +55,13 @@ const MessageForm = () => {
     <section className="bg-white px-4 py-16 sm:py-20">
       <div className="mx-auto w-full max-w-3xl">
         <div className="mb-8 text-center">
-          <p className="text-sm font-semibold uppercase tracking-wider text-teal-700">
+          <p className="text-sm font-semibold uppercase tracking-wider text-accent-700">
             Get in touch
           </p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+          <h2 className="mt-3 text-3xl font-semibold tracking-tight text-ink-900 sm:text-4xl">
             Send Us a Message
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-slate-600">
+          <p className="mx-auto mt-4 max-w-xl text-ink-600">
             Questions about a department, a report or your visit? Write to us and
             our team will get back to you.
           </p>
@@ -69,7 +69,7 @@ const MessageForm = () => {
 
         <form
           onSubmit={handleMessage}
-          className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"
+          className="rounded-2xl border border-line bg-white p-6 shadow-e1 sm:p-8"
         >
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <div>
@@ -127,7 +127,7 @@ const MessageForm = () => {
                 Mobile number
               </label>
               <div className="flex">
-                <span className="inline-flex select-none items-center rounded-l-lg border border-r-0 border-slate-300 bg-slate-50 px-3 text-sm text-slate-600">
+                <span className="inline-flex select-none items-center rounded-l-lg border border-r-0 border-line-control bg-ink-50 px-3 text-sm text-ink-600">
                   +91
                 </span>
                 <input
@@ -162,7 +162,7 @@ const MessageForm = () => {
                 required
                 disabled={submitting}
               />
-              <p className="mt-1.5 text-right text-xs text-slate-500">
+              <p className="mt-1.5 text-right text-xs text-ink-500">
                 {form.message.length}/2000
               </p>
             </div>
@@ -172,9 +172,9 @@ const MessageForm = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full rounded-lg bg-teal-700 px-6 py-3 text-sm font-semibold text-white
-                shadow-sm transition hover:bg-teal-800 focus:outline-none focus-visible:ring-2
-                focus-visible:ring-teal-600 focus-visible:ring-offset-2
+              className="w-full rounded-lg bg-accent-700 px-6 py-3 text-sm font-semibold text-white
+                shadow-e1 transition hover:bg-accent-800 focus:outline-none focus-visible:ring-2
+                focus-visible:ring-accent-600 focus-visible:ring-offset-2
                 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
             >
               {submitting ? "Sending…" : "Send message"}

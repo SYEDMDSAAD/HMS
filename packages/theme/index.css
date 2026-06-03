@@ -1,0 +1,19 @@
+/* UC Healthcare theme — the single entry point for both apps.
+ *
+ * Usage, in each app's src/App.css:
+ *
+ *   @import "tailwindcss";
+ *   @import "../../packages/theme/index.css";
+ *
+ * Order matters: "tailwindcss" must be imported first so that @layer base and
+ * @layer components below land in the right cascade layers.
+ *
+ * This directory is plain CSS with no build step and no package.json — the
+ * apps reach it by relative path, which works in both `vite dev` and
+ * `vite build` (verified). It is deliberately not an npm workspace yet; that
+ * is Part 3, and it is a decision that has not been made.
+ */
+
+@import "./tokens.css";
+@import "./base.css";
+@import "./components.css";

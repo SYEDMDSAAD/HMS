@@ -28,18 +28,18 @@ const NotFound = () => {
   return (
     <section className="flex min-h-[60vh] items-center justify-center px-4 py-16">
       <div className="text-center">
-        <p className="text-sm font-semibold text-teal-700">404</p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-900">
+        <p className="text-sm font-semibold text-accent-700">404</p>
+        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-ink-900">
           Page not found
         </h1>
-        <p className="mt-3 text-slate-600">
+        <p className="mt-3 text-ink-600">
           The page you are looking for does not exist or has moved.
         </p>
         <Link
           to="/"
-          className="mt-8 inline-flex items-center justify-center rounded-lg bg-teal-700 px-6 py-3
-            text-sm font-semibold text-white shadow-sm transition hover:bg-teal-800
-            focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-600
+          className="mt-8 inline-flex items-center justify-center rounded-lg bg-accent-700 px-6 py-3
+            text-sm font-semibold text-white shadow-e1 transition hover:bg-accent-800
+            focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600
             focus-visible:ring-offset-2"
         >
           Back to home
@@ -75,7 +75,7 @@ const App = () => {
     return (
       <div className="flex min-h-screen items-center justify-center bg-white">
         <div
-          className="h-9 w-9 animate-spin rounded-full border-2 border-slate-200 border-t-teal-700"
+          className="h-9 w-9 animate-spin rounded-full border-2 border-line border-t-accent-solid"
           role="status"
           aria-label="Loading"
         />

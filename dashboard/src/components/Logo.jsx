@@ -14,9 +14,13 @@
  * and also served as the favicon.
  */
 
-// Hard-coded rather than a Tailwind class: this same value is duplicated in
-// public/favicon.svg, which is a standalone file with no access to the theme.
-const ACCENT = "#0D9488";
+// The mark is painted from --color-accent-600, a fixed ramp step rather than a
+// semantic token: a logo has to be the same colour in light and dark, and only
+// the semantic tokens swap.
+//
+// The same value is duplicated as a literal in public/favicon.svg, which is a
+// standalone file with no access to the theme. packages/theme/tokens.css calls
+// that out at the definition, so the two do not drift.
 
 export const LogoMark = ({ className = "h-9 w-9", title }) => (
   <svg
@@ -29,10 +33,10 @@ export const LogoMark = ({ className = "h-9 w-9", title }) => (
     aria-hidden={title ? undefined : "true"}
   >
     {title && <title>{title}</title>}
-    <rect width="32" height="32" rx="8" fill={ACCENT} />
+    <rect width="32" height="32" rx="8" className="fill-accent-600" />
     <g
       fill="none"
-      stroke="#ffffff"
+      className="stroke-white"
       strokeWidth="2.5"
       strokeLinecap="round"
       strokeLinejoin="round"
