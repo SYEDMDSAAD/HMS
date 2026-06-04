@@ -3,23 +3,43 @@
 A MERN application in three parts: a REST API, a public patient site, and an
 admin dashboard.
 
-| Package     | What it is                                                  | Dev port |
-| ----------- | ----------------------------------------------------------- | -------- |
-| `backend`        | Express + Mongoose REST API                            | 4000     |
-| `frontend`       | Patient site — register, sign in, book an appointment  | 5173     |
-| `dashboard`      | Admin portal — appointments, doctors, admins, messages | 5174     |
-| `packages/theme` | Design tokens and base styles, shared by both apps     | —        |
+| Package           | What it is                                             | Dev port |
+| ----------------- | ------------------------------------------------------ | -------- |
+| `backend`         | Express + Mongoose REST API                            | 4000     |
+| `frontend`        | Patient site — register, sign in, book an appointment  | 5173     |
+| `dashboard`       | Admin portal — appointments, doctors, admins, messages | 5174     |
+| `packages/theme`  | `@uc/theme` — design tokens and base styles            | —        |
+| `packages/ui`     | `@uc/ui` — shared React components                     | —        |
+| `packages/client` | `@uc/client` — API client and auth context             | —        |
 
 Both front ends are React 18 + Vite 6 + Tailwind 4. The backend is ESM
 (`"type": "module"`), so every local import needs its `.js` extension.
 
+## Workspace layout
+
+`frontend`, `dashboard` and `packages/*` are one npm workspace: a single
+lockfile, a single hoisted `node_modules`, one copy of React. The `packages/*`
+entries are consumed as **source** — Vite compiles them as part of whichever app
+imports them — so they have no build step and editing one hot-reloads both apps.
+
+Anything used by both apps belongs in a package. Three things were previously
+maintained as two copies each (`AppContext.js`, `api.js`, `Logo.jsx`), plus two
+byte-identical `eslint.config.js` files; a rule or fix applied to one silently
+did not apply to the other.
+
+One consequence worth knowing before adding components to `@uc/ui`: Tailwind
+scans the project it compiles in, and `packages/ui` sits outside both app roots.
+Each app's `App.css` carries an `@source "../../packages/ui/src"` line to make
+those files visible. Without it the classes are silently never generated — no
+error, just unstyled output. If a shared component renders unstyled, check that
+line first.
+
 ## Design tokens
 
-`packages/theme` is the single source for colour, type, radius and elevation.
-Each app's `src/App.css` imports it by relative path; there is no build step and
-no `package.json` (making it a real npm workspace is a separate, unmade
-decision). Tailwind's default palette is switched off in `tokens.css`, so
-`bg-slate-200` compiles to nothing — reach for a token instead.
+`@uc/theme` is the single source for colour, type, radius and elevation. Each
+app's `src/App.css` pulls it in with `@import "@uc/theme"`. Tailwind's default
+palette is switched off in `tokens.css`, so `bg-slate-200` compiles to nothing —
+reach for a token instead.
 
 Two layers, and the difference matters:
 
@@ -50,12 +70,14 @@ node packages/theme/check-contrast.mjs
 
 ## Setup
 
-Each package installs separately — there is no workspace root.
+The front ends are an npm workspace, so one install at the repo root covers
+`frontend`, `dashboard` and everything in `packages/`. The backend is not a
+workspace — it shares no code with the front ends, and folding it in would mean
+rebuilding its native `bcrypt` dependency for no benefit.
 
 ```bash
+npm install                       # frontend + dashboard + packages/*
 npm install --prefix backend
-npm install --prefix frontend
-npm install --prefix dashboard
 ```
 
 Then the backend config, which is required:
@@ -78,16 +100,22 @@ Three terminals:
 
 ```bash
 npm run dev --prefix backend      # nodemon, port 4000
-npm run dev --prefix frontend     # port 5173
-npm run dev --prefix dashboard    # port 5174
+npm run dev:web                   # patient site,    port 5173
+npm run dev:admin                 # admin dashboard, port 5174
 ```
+
+Both front-end commands run from the repo root. There is deliberately no single
+`npm run dev` that starts both: doing it without a process manager leaves
+orphaned Vite servers behind, and adding one for two commands is not worth the
+dependency.
 
 The Vite ports are pinned with `strictPort`, so a busy port fails loudly instead
 of silently moving to the next one — which matters because the backend only
 accepts CORS requests from the two origins named in `FRONTEND_URL_ONE` and
 `FRONTEND_URL_TWO`.
 
-`npm run build` and `npm run lint` are available in both front ends.
+From the root, `npm run build` builds both front ends and `npm run lint` lints
+the whole workspace against the single `eslint.config.js` at the root.
 
 ## Creating the first admin
 

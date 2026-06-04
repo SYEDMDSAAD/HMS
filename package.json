@@ -1,0 +1,26 @@
+{
+  "name": "hms",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "frontend",
+    "dashboard"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev --workspace=frontend",
+    "dev:admin": "npm run dev --workspace=dashboard",
+    "build": "npm run build --workspace=frontend && npm run build --workspace=dashboard",
+    "lint": "eslint .",
+    "check:contrast": "node packages/theme/check-contrast.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "eslint": "^9.17.0",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.16",
+    "globals": "^15.14.0"
+  }
+}

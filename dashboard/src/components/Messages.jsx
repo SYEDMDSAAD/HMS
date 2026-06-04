@@ -1,9 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import { Context } from "../context/AppContext";
 import { Navigate } from "react-router-dom";
 import { MdEmail } from "react-icons/md";
 import { FaPhone } from "react-icons/fa6";
-import { api } from "../lib/api";
+import { Context, api } from "@uc/client";
 
 // 9876543210 -> +91 98765 43210
 const formatPhone = (phone) => {

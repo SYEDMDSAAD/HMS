@@ -11,13 +11,12 @@ import Login from "./components/Login";
 import AddNewDoctor from "./components/AddNewDoctor";
 import Messages from "./components/Messages";
 import Doctors from "./components/Doctors";
-import { Context } from "./context/AppContext";
-import { api } from "./lib/api";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Sidebar from "./components/Sidebar";
 import AddNewAdmin from "./components/AddNewAdmin";
 import "./App.css";
+import { Context, api } from "@uc/client";
 
 const NotFound = () => (
   <section className="flex min-h-screen items-center justify-center px-4 md:pl-28">
@@ -42,7 +41,7 @@ const NotFound = () => (
 );
 
 const App = () => {
-  const { isAuthenticated, setIsAuthenticated, setAdmin } = useContext(Context);
+  const { isAuthenticated, setIsAuthenticated, setUser } = useContext(Context);
   // Until /admin/me answers we do not know whether there is a session, and
   // guessing "logged out" bounces a signed-in admin to the login screen on
   // every page refresh.
@@ -53,16 +52,16 @@ const App = () => {
       try {
         const { data } = await api.get("/user/admin/me");
         setIsAuthenticated(true);
-        setAdmin(data.user);
+        setUser(data.user);
       } catch {
         setIsAuthenticated(false);
-        setAdmin({});
+        setUser({});
       } finally {
         setCheckingSession(false);
       }
     };
     fetchUser();
-  }, [isAuthenticated, setIsAuthenticated, setAdmin]);
+  }, [isAuthenticated, setIsAuthenticated, setUser]);
 
   if (checkingSession) {
     return (

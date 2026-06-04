@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { FaLocationDot, FaPhone } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
-import { Logo } from "./Logo";
+import { Logo } from "@uc/ui";
 
 // PLACEHOLDER CONTACT DETAILS — replace all of these with the hospital's real
 // address, phone numbers and email before this goes live.

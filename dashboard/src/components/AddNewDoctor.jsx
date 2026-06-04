@@ -1,9 +1,8 @@
 import { useContext, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Context } from "../context/AppContext";
-import { api } from "../lib/api";
-import { Logo } from "./Logo";
+import { Logo } from "@uc/ui";
+import { Context, api } from "@uc/client";
 
 // Must stay in step with DEPARTMENTS in backend/models/appointmentSchema.js —
 // the schema enum rejects anything not on that list.

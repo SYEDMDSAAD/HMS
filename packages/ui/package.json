@@ -1,0 +1,17 @@
+{
+  "name": "@uc/ui",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Shared React components for the patient site and the admin dashboard",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src"
+  ],
+  "peerDependencies": {
+    "react": "^18.3.1"
+  }
+}

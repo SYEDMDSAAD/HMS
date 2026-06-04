@@ -17,8 +17,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
-import { Context } from "./context/AppContext";
-import { api } from "./lib/api";
+import { Context, api } from "@uc/client";
 
 const NotFound = () => {
   useEffect(() => {

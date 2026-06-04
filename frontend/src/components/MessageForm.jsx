@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { api } from "../lib/api";
+import { api } from "@uc/client";
 
 const initialForm = {
   firstName: "",

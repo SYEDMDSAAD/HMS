@@ -1,9 +1,8 @@
 import { useContext, useState } from "react";
-import { Context } from "../context/AppContext";
 import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { api } from "../lib/api";
-import { Logo } from "./Logo";
+import { Logo } from "@uc/ui";
+import { Context, api } from "@uc/client";
 
 const GENDERS = ["Male", "Female", "Other"];
 

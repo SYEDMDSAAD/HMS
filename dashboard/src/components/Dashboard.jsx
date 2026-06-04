@@ -1,10 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import { Context } from "../context/AppContext";
 import { Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { GoCheckCircleFill } from "react-icons/go";
 import { AiFillCloseCircle } from "react-icons/ai";
-import { api } from "../lib/api";
+import { Context, api } from "@uc/client";
 
 const STATUSES = ["Pending", "Accepted", "Rejected"];
 
@@ -37,7 +36,7 @@ const StatCard = ({ label, value, tone }) => (
 );
 
 const Dashboard = () => {
-  const { isAuthenticated, admin } = useContext(Context);
+  const { isAuthenticated, user } = useContext(Context);
 
   const [appointments, setAppointments] = useState([]);
   const [doctorCount, setDoctorCount] = useState(null);
@@ -99,7 +98,7 @@ const Dashboard = () => {
     return <Navigate to={"/login"} />;
   }
 
-  const adminName = [admin?.firstName, admin?.lastName]
+  const adminName = [user?.firstName, user?.lastName]
     .filter(Boolean)
     .join(" ");
   const pendingCount = appointments.filter((a) => a.status === "Pending")

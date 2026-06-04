@@ -7,10 +7,9 @@ import { FaUserDoctor, FaXmark } from "react-icons/fa6";
 import { MdAddModerator } from "react-icons/md";
 import { IoPersonAddSharp } from "react-icons/io5";
 import { toast } from "react-toastify";
-import { Context } from "../context/AppContext";
 import { NavLink, useNavigate } from "react-router-dom";
-import { api } from "../lib/api";
-import { Logo, LogoMark } from "./Logo";
+import { Logo, LogoMark } from "@uc/ui";
+import { Context, api } from "@uc/client";
 
 const NAV_ITEMS = [
   { to: "/", label: "Dashboard", icon: TiHome, end: true },

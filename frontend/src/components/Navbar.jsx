@@ -3,9 +3,8 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { FaXmark } from "react-icons/fa6";
 import { toast } from "react-toastify";
-import { Context } from "../context/AppContext";
-import { api } from "../lib/api";
-import { Logo } from "./Logo";
+import { Logo } from "@uc/ui";
+import { Context, api } from "@uc/client";
 
 const NAV_LINKS = [
   { to: "/", label: "Home", end: true },

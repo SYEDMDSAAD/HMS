@@ -1,8 +1,7 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-import { Context } from "../context/AppContext";
-import { api } from "../lib/api";
+import { Context, api } from "@uc/client";
 
 // Must stay in step with DEPARTMENTS in backend/models/appointmentSchema.js.
 const DEPARTMENTS = [

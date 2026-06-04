@@ -1,9 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { Context } from "../context/AppContext";
 import { Link, useNavigate, Navigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
-import { api } from "../lib/api";
+import { Context, api } from "@uc/client";
 
 const labelClass = "block text-sm font-medium text-ink-700 mb-1.5";
 const fieldClass =

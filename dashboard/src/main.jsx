@@ -1,17 +1,17 @@
 import React, { useMemo, useState } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
-import { Context } from "./context/AppContext.js";
+import { Context } from "@uc/client";
 
 const AppWrapper = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [admin, setAdmin] = useState({});
+  const [user, setUser] = useState({});
 
   // Without useMemo this object is a new reference on every render, so every
   // consumer re-renders even when nothing it reads has changed.
   const value = useMemo(
-    () => ({ isAuthenticated, setIsAuthenticated, admin, setAdmin }),
-    [isAuthenticated, admin]
+    () => ({ isAuthenticated, setIsAuthenticated, user, setUser }),
+    [isAuthenticated, user]
   );
 
   return (

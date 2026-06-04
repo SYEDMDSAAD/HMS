@@ -1,16 +1,20 @@
 /* Tailwind v4 — single entry point. Imported by src/App.jsx.
    Requires the @tailwindcss/vite plugin in vite.config.js.
 
-   Everything that used to live here — tokens, base styles, the .field/.card/
-   .btn-* classes — moved to packages/theme, which the dashboard imports too.
-   The two files had drifted into near-copies of each other; now there is one
-   source and this file holds only what is genuinely specific to the public
-   site. Keep it that way: if a change would also be right for the dashboard,
-   it belongs in packages/theme. */
+   Tokens, base styles and the .field/.card/.btn-* classes live in @uc/theme,
+   which the dashboard imports too. This file holds only what is genuinely
+   specific to the public site — if a change would also be right for the
+   dashboard, it belongs in packages/theme.
+
+   The public site's canvas is plain white and cards separate from it by border
+   and elevation; the dashboard overrides --ui-canvas to the muted step. */
 
 @import "tailwindcss";
-@import "../../packages/theme/index.css";
+@import "@uc/theme";
 
-/* The public site's canvas is plain white — cards separate from it by border
-   and elevation. The dashboard uses the muted canvas instead. This is the one
-   token the two apps disagree on. */
+/* Tailwind scans the project it is compiled in. @uc/ui resolves to a symlink
+   into packages/ui, outside this app's root, so classes written inside shared
+   components — the logo's fill-accent-600, and every primitive Parts 4 and 5
+   add — would be scanned by neither app and simply never generated. This makes
+   them visible. Both apps need their own copy of this line. */
+@source "../../packages/ui/src";

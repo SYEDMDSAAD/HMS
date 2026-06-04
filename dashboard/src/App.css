@@ -1,15 +1,20 @@
 /* Tailwind v4 — single entry point. Imported by src/App.jsx.
    Requires the @tailwindcss/vite plugin in vite.config.js.
 
-   Everything that used to live here — tokens, base styles, the .field/.card/
-   .btn-* classes — moved to packages/theme, which the public site imports too.
-   The two files had drifted into near-copies of each other; now there is one
-   source and this file holds only what is genuinely specific to the staff app.
-   Keep it that way: if a change would also be right for the public site, it
-   belongs in packages/theme. */
+   Tokens, base styles and the .field/.card/.btn-* classes live in @uc/theme,
+   which the public site imports too. This file holds only what is genuinely
+   specific to the staff app — if a change would also be right for the public
+   site, it belongs in packages/theme. */
 
 @import "tailwindcss";
-@import "../../packages/theme/index.css";
+@import "@uc/theme";
+
+/* Tailwind scans the project it is compiled in. @uc/ui resolves to a symlink
+   into packages/ui, outside this app's root, so classes written inside shared
+   components — the logo's fill-accent-600, and every primitive Parts 4 and 5
+   add — would be scanned by neither app and simply never generated. This makes
+   them visible. Both apps need their own copy of this line. */
+@source "../../packages/ui/src";
 
 /* A dense admin UI reads better when the page recedes and the cards on it are
    the white surfaces, rather than everything being white and separated only by
