@@ -1,7 +1,7 @@
 # Hospital Management System
 
-A MERN application in three parts: a REST API, a public patient site, and an
-admin dashboard.
+A MERN application: a REST API, a public patient site, and an admin dashboard,
+with the code the two front ends share extracted into local packages.
 
 | Package           | What it is                                             | Dev port |
 | ----------------- | ------------------------------------------------------ | -------- |
@@ -57,7 +57,7 @@ After changing any colour, run the contrast check — it parses `tokens.css`
 directly and exits non-zero on a regression:
 
 ```bash
-node packages/theme/check-contrast.mjs
+npm run check:contrast
 ```
 
 ## Prerequisites
@@ -115,7 +115,8 @@ accepts CORS requests from the two origins named in `FRONTEND_URL_ONE` and
 `FRONTEND_URL_TWO`.
 
 From the root, `npm run build` builds both front ends and `npm run lint` lints
-the whole workspace against the single `eslint.config.js` at the root.
+the whole workspace against the single `eslint.config.js` at the root. There is
+no per-app `lint` script — there is no per-app config left for it to use.
 
 ## Creating the first admin
 
