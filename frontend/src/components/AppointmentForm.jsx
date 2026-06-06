@@ -39,13 +39,6 @@ const initialForm = {
 
 const today = () => new Date().toISOString().split("T")[0];
 
-const labelClass = "block text-sm font-medium text-ink-700 mb-1.5";
-const fieldClass =
-  "w-full rounded-lg border border-line-control bg-white px-3.5 py-2.5 text-ink-900 " +
-  "placeholder:text-fg-placeholder shadow-e1 transition " +
-  "focus:border-accent-600 focus:outline-none focus:ring-2 focus:ring-accent-600/20 " +
-  "disabled:cursor-not-allowed disabled:bg-ink-50";
-
 const AppointmentForm = () => {
   const { isAuthenticated } = useContext(Context);
 
@@ -76,18 +69,15 @@ const AppointmentForm = () => {
     [doctors, form.department]
   );
 
-  const update = (field) => (e) =>
-    setForm((prev) => ({ ...prev, [field]: e.target.value }));
+  // The controls hand back the value, not the event — and the digit-only
+  // filtering that used to need a second helper now lives in NumericInput and
+  // PhoneInput.
+  const update = (field) => (value) =>
+    setForm((prev) => ({ ...prev, [field]: value }));
 
-  const updateDigits = (field, maxLength) => (e) =>
-    setForm((prev) => ({
-      ...prev,
-      [field]: e.target.value.replace(/\D/g, "").slice(0, maxLength),
-    }));
-
-  const handleDepartmentChange = (e) =>
+  const handleDepartmentChange = (department) =>
     // Clear the doctor too — the previous pick belongs to another department.
-    setForm((prev) => ({ ...prev, department: e.target.value, doctorId: "" }));
+    setForm((prev) => ({ ...prev, department, doctorId: "" }));
 
   const handleAppointment = async (e) => {
     e.preventDefault();
@@ -166,232 +156,137 @@ const AppointmentForm = () => {
           className="rounded-2xl border border-line bg-white p-6 shadow-e1 sm:p-8"
         >
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-            <div>
-              <label className={labelClass} htmlFor="firstName">
-                First name
-              </label>
-              <input
-                id="firstName"
-                className={fieldClass}
-                type="text"
-                placeholder="Ananya"
-                value={form.firstName}
-                onChange={update("firstName")}
-                minLength={3}
-                required
-                disabled={submitting}
-              />
-            </div>
-
-            <div>
-              <label className={labelClass} htmlFor="lastName">
-                Last name
-              </label>
-              <input
-                id="lastName"
-                className={fieldClass}
-                type="text"
-                placeholder="Sharma"
-                value={form.lastName}
-                onChange={update("lastName")}
-                minLength={3}
-                required
-                disabled={submitting}
-              />
-            </div>
-
-            <div>
-              <label className={labelClass} htmlFor="email">
-                Email
-              </label>
-              <input
-                id="email"
-                className={fieldClass}
-                type="email"
-                placeholder="ananya.sharma@example.in"
-                value={form.email}
-                onChange={update("email")}
-                required
-                disabled={submitting}
-              />
-            </div>
-
-            <div>
-              <label className={labelClass} htmlFor="phone">
-                Mobile number
-              </label>
-              <div className="flex">
-                <span className="inline-flex select-none items-center rounded-l-lg border border-r-0 border-line-control bg-ink-50 px-3 text-sm text-ink-600">
-                  +91
-                </span>
-                <input
-                  id="phone"
-                  className={`${fieldClass} rounded-l-none`}
-                  type="tel"
-                  inputMode="numeric"
-                  placeholder="98765 43210"
-                  value={form.phone}
-                  onChange={updateDigits("phone", 10)}
-                  pattern="[6-9][0-9]{9}"
-                  title="10-digit Indian mobile number starting with 6-9"
-                  required
-                  disabled={submitting}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className={labelClass} htmlFor="aadhaar">
-                Aadhaar number
-              </label>
-              <input
-                id="aadhaar"
-                className={fieldClass}
-                type="text"
-                inputMode="numeric"
-                placeholder="12 digits"
-                value={form.aadhaar}
-                onChange={updateDigits("aadhaar", 12)}
-                pattern="[2-9][0-9]{11}"
-                title="12-digit Aadhaar number"
-                required
-                disabled={submitting}
-              />
-            </div>
-
-            <div>
-              <label className={labelClass} htmlFor="dob">
-                Date of birth
-              </label>
-              <input
-                id="dob"
-                className={fieldClass}
-                type="date"
-                value={form.dob}
-                onChange={update("dob")}
-                max={today()}
-                required
-                disabled={submitting}
-              />
-            </div>
-
-            <div>
-              <label className={labelClass} htmlFor="gender">
-                Gender
-              </label>
-              <select
-                id="gender"
-                className={fieldClass}
-                value={form.gender}
-                onChange={update("gender")}
-                required
-                disabled={submitting}
-              >
-                <option value="">Select gender</option>
-                {GENDERS.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className={labelClass} htmlFor="appointmentDate">
-                Preferred date
-              </label>
-              <input
-                id="appointmentDate"
-                className={fieldClass}
-                type="date"
-                value={form.appointmentDate}
-                onChange={update("appointmentDate")}
-                min={today()}
-                required
-                disabled={submitting}
-              />
-            </div>
-
-            <div>
-              <label className={labelClass} htmlFor="department">
-                Department
-              </label>
-              <select
-                id="department"
-                className={fieldClass}
-                value={form.department}
-                onChange={handleDepartmentChange}
-                required
-                disabled={submitting}
-              >
-                <option value="">Select department</option>
-                {DEPARTMENTS.map((department) => (
-                  <option key={department} value={department}>
-                    {department}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className={labelClass} htmlFor="doctorId">
-                Doctor
-              </label>
-              <select
-                id="doctorId"
-                className={fieldClass}
-                value={form.doctorId}
-                onChange={update("doctorId")}
-                required
-                disabled={submitting || !form.department}
-              >
-                <option value="">
-                  {!form.department
-                    ? "Select a department first"
-                    : departmentDoctors.length === 0
-                    ? "No doctors in this department yet"
-                    : "Select doctor"}
-                </option>
-                {departmentDoctors.map((doctor) => (
-                  <option key={doctor._id} value={doctor._id}>
-                    Dr. {doctor.firstName} {doctor.lastName}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="sm:col-span-2">
-              <label className={labelClass} htmlFor="address">
-                Address
-              </label>
-              <textarea
-                id="address"
-                className={fieldClass}
-                rows={4}
-                placeholder="House / street, area, city, state, PIN code"
-                value={form.address}
-                onChange={update("address")}
-                required
-                disabled={submitting}
-              />
-            </div>
-          </div>
-
-          <div className="mt-6 flex items-center gap-3">
-            <input
-              id="hasVisited"
-              type="checkbox"
-              className="h-4 w-4 rounded border-line-control text-accent-700 focus:ring-accent-600"
-              checked={form.hasVisited}
-              onChange={(e) =>
-                setForm((prev) => ({ ...prev, hasVisited: e.target.checked }))
-              }
+            <Input
+              label="First name"
+              placeholder="Ananya"
+              value={form.firstName}
+              onValueChange={update("firstName")}
+              minLength={3}
+              required
               disabled={submitting}
             />
-            <label htmlFor="hasVisited" className="text-sm text-ink-700">
-              I have visited UC Healthcare before
-            </label>
+
+            <Input
+              label="Last name"
+              placeholder="Sharma"
+              value={form.lastName}
+              onValueChange={update("lastName")}
+              minLength={3}
+              required
+              disabled={submitting}
+            />
+
+            <Input
+              label="Email"
+              type="email"
+              placeholder="ananya.sharma@example.in"
+              value={form.email}
+              onValueChange={update("email")}
+              required
+              disabled={submitting}
+            />
+
+            <PhoneInput
+              value={form.phone}
+              onValueChange={update("phone")}
+              required
+              disabled={submitting}
+            />
+
+            <NumericInput
+              label="Aadhaar number"
+              hint="12 digits, as printed on the card"
+              maxLength={12}
+              value={form.aadhaar}
+              onValueChange={update("aadhaar")}
+              pattern="[2-9][0-9]{11}"
+              title="12-digit Aadhaar number"
+              required
+              disabled={submitting}
+            />
+
+            <Input
+              label="Date of birth"
+              type="date"
+              value={form.dob}
+              onValueChange={update("dob")}
+              max={today()}
+              required
+              disabled={submitting}
+            />
+
+            <Select
+              label="Gender"
+              placeholder="Select gender"
+              options={GENDERS}
+              value={form.gender}
+              onValueChange={update("gender")}
+              required
+              disabled={submitting}
+            />
+
+            <Input
+              label="Preferred date"
+              type="date"
+              value={form.appointmentDate}
+              onValueChange={update("appointmentDate")}
+              min={today()}
+              required
+              disabled={submitting}
+            />
+
+            <Select
+              label="Department"
+              placeholder="Select department"
+              options={DEPARTMENTS}
+              value={form.department}
+              onValueChange={handleDepartmentChange}
+              required
+              disabled={submitting}
+            />
+
+            <Select
+              label="Doctor"
+              // The empty option carries the reason the list is empty, which is
+              // the only place a patient will look for it.
+              placeholder={
+                !form.department
+                  ? "Select a department first"
+                  : departmentDoctors.length === 0
+                  ? "No doctors in this department yet"
+                  : "Select doctor"
+              }
+              options={departmentDoctors.map((doctor) => ({
+                value: doctor._id,
+                label: `Dr. ${doctor.firstName} ${doctor.lastName}`,
+              }))}
+              value={form.doctorId}
+              onValueChange={update("doctorId")}
+              required
+              disabled={submitting || !form.department}
+            />
+
+            <Textarea
+              label="Address"
+              fieldClassName="sm:col-span-2"
+              rows={4}
+              placeholder="House / street, area, city, state, PIN code"
+              value={form.address}
+              onValueChange={update("address")}
+              required
+              disabled={submitting}
+            />
           </div>
+
+          <Checkbox
+            className="mt-6"
+            label="I have visited UC Healthcare before"
+            checked={form.hasVisited}
+            onCheckedChange={(hasVisited) =>
+              setForm((prev) => ({ ...prev, hasVisited }))
+            }
+            disabled={submitting}
+          />
 
           <div className="mt-8">
             <button

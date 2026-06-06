@@ -1,7 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { FaEye, FaEyeSlash } from "react-icons/fa6";
+import {
+  Input,
+  NumericInput,
+  PasswordInput,
+  PhoneInput,
+  Select,
+} from "@uc/ui";
 import { Context, api } from "@uc/client";
 
 const GENDERS = ["Male", "Female", "Other"];
@@ -19,18 +25,10 @@ const initialForm = {
 
 const today = () => new Date().toISOString().split("T")[0];
 
-const labelClass = "block text-sm font-medium text-ink-700 mb-1.5";
-const fieldClass =
-  "w-full rounded-lg border border-line-control bg-white px-3.5 py-2.5 text-ink-900 " +
-  "placeholder:text-fg-placeholder shadow-e1 transition " +
-  "focus:border-accent-600 focus:outline-none focus:ring-2 focus:ring-accent-600/20 " +
-  "disabled:cursor-not-allowed disabled:bg-ink-50";
-
 const Register = () => {
   const { isAuthenticated, setIsAuthenticated } = useContext(Context);
 
   const [form, setForm] = useState(initialForm);
-  const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   const navigateTo = useNavigate();
@@ -39,14 +37,11 @@ const Register = () => {
     document.title = "Create an Account · UC Healthcare";
   }, []);
 
-  const update = (field) => (e) =>
-    setForm((prev) => ({ ...prev, [field]: e.target.value }));
-
-  const updateDigits = (field, maxLength) => (e) =>
-    setForm((prev) => ({
-      ...prev,
-      [field]: e.target.value.replace(/\D/g, "").slice(0, maxLength),
-    }));
+  // The controls hand back the value, not the event — and the digit-only
+  // filtering that used to need a second helper now lives in NumericInput and
+  // PhoneInput.
+  const update = (field) => (value) =>
+    setForm((prev) => ({ ...prev, [field]: value }));
 
   const handleRegistration = async (e) => {
     e.preventDefault();
@@ -90,172 +85,88 @@ const Register = () => {
 
           <form onSubmit={handleRegistration} className="mt-8">
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-              <div>
-                <label className={labelClass} htmlFor="firstName">
-                  First name
-                </label>
-                <input
-                  id="firstName"
-                  className={fieldClass}
-                  type="text"
-                  autoComplete="given-name"
-                  placeholder="Ananya"
-                  value={form.firstName}
-                  onChange={update("firstName")}
-                  minLength={3}
-                  required
-                  disabled={submitting}
-                />
-              </div>
+              <Input
+                label="First name"
+                autoComplete="given-name"
+                placeholder="Ananya"
+                value={form.firstName}
+                onValueChange={update("firstName")}
+                minLength={3}
+                required
+                disabled={submitting}
+              />
 
-              <div>
-                <label className={labelClass} htmlFor="lastName">
-                  Last name
-                </label>
-                <input
-                  id="lastName"
-                  className={fieldClass}
-                  type="text"
-                  autoComplete="family-name"
-                  placeholder="Sharma"
-                  value={form.lastName}
-                  onChange={update("lastName")}
-                  minLength={3}
-                  required
-                  disabled={submitting}
-                />
-              </div>
+              <Input
+                label="Last name"
+                autoComplete="family-name"
+                placeholder="Sharma"
+                value={form.lastName}
+                onValueChange={update("lastName")}
+                minLength={3}
+                required
+                disabled={submitting}
+              />
 
-              <div>
-                <label className={labelClass} htmlFor="email">
-                  Email
-                </label>
-                <input
-                  id="email"
-                  className={fieldClass}
-                  type="email"
-                  autoComplete="email"
-                  placeholder="ananya.sharma@example.in"
-                  value={form.email}
-                  onChange={update("email")}
-                  required
-                  disabled={submitting}
-                />
-              </div>
+              <Input
+                label="Email"
+                type="email"
+                autoComplete="email"
+                placeholder="ananya.sharma@example.in"
+                value={form.email}
+                onValueChange={update("email")}
+                required
+                disabled={submitting}
+              />
 
-              <div>
-                <label className={labelClass} htmlFor="phone">
-                  Mobile number
-                </label>
-                <div className="flex">
-                  <span className="inline-flex select-none items-center rounded-l-lg border border-r-0 border-line-control bg-ink-50 px-3 text-sm text-ink-600">
-                    +91
-                  </span>
-                  <input
-                    id="phone"
-                    className={`${fieldClass} rounded-l-none`}
-                    type="tel"
-                    inputMode="numeric"
-                    autoComplete="tel-national"
-                    placeholder="98765 43210"
-                    value={form.phone}
-                    onChange={updateDigits("phone", 10)}
-                    pattern="[6-9][0-9]{9}"
-                    title="10-digit Indian mobile number starting with 6-9"
-                    required
-                    disabled={submitting}
-                  />
-                </div>
-              </div>
+              <PhoneInput
+                value={form.phone}
+                onValueChange={update("phone")}
+                required
+                disabled={submitting}
+              />
 
-              <div>
-                <label className={labelClass} htmlFor="aadhaar">
-                  Aadhaar number
-                </label>
-                <input
-                  id="aadhaar"
-                  className={fieldClass}
-                  type="text"
-                  inputMode="numeric"
-                  placeholder="12 digits"
-                  value={form.aadhaar}
-                  onChange={updateDigits("aadhaar", 12)}
-                  pattern="[2-9][0-9]{11}"
-                  title="12-digit Aadhaar number"
-                  required
-                  disabled={submitting}
-                />
-              </div>
+              <NumericInput
+                label="Aadhaar number"
+                hint="12 digits, as printed on the card"
+                maxLength={12}
+                value={form.aadhaar}
+                onValueChange={update("aadhaar")}
+                pattern="[2-9][0-9]{11}"
+                title="12-digit Aadhaar number"
+                required
+                disabled={submitting}
+              />
 
-              <div>
-                <label className={labelClass} htmlFor="dob">
-                  Date of birth
-                </label>
-                <input
-                  id="dob"
-                  className={fieldClass}
-                  type="date"
-                  autoComplete="bday"
-                  value={form.dob}
-                  onChange={update("dob")}
-                  max={today()}
-                  required
-                  disabled={submitting}
-                />
-              </div>
+              <Input
+                label="Date of birth"
+                type="date"
+                autoComplete="bday"
+                value={form.dob}
+                onValueChange={update("dob")}
+                max={today()}
+                required
+                disabled={submitting}
+              />
 
-              <div>
-                <label className={labelClass} htmlFor="gender">
-                  Gender
-                </label>
-                <select
-                  id="gender"
-                  className={fieldClass}
-                  value={form.gender}
-                  onChange={update("gender")}
-                  required
-                  disabled={submitting}
-                >
-                  <option value="">Select gender</option>
-                  {GENDERS.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <Select
+                label="Gender"
+                placeholder="Select gender"
+                options={GENDERS}
+                value={form.gender}
+                onValueChange={update("gender")}
+                required
+                disabled={submitting}
+              />
 
-              <div>
-                <label className={labelClass} htmlFor="password">
-                  Password
-                </label>
-                <div className="relative">
-                  <input
-                    id="password"
-                    className={`${fieldClass} pr-11`}
-                    type={showPassword ? "text" : "password"}
-                    autoComplete="new-password"
-                    placeholder="At least 8 characters"
-                    value={form.password}
-                    onChange={update("password")}
-                    minLength={8}
-                    required
-                    disabled={submitting}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((visible) => !visible)}
-                    aria-label={
-                      showPassword ? "Hide password" : "Show password"
-                    }
-                    className="absolute inset-y-0 right-0 flex items-center rounded-r-lg px-3.5
-                      text-ink-400 transition hover:text-ink-600 focus:outline-none
-                      focus-visible:ring-2 focus-visible:ring-accent-600/30"
-                  >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
-                  </button>
-                </div>
-              </div>
+              <PasswordInput
+                hint="At least 8 characters"
+                autoComplete="new-password"
+                value={form.password}
+                onValueChange={update("password")}
+                minLength={8}
+                required
+                disabled={submitting}
+              />
             </div>
 
             <p className="mt-6 text-xs text-ink-500">
