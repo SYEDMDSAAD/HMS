@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 
-import { Field, useFieldIds } from "./Field.jsx";
+import { Field } from "./Field.jsx";
+import { useFieldIds } from "./use-field-ids.js";
 import { controlClass } from "./field-styles.js";
 
 /**

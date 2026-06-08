@@ -1,4 +1,4 @@
-import { useFieldIds } from "./Field.jsx";
+import { useFieldIds } from "./use-field-ids.js";
 
 /**
  * A checkbox with its label beside it.

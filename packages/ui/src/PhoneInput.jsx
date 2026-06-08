@@ -1,4 +1,5 @@
-import { Field, useFieldIds } from "./Field.jsx";
+import { Field } from "./Field.jsx";
+import { useFieldIds } from "./use-field-ids.js";
 import { controlClass } from "./field-styles.js";
 
 /**
@@ -13,6 +14,28 @@ import { controlClass } from "./field-styles.js";
  * Digits-only filtering and the 10-digit cap live here rather than in each
  * form's `updateDigits` helper, which existed in five copies.
  */
+
+/**
+ * Ten digits, however the number was written.
+ *
+ * The naive version — strip non-digits, take the first ten — is what the five
+ * copied helpers did, and it is wrong for the most likely paste. Someone
+ * copying "+91 98765 43210" from a contact card got `9198765432`: the country
+ * code became the first two digits of the number, the last two fell off the
+ * end, and nothing said so, because the result is still ten digits and still
+ * matches [6-9][0-9]{9}. Displaying "+91" beside the box makes it worse — the
+ * screen then reads +91 9198765432.
+ *
+ * So a country code is dropped rather than consumed, and only when there are
+ * too many digits for it to have been part of the number itself. A leading 0 is
+ * the same story from landline-era habit.
+ */
+const toNationalDigits = (raw) => {
+  let digits = raw.replace(/\D/g, "");
+  if (digits.length > 10 && digits.startsWith("91")) digits = digits.slice(2);
+  if (digits.length > 10 && digits.startsWith("0")) digits = digits.slice(1);
+  return digits.slice(0, 10);
+};
 export const PhoneInput = ({
   label = "Mobile number",
   hint,
@@ -61,7 +84,7 @@ export const PhoneInput = ({
           })}
           onChange={(event) => {
             onChange?.(event);
-            onValueChange?.(event.target.value.replace(/\D/g, "").slice(0, 10));
+            onValueChange?.(toNationalDigits(event.target.value));
           }}
           {...rest}
         />

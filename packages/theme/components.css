@@ -1,25 +1,19 @@
 /* Shared class-based primitives.
  *
- * These are written entirely in semantic tokens, so they are already correct in
- * dark mode. They are also the interim answer: Parts 4 and 5 replace them with
- * real React components (Field, Input, Button, Card) that can carry state,
- * variants and ARIA wiring, which a CSS class cannot. Until then, prefer
- * `className="field"` over re-declaring the same string as a JS constant —
- * which is what seven form components currently do.
+ * Written entirely in semantic tokens, so they are already correct in dark mode.
+ *
+ * `.label` and `.field` used to live here as the interim answer for form
+ * controls. They are gone: @uc/ui now exports Field, Input, Select, Textarea,
+ * Checkbox, PasswordInput and PhoneInput, which carry the label binding,
+ * aria-describedby wiring and error state that a CSS class cannot. Two ways to
+ * style a control is one too many, so the classes went rather than lingering as
+ * a second source of truth.
+ *
+ * What is left is the interim answer for buttons and cards, which Part 5
+ * replaces the same way.
  */
 
 @layer components {
-  .label {
-    @apply mb-1.5 block text-sm font-medium text-fg-muted;
-  }
-
-  .field {
-    @apply w-full rounded-lg border border-line-control bg-surface px-3.5 py-2.5
-      text-fg shadow-e1 transition placeholder:text-fg-placeholder
-      focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25
-      disabled:cursor-not-allowed disabled:bg-surface-muted;
-  }
-
   .card {
     @apply rounded-2xl border border-line bg-surface shadow-e1;
   }

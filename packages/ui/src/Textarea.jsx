@@ -1,4 +1,5 @@
-import { Field, useFieldIds } from "./Field.jsx";
+import { Field } from "./Field.jsx";
+import { useFieldIds } from "./use-field-ids.js";
 import { controlClass } from "./field-styles.js";
 
 export const Textarea = ({

@@ -1,7 +1,14 @@
 import { useContext, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Logo } from "@uc/ui";
+import {
+  Input,
+  Logo,
+  NumericInput,
+  PasswordInput,
+  PhoneInput,
+  Select,
+} from "@uc/ui";
 import { Context, api } from "@uc/client";
 
 const GENDERS = ["Male", "Female", "Other"];
@@ -17,13 +24,6 @@ const initialForm = {
   password: "",
 };
 
-const labelClass = "block text-sm font-medium text-ink-700 mb-1.5";
-const fieldClass =
-  "w-full rounded-lg border border-line-control bg-white px-3.5 py-2.5 text-ink-900 " +
-  "placeholder:text-fg-placeholder shadow-e1 transition " +
-  "focus:border-accent-600 focus:outline-none focus:ring-2 focus:ring-accent-600/20 " +
-  "disabled:cursor-not-allowed disabled:bg-ink-50";
-
 const AddNewAdmin = () => {
   const { isAuthenticated } = useContext(Context);
   const [form, setForm] = useState(initialForm);
@@ -31,16 +31,11 @@ const AddNewAdmin = () => {
 
   const navigateTo = useNavigate();
 
-  const update = (field) => (e) =>
-    setForm((prev) => ({ ...prev, [field]: e.target.value }));
-
-  // Keep only digits, so a pasted "+91 98765 43210" or "9876-543-210" still
-  // arrives at the API in the shape the schema expects.
-  const updateDigits = (field, maxLength) => (e) =>
-    setForm((prev) => ({
-      ...prev,
-      [field]: e.target.value.replace(/\D/g, "").slice(0, maxLength),
-    }));
+  // The controls hand back the value, not the event. Digit-only filtering —
+  // so a pasted "+91 98765 43210" still arrives in the shape the schema
+  // expects — moved into NumericInput and PhoneInput.
+  const update = (field) => (value) =>
+    setForm((prev) => ({ ...prev, [field]: value }));
 
   const handleAddNewAdmin = async (e) => {
     e.preventDefault();
@@ -85,152 +80,84 @@ const AddNewAdmin = () => {
 
           <form onSubmit={handleAddNewAdmin} noValidate={false}>
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-              <div>
-                <label className={labelClass} htmlFor="firstName">
-                  First name
-                </label>
-                <input
-                  id="firstName"
-                  className={fieldClass}
-                  type="text"
-                  placeholder="Ananya"
-                  value={form.firstName}
-                  onChange={update("firstName")}
-                  minLength={3}
-                  required
-                  disabled={submitting}
-                />
-              </div>
+              <Input
+                label="First name"
+                placeholder="Ananya"
+                value={form.firstName}
+                onValueChange={update("firstName")}
+                minLength={3}
+                required
+                disabled={submitting}
+              />
 
-              <div>
-                <label className={labelClass} htmlFor="lastName">
-                  Last name
-                </label>
-                <input
-                  id="lastName"
-                  className={fieldClass}
-                  type="text"
-                  placeholder="Sharma"
-                  value={form.lastName}
-                  onChange={update("lastName")}
-                  minLength={3}
-                  required
-                  disabled={submitting}
-                />
-              </div>
+              <Input
+                label="Last name"
+                placeholder="Sharma"
+                value={form.lastName}
+                onValueChange={update("lastName")}
+                minLength={3}
+                required
+                disabled={submitting}
+              />
 
-              <div>
-                <label className={labelClass} htmlFor="email">
-                  Email
-                </label>
-                <input
-                  id="email"
-                  className={fieldClass}
-                  type="email"
-                  placeholder="ananya.sharma@example.in"
-                  value={form.email}
-                  onChange={update("email")}
-                  required
-                  disabled={submitting}
-                />
-              </div>
+              <Input
+                label="Email"
+                type="email"
+                placeholder="ananya.sharma@example.in"
+                value={form.email}
+                onValueChange={update("email")}
+                required
+                disabled={submitting}
+              />
 
-              <div>
-                <label className={labelClass} htmlFor="phone">
-                  Mobile number
-                </label>
-                <div className="flex">
-                  <span className="inline-flex select-none items-center rounded-l-lg border border-r-0 border-line-control bg-ink-50 px-3 text-sm text-ink-600">
-                    +91
-                  </span>
-                  <input
-                    id="phone"
-                    className={`${fieldClass} rounded-l-none`}
-                    type="tel"
-                    inputMode="numeric"
-                    placeholder="98765 43210"
-                    value={form.phone}
-                    onChange={updateDigits("phone", 10)}
-                    pattern="[6-9][0-9]{9}"
-                    title="10-digit Indian mobile number starting with 6-9"
-                    required
-                    disabled={submitting}
-                  />
-                </div>
-              </div>
+              <PhoneInput
+                value={form.phone}
+                onValueChange={update("phone")}
+                required
+                disabled={submitting}
+              />
 
-              <div>
-                <label className={labelClass} htmlFor="aadhaar">
-                  Aadhaar number
-                </label>
-                <input
-                  id="aadhaar"
-                  className={fieldClass}
-                  type="text"
-                  inputMode="numeric"
-                  placeholder="12 digits"
-                  value={form.aadhaar}
-                  onChange={updateDigits("aadhaar", 12)}
-                  pattern="[2-9][0-9]{11}"
-                  title="12-digit Aadhaar number"
-                  required
-                  disabled={submitting}
-                />
-              </div>
+              <NumericInput
+                label="Aadhaar number"
+                hint="12 digits, as printed on the card"
+                maxLength={12}
+                value={form.aadhaar}
+                onValueChange={update("aadhaar")}
+                pattern="[2-9][0-9]{11}"
+                title="12-digit Aadhaar number"
+                required
+                disabled={submitting}
+              />
 
-              <div>
-                <label className={labelClass} htmlFor="dob">
-                  Date of birth
-                </label>
-                <input
-                  id="dob"
-                  className={fieldClass}
-                  type="date"
-                  value={form.dob}
-                  onChange={update("dob")}
-                  max={new Date().toISOString().split("T")[0]}
-                  required
-                  disabled={submitting}
-                />
-              </div>
+              <Input
+                label="Date of birth"
+                type="date"
+                value={form.dob}
+                onValueChange={update("dob")}
+                max={new Date().toISOString().split("T")[0]}
+                required
+                disabled={submitting}
+              />
 
-              <div>
-                <label className={labelClass} htmlFor="gender">
-                  Gender
-                </label>
-                <select
-                  id="gender"
-                  className={fieldClass}
-                  value={form.gender}
-                  onChange={update("gender")}
-                  required
-                  disabled={submitting}
-                >
-                  <option value="">Select gender</option>
-                  {GENDERS.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <Select
+                label="Gender"
+                placeholder="Select gender"
+                options={GENDERS}
+                value={form.gender}
+                onValueChange={update("gender")}
+                required
+                disabled={submitting}
+              />
 
-              <div>
-                <label className={labelClass} htmlFor="password">
-                  Password
-                </label>
-                <input
-                  id="password"
-                  className={fieldClass}
-                  type="password"
-                  placeholder="At least 8 characters"
-                  value={form.password}
-                  onChange={update("password")}
-                  minLength={8}
-                  required
-                  disabled={submitting}
-                />
-              </div>
+              <PasswordInput
+                hint="At least 8 characters"
+                autoComplete="new-password"
+                value={form.password}
+                onValueChange={update("password")}
+                minLength={8}
+                required
+                disabled={submitting}
+              />
             </div>
 
             <div className="mt-8 flex justify-center">

@@ -1,23 +1,14 @@
 import { useContext, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { FaEye, FaEyeSlash } from "react-icons/fa6";
-import { Logo } from "@uc/ui";
+import { Input, Logo, PasswordInput } from "@uc/ui";
 import { Context, api } from "@uc/client";
-
-const labelClass = "block text-sm font-medium text-ink-700 mb-1.5";
-const fieldClass =
-  "w-full rounded-lg border border-line-control bg-white px-3.5 py-2.5 text-ink-900 " +
-  "placeholder:text-fg-placeholder shadow-e1 transition " +
-  "focus:border-accent-600 focus:outline-none focus:ring-2 focus:ring-accent-600/20 " +
-  "disabled:cursor-not-allowed disabled:bg-ink-50";
 
 const Login = () => {
   const { isAuthenticated, setIsAuthenticated } = useContext(Context);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   const navigateTo = useNavigate();
@@ -67,51 +58,25 @@ const Login = () => {
           </div>
 
           <form onSubmit={handleLogin} className="mt-8 space-y-5">
-            <div>
-              <label className={labelClass} htmlFor="email">
-                Email
-              </label>
-              <input
-                id="email"
-                className={fieldClass}
-                type="email"
-                autoComplete="username"
-                placeholder="admin@example.in"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                disabled={submitting}
-              />
-            </div>
+            <Input
+              label="Email"
+              type="email"
+              autoComplete="username"
+              placeholder="admin@example.in"
+              value={email}
+              onValueChange={setEmail}
+              required
+              disabled={submitting}
+            />
 
-            <div>
-              <label className={labelClass} htmlFor="password">
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  id="password"
-                  className={`${fieldClass} pr-11`}
-                  type={showPassword ? "text" : "password"}
-                  autoComplete="current-password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  disabled={submitting}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((visible) => !visible)}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                  className="absolute inset-y-0 right-0 flex items-center px-3.5 text-ink-400
-                    transition hover:text-ink-600 focus:outline-none focus:ring-2
-                    focus:ring-accent-600/30 rounded-r-lg"
-                >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </button>
-              </div>
-            </div>
+            <PasswordInput
+              autoComplete="current-password"
+              placeholder="••••••••"
+              value={password}
+              onValueChange={setPassword}
+              required
+              disabled={submitting}
+            />
 
             <button
               type="submit"

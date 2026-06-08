@@ -1,5 +1,3 @@
-import { useId } from "react";
-
 /**
  * Label + control + hint + error, wired together.
  *
@@ -13,29 +11,6 @@ import { useId } from "react";
  * leaving the requirement as text floating somewhere near the box. That wiring
  * needs an id shared by four elements, which is why it belongs in one place.
  */
-
-/**
- * Derives the ids the wiring needs. `id` is optional — React's useId is stable
- * across renders and unique per instance, so call sites only pass one when
- * something outside the field has to reference it.
- */
-export const useFieldIds = (id, { hint, error } = {}) => {
-  const generated = useId();
-  const base = id || generated;
-  const hintId = hint ? `${base}-hint` : undefined;
-  const errorId = error ? `${base}-error` : undefined;
-
-  return {
-    id: base,
-    hintId,
-    errorId,
-    invalid: Boolean(error),
-    // Only one of the two is ever rendered (see Field below), and pointing
-    // aria-describedby at an id that is not in the document is worse than
-    // pointing at nothing — the description is silently dropped.
-    describedBy: errorId || hintId,
-  };
-};
 
 export const Field = ({
   label,
