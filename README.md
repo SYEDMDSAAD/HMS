@@ -27,6 +27,14 @@ maintained as two copies each (`AppContext.js`, `api.js`, `Logo.jsx`), plus two
 byte-identical `eslint.config.js` files; a rule or fix applied to one silently
 did not apply to the other.
 
+`@uc/ui` exports the form primitives: `Input`, `NumericInput`, `Select`,
+`Textarea`, `Checkbox`, `PasswordInput`, `PhoneInput`, and the `Field` wrapper
+they are built on. Use them rather than styling a bare `<input>` — they carry
+the label binding and the `aria-describedby` wiring for hint and error text,
+which is the part that is easy to leave out and impossible to see is missing.
+Every control takes `value` + `onValueChange(nextValue)`; `Checkbox` takes
+`checked` + `onCheckedChange(bool)`.
+
 One consequence worth knowing before adding components to `@uc/ui`: Tailwind
 scans the project it compiles in, and `packages/ui` sits outside both app roots.
 Each app's `App.css` carries an `@source "../../packages/ui/src"` line to make
