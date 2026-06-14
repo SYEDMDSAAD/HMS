@@ -1,9 +1,10 @@
 import { useContext, useEffect, useMemo, useState } from "react";
-import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import {
+  ,
   Checkbox,
   Input,
+  notify,
   NumericInput,
   PhoneInput,
   Select,
@@ -93,7 +94,7 @@ const AppointmentForm = () => {
 
     const doctor = doctors.find((entry) => entry._id === form.doctorId);
     if (!doctor) {
-      toast.error("Please select a doctor.");
+      notify.error("Please select a doctor.");
       return;
     }
 
@@ -118,13 +119,10 @@ const AppointmentForm = () => {
         },
         { headers: { "Content-Type": "application/json" } }
       );
-      toast.success(data.message);
+      notify.success(data.message);
       setForm(initialForm);
     } catch (error) {
-      toast.error(
-        error.response?.data?.message ||
-          "Could not book your appointment. Please try again."
-      );
+      notify.apiError(error, "Could not book your appointment. Please try again.");
     } finally {
       setSubmitting(false);
     }

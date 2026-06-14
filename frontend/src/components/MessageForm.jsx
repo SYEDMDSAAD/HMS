@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { toast } from "react-toastify";
-import { Input, PhoneInput, Textarea } from "@uc/ui";
+import { Input, notify, PhoneInput, Textarea } from "@uc/ui";
 import { api } from "@uc/client";
 
 const initialForm = {
@@ -27,13 +26,10 @@ const MessageForm = () => {
       const { data } = await api.post("/message/send", form, {
         headers: { "Content-Type": "application/json" },
       });
-      toast.success(data.message);
+      notify.success(data.message);
       setForm(initialForm);
     } catch (error) {
-      toast.error(
-        error.response?.data?.message ||
-          "Could not send your message. Please try again."
-      );
+      notify.apiError(error, "Could not send your message. Please try again.");
     } finally {
       setSubmitting(false);
     }

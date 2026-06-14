@@ -1,9 +1,10 @@
 import { useContext, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import {
+  ,
   Input,
   Logo,
+  notify,
   NumericInput,
   PasswordInput,
   PhoneInput,
@@ -46,15 +47,12 @@ const AddNewAdmin = () => {
       const { data } = await api.post("/user/admin/addnew", form, {
         headers: { "Content-Type": "application/json" },
       });
-      toast.success(data.message);
+      notify.success(data.message);
       setForm(initialForm);
       navigateTo("/");
     } catch (error) {
       // error.response is undefined when the request never reached the server.
-      toast.error(
-        error.response?.data?.message ||
-          "Could not reach the server. Please try again."
-      );
+      notify.apiError(error, "Could not reach the server. Please try again.");
     } finally {
       setSubmitting(false);
     }

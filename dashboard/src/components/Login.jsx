@@ -1,7 +1,6 @@
 import { useContext, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { Input, Logo, PasswordInput } from "@uc/ui";
+import { Input, Logo, notify, PasswordInput } from "@uc/ui";
 import { Context, api } from "@uc/client";
 
 const Login = () => {
@@ -24,16 +23,13 @@ const Login = () => {
         { email, password, role: "Admin" },
         { headers: { "Content-Type": "application/json" } }
       );
-      toast.success(data.message);
+      notify.success(data.message);
       setEmail("");
       setPassword("");
       setIsAuthenticated(true);
       navigateTo("/");
     } catch (error) {
-      toast.error(
-        error.response?.data?.message ||
-          "Could not reach the server. Please try again."
-      );
+      notify.apiError(error, "Could not reach the server. Please try again.");
     } finally {
       setSubmitting(false);
     }

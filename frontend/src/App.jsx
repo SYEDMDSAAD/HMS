@@ -6,8 +6,6 @@ import {
   Route,
   Link,
 } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 // Directory is lowercase "pages" — the old "./Pages/..." specifiers resolved on
 // case-insensitive filesystems but failed the build on Linux and in CI.
 import Home from "./pages/Home";
@@ -17,6 +15,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
+import { Toaster } from "@uc/ui";
 import { Context, api } from "@uc/client";
 
 const NotFound = () => {
@@ -98,7 +97,7 @@ const App = () => {
         </main>
         <Footer />
       </div>
-      <ToastContainer position="top-center" theme="light" />
+      <Toaster />
     </Router>
   );
 };

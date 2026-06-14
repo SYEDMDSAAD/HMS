@@ -1,7 +1,16 @@
 import { useContext, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { MdEmail } from "react-icons/md";
+import { MdEmail, MdMarkEmailUnread } from "react-icons/md";
 import { FaPhone } from "react-icons/fa6";
+import {
+  Alert,
+  Card,
+  EmptyState,
+  PageHeader,
+  Skeleton,
+  SkeletonGroup,
+  SkeletonText,
+} from "@uc/ui";
 import { Context, api } from "@uc/client";
 
 // 9876543210 -> +91 98765 43210
@@ -59,43 +68,46 @@ const Messages = () => {
   return (
     <section className="min-h-screen bg-ink-50 px-4 py-8 md:pl-28">
       <div className="mx-auto w-full max-w-5xl">
-        <header className="mb-6">
-          <h1 className="text-2xl font-semibold tracking-tight text-ink-900">
-            Patient Enquiries
-          </h1>
-          <p className="mt-1 text-sm text-ink-500">
-            {loading
+        <PageHeader
+          level={1}
+          className="mb-6"
+          title="Patient Enquiries"
+          description={
+            loading
               ? "Loading…"
               : `${messages.length} ${
                   messages.length === 1 ? "message" : "messages"
-                } from the website contact form`}
-          </p>
-        </header>
+                } from the website contact form`
+          }
+        />
 
         {loadError ? (
-          <div className="rounded-2xl border border-danger-200 bg-danger-50 px-6 py-10 text-center text-sm text-danger-700">
+          <Alert tone="danger" live>
             {loadError}
-          </div>
+          </Alert>
         ) : loading ? (
-          <div className="rounded-2xl border border-line bg-white px-6 py-10 text-center text-sm text-ink-500">
-            Loading messages…
-          </div>
+          <SkeletonGroup label="Loading messages…">
+            <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+              {Array.from({ length: 4 }, (_, card) => (
+                <Card key={card}>
+                  <Skeleton className="h-5 w-1/3" />
+                  <SkeletonText className="mt-4" lines={3} />
+                </Card>
+              ))}
+            </div>
+          </SkeletonGroup>
         ) : messages.length === 0 ? (
-          <div className="rounded-2xl border border-line bg-white px-6 py-12 text-center">
-            <p className="text-sm font-medium text-ink-900">No messages yet</p>
-            <p className="mt-1 text-sm text-ink-500">
-              Enquiries sent from the website contact form will appear here.
-            </p>
-          </div>
+          <EmptyState
+            icon={MdMarkEmailUnread}
+            title="No messages yet"
+            description="Enquiries sent from the website contact form will appear here."
+          />
         ) : (
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
             {messages.map((message) => {
               const received = formatReceived(message.createdAt);
               return (
-                <article
-                  key={message._id}
-                  className="flex flex-col rounded-2xl border border-line bg-white p-6 shadow-e1 transition hover:shadow-e2"
-                >
+                <Card as="article" key={message._id} className="flex flex-col">
                   <div className="flex items-start justify-between gap-4">
                     <h2 className="text-base font-semibold text-ink-900">
                       {message.firstName} {message.lastName}
@@ -127,7 +139,7 @@ const Messages = () => {
                       {formatPhone(message.phone)}
                     </a>
                   </div>
-                </article>
+                </Card>
               );
             })}
           </div>

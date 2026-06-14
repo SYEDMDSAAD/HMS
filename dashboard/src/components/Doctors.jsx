@@ -1,7 +1,15 @@
 import { useContext, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { MdEmail } from "react-icons/md";
+import { MdEmail, MdPersonAddAlt1 } from "react-icons/md";
 import { FaPhone } from "react-icons/fa6";
+import {
+  Alert,
+  Card,
+  EmptyState,
+  PageHeader,
+  Skeleton,
+  SkeletonGroup,
+} from "@uc/ui";
 import { Context, api } from "@uc/client";
 
 // 9876543210 -> +91 98765 43210
@@ -46,42 +54,51 @@ const Doctors = () => {
   return (
     <section className="min-h-screen bg-ink-50 px-4 py-8 md:pl-28">
       <div className="mx-auto w-full max-w-6xl">
-        <header className="mb-6">
-          <h1 className="text-2xl font-semibold tracking-tight text-ink-900">
-            Doctors
-          </h1>
-          <p className="mt-1 text-sm text-ink-500">
-            {loading
+        <PageHeader
+          level={1}
+          className="mb-6"
+          title="Doctors"
+          description={
+            loading
               ? "Loading…"
               : `${doctors.length} ${
                   doctors.length === 1 ? "doctor" : "doctors"
-                } registered at UC Healthcare`}
-          </p>
-        </header>
+                } registered at UC Healthcare`
+          }
+        />
 
         {loadError ? (
-          <div className="rounded-2xl border border-danger-200 bg-danger-50 px-6 py-10 text-center text-sm text-danger-700">
+          <Alert tone="danger" live>
             {loadError}
-          </div>
+          </Alert>
         ) : loading ? (
-          <div className="rounded-2xl border border-line bg-white px-6 py-10 text-center text-sm text-ink-500">
-            Loading doctors…
-          </div>
+          <SkeletonGroup label="Loading doctors…">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 6 }, (_, card) => (
+                <Card key={card} className="flex flex-col items-center">
+                  <Skeleton className="h-24 w-24 rounded-full" />
+                  <Skeleton className="mt-4 h-5 w-2/3" />
+                  <Skeleton className="mt-2 h-5 w-1/3 rounded-full" />
+                  <Skeleton className="mt-5 h-3.5 w-full" />
+                  <Skeleton className="mt-2 h-3.5 w-4/5" />
+                </Card>
+              ))}
+            </div>
+          </SkeletonGroup>
         ) : doctors.length === 0 ? (
-          <div className="rounded-2xl border border-line bg-white px-6 py-12 text-center">
-            <p className="text-sm font-medium text-ink-900">
-              No doctors registered yet
-            </p>
-            <p className="mt-1 text-sm text-ink-500">
-              Add one from the sidebar to make them bookable by patients.
-            </p>
-          </div>
+          <EmptyState
+            icon={MdPersonAddAlt1}
+            title="No doctors registered yet"
+            description="Add one from the sidebar to make them bookable by patients."
+          />
         ) : (
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {doctors.map((doctor) => (
-              <article
+              <Card
+                as="article"
                 key={doctor._id}
-                className="flex flex-col items-center rounded-2xl border border-line bg-white p-6 text-center shadow-e1 transition hover:shadow-e2"
+                interactive
+                className="flex flex-col items-center text-center"
               >
                 <img
                   src={doctor.docAvatar?.url || "/docHolder.jpg"}
@@ -89,14 +106,14 @@ const Doctors = () => {
                   onError={(e) => {
                     e.currentTarget.src = "/docHolder.jpg";
                   }}
-                  className="h-24 w-24 rounded-full object-cover ring-1 ring-ink-200"
+                  className="h-24 w-24 rounded-full object-cover ring-1 ring-line"
                 />
 
                 <h2 className="mt-4 text-base font-semibold text-ink-900">
                   Dr. {doctor.firstName} {doctor.lastName}
                 </h2>
 
-                <span className="mt-2 inline-flex items-center rounded-full bg-accent-50 px-3 py-1 text-xs font-medium text-accent-800 ring-1 ring-inset ring-accent-200">
+                <span className="mt-2 inline-flex items-center rounded-full bg-accent-tint px-3 py-1 text-xs font-medium text-accent-text ring-1 ring-inset ring-accent-200">
                   {doctor.doctorDepartment || "Unassigned"}
                 </span>
 
@@ -116,7 +133,7 @@ const Doctors = () => {
                     <dd>{doctor.gender || "—"}</dd>
                   </div>
                 </dl>
-              </article>
+              </Card>
             ))}
           </div>
         )}

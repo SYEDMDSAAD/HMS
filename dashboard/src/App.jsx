@@ -11,11 +11,10 @@ import Login from "./components/Login";
 import AddNewDoctor from "./components/AddNewDoctor";
 import Messages from "./components/Messages";
 import Doctors from "./components/Doctors";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import Sidebar from "./components/Sidebar";
 import AddNewAdmin from "./components/AddNewAdmin";
 import "./App.css";
+import { Toaster } from "@uc/ui";
 import { Context, api } from "@uc/client";
 
 const NotFound = () => (
@@ -94,7 +93,7 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
-      <ToastContainer position="top-center" theme="light" />
+      <Toaster />
     </Router>
   );
 };

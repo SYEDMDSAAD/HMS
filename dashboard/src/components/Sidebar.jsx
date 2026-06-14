@@ -6,9 +6,8 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { FaUserDoctor, FaXmark } from "react-icons/fa6";
 import { MdAddModerator } from "react-icons/md";
 import { IoPersonAddSharp } from "react-icons/io5";
-import { toast } from "react-toastify";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Logo, LogoMark } from "@uc/ui";
+import { Logo, LogoMark, notify } from "@uc/ui";
 import { Context, api } from "@uc/client";
 
 const NAV_ITEMS = [
@@ -48,11 +47,9 @@ const Sidebar = () => {
       // POST, not GET — a state-changing endpoint reachable by GET can be
       // triggered by any third-party page.
       const { data } = await api.post("/user/admin/logout", {});
-      toast.success(data.message);
+      notify.success(data.message);
     } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Could not log out. Please try again."
-      );
+      notify.apiError(error, "Could not log out. Please try again.");
     } finally {
       // Clear local session either way: if the cookie was already expired the
       // request fails, and leaving the UI "logged in" would trap the user.

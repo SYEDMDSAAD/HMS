@@ -1,17 +1,23 @@
 import { useContext, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { GoCheckCircleFill } from "react-icons/go";
 import { AiFillCloseCircle } from "react-icons/ai";
+import { MdEventNote } from "react-icons/md";
+import {
+  Alert,
+  Card,
+  EmptyState,
+  PageHeader,
+  Select,
+  Skeleton,
+  SkeletonGroup,
+  StatusPill,
+  Table,
+  notify,
+} from "@uc/ui";
 import { Context, api } from "@uc/client";
 
 const STATUSES = ["Pending", "Accepted", "Rejected"];
-
-const STATUS_STYLES = {
-  Pending: "border-warning-300 bg-warning-50 text-warning-800",
-  Accepted: "border-accent-300 bg-accent-50 text-accent-800",
-  Rejected: "border-danger-300 bg-danger-50 text-danger-800",
-};
 
 // appointment_date is stored as a plain "YYYY-MM-DD" string, so parse
 // defensively and fall back to showing it raw rather than crashing.
@@ -26,13 +32,16 @@ const formatDate = (value) => {
   });
 };
 
+// Flat, not raised. These are supporting figures; the appointments table is
+// the thing on this page, and it cannot read as primary if five tiles above it
+// float at the same height.
 const StatCard = ({ label, value, tone }) => (
-  <div className="rounded-2xl border border-line bg-white p-6 shadow-e1">
-    <p className="text-sm font-medium text-ink-500">{label}</p>
+  <Card elevation="flat">
+    <p className="text-sm font-medium text-fg-subtle">{label}</p>
     <p className={`mt-2 text-4xl font-semibold tracking-tight ${tone}`}>
       {value}
     </p>
-  </div>
+  </Card>
 );
 
 const Dashboard = () => {
@@ -83,12 +92,9 @@ const Dashboard = () => {
             : appointment
         )
       );
-      toast.success(data.message);
+      notify.success(data.message);
     } catch (error) {
-      toast.error(
-        error.response?.data?.message ||
-          "Could not update the appointment. Please try again."
-      );
+      notify.apiError(error, "Could not update the appointment. Please try again.");
     } finally {
       setUpdatingId(null);
     }
@@ -109,22 +115,21 @@ const Dashboard = () => {
       <div className="mx-auto w-full max-w-6xl">
         {/* Welcome + stats */}
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
-          <div className="flex items-center gap-5 rounded-2xl border border-line bg-white p-6 shadow-e1 lg:col-span-1">
+          <Card elevation="flat" className="flex items-center gap-5 lg:col-span-1">
             <img
               src="/doc.png"
               alt=""
-              className="h-16 w-16 shrink-0 rounded-full object-cover ring-1 ring-ink-200"
+              className="h-16 w-16 shrink-0 rounded-full object-cover ring-1 ring-line"
             />
-            <div className="min-w-0">
-              <p className="text-sm text-ink-500">Welcome back,</p>
-              <h1 className="truncate text-xl font-semibold text-ink-900">
-                {adminName || "Admin"}
-              </h1>
-              <p className="mt-1 text-sm text-ink-500">
-                UC Healthcare
-              </p>
-            </div>
-          </div>
+            <PageHeader
+              level={1}
+              size="sm"
+              className="min-w-0"
+              eyebrow="Welcome back,"
+              title={adminName || "Admin"}
+              description="UC Healthcare"
+            />
+          </Card>
 
           <StatCard
             label="Total appointments"
@@ -155,98 +160,116 @@ const Dashboard = () => {
           />
         </div>
 
-        {/* Appointments table */}
-        <div className="mt-8 rounded-2xl border border-line bg-white shadow-e1">
+        {/* Appointments table — the one raised surface on this page */}
+        <Card className="mt-8" padded={false}>
           <div className="border-b border-line px-6 py-4">
-            <h2 className="text-lg font-semibold text-ink-900">
-              Appointments
-            </h2>
+            <h2 className="text-lg font-semibold text-fg">Appointments</h2>
           </div>
 
           {loadError ? (
-            <p className="px-6 py-10 text-center text-sm text-danger-700">
-              {loadError}
-            </p>
-          ) : loading ? (
-            <p className="px-6 py-10 text-center text-sm text-ink-500">
-              Loading appointments…
-            </p>
-          ) : appointments.length === 0 ? (
-            <p className="px-6 py-10 text-center text-sm text-ink-500">
-              No appointments booked yet.
-            </p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[720px] text-left text-sm">
-                <thead className="bg-ink-50 text-xs uppercase tracking-wide text-ink-500">
-                  <tr>
-                    <th className="px-6 py-3 font-semibold">Patient</th>
-                    <th className="px-6 py-3 font-semibold">Date</th>
-                    <th className="px-6 py-3 font-semibold">Doctor</th>
-                    <th className="px-6 py-3 font-semibold">Department</th>
-                    <th className="px-6 py-3 font-semibold">Status</th>
-                    <th className="px-6 py-3 font-semibold">Visited</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-ink-100">
-                  {appointments.map((appointment) => (
-                    <tr key={appointment._id} className="hover:bg-ink-50">
-                      <td className="px-6 py-4 font-medium text-ink-900">
-                        {`${appointment.firstName} ${appointment.lastName}`}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4 text-ink-600">
-                        {formatDate(appointment.appointment_date)}
-                      </td>
-                      <td className="px-6 py-4 text-ink-600">
-                        {appointment.doctor
-                          ? `Dr. ${appointment.doctor.firstName} ${appointment.doctor.lastName}`
-                          : "—"}
-                      </td>
-                      <td className="px-6 py-4 text-ink-600">
-                        {appointment.department}
-                      </td>
-                      <td className="px-6 py-4">
-                        <select
-                          aria-label={`Status for ${appointment.firstName} ${appointment.lastName}`}
-                          className={`rounded-lg border px-2.5 py-1.5 text-sm font-medium transition
-                            focus:outline-none focus:ring-2 focus:ring-accent-600/30
-                            disabled:opacity-60 ${
-                              STATUS_STYLES[appointment.status] ||
-                              "border-line-control bg-white text-ink-700"
-                            }`}
-                          value={appointment.status}
-                          disabled={updatingId === appointment._id}
-                          onChange={(e) =>
-                            handleUpdateStatus(appointment._id, e.target.value)
-                          }
-                        >
-                          {STATUSES.map((status) => (
-                            <option key={status} value={status}>
-                              {status}
-                            </option>
-                          ))}
-                        </select>
-                      </td>
-                      <td className="px-6 py-4">
-                        {appointment.hasVisited ? (
-                          <GoCheckCircleFill
-                            className="text-xl text-accent-600"
-                            title="Visited"
-                          />
-                        ) : (
-                          <AiFillCloseCircle
-                            className="text-xl text-ink-400"
-                            title="Not visited"
-                          />
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="p-6">
+              <Alert tone="danger" live>
+                {loadError}
+              </Alert>
             </div>
+          ) : loading ? (
+            <SkeletonGroup label="Loading appointments…" className="p-6">
+              <div className="space-y-3">
+                {Array.from({ length: 5 }, (_, row) => (
+                  <div key={row} className="flex gap-4">
+                    <Skeleton className="h-5 w-1/4" />
+                    <Skeleton className="h-5 w-1/6" />
+                    <Skeleton className="h-5 w-1/5" />
+                    <Skeleton className="h-5 w-1/5" />
+                    <Skeleton className="h-5 w-1/12" />
+                  </div>
+                ))}
+              </div>
+            </SkeletonGroup>
+          ) : appointments.length === 0 ? (
+            <EmptyState
+              icon={MdEventNote}
+              className="border-0 shadow-none"
+              title="No appointments booked yet"
+              description="Bookings made from the patient website land here for you to accept or reject."
+            />
+          ) : (
+            <Table
+              caption="Patient appointments"
+              rows={appointments}
+              columns={[
+                {
+                  key: "patient",
+                  header: "Patient",
+                  className: "font-medium text-fg",
+                  render: (a) => `${a.firstName} ${a.lastName}`,
+                },
+                {
+                  key: "date",
+                  header: "Date",
+                  className: "whitespace-nowrap text-fg-muted",
+                  render: (a) => formatDate(a.appointment_date),
+                },
+                {
+                  key: "doctor",
+                  header: "Doctor",
+                  className: "text-fg-muted",
+                  render: (a) =>
+                    a.doctor
+                      ? `Dr. ${a.doctor.firstName} ${a.doctor.lastName}`
+                      : "—",
+                },
+                {
+                  key: "department",
+                  header: "Department",
+                  className: "text-fg-muted",
+                  render: (a) => a.department,
+                },
+                {
+                  key: "status",
+                  header: "Status",
+                  // The pill shows the current state at a glance; the select
+                  // beneath it is how you change it. Previously the select was
+                  // both, which meant the status was only legible once you had
+                  // learned that a coloured dropdown was a status.
+                  render: (a) => (
+                    <div className="flex flex-col items-start gap-1.5">
+                      <StatusPill status={a.status} />
+                      <Select
+                        label={null}
+                        aria-label={`Change status for ${a.firstName} ${a.lastName}`}
+                        options={STATUSES}
+                        value={a.status}
+                        disabled={updatingId === a._id}
+                        onValueChange={(status) =>
+                          handleUpdateStatus(a._id, status)
+                        }
+                        className="w-auto px-2.5 py-1 text-xs"
+                      />
+                    </div>
+                  ),
+                },
+                {
+                  key: "visited",
+                  header: "Visited",
+                  render: (a) =>
+                    a.hasVisited ? (
+                      <GoCheckCircleFill
+                        className="text-xl text-success-600"
+                        title="Visited"
+                      />
+                    ) : (
+                      <AiFillCloseCircle
+                        className="text-xl text-fg-subtle"
+                        title="Not visited"
+                      />
+                    ),
+                },
+              ]}
+            />
           )}
-        </div>
+        </Card>
+
       </div>
     </section>
   );

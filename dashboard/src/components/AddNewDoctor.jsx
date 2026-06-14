@@ -1,9 +1,10 @@
 import { useContext, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import {
+  ,
   Input,
   Logo,
+  notify,
   NumericInput,
   PasswordInput,
   PhoneInput,
@@ -70,12 +71,12 @@ const AddNewDoctor = () => {
     if (!file) return;
 
     if (!ALLOWED_TYPES.includes(file.type)) {
-      toast.error("Avatar must be a PNG, JPEG or WEBP image.");
+      notify.error("Avatar must be a PNG, JPEG or WEBP image.");
       e.target.value = "";
       return;
     }
     if (file.size > MAX_AVATAR_BYTES) {
-      toast.error("Avatar must be 5MB or smaller.");
+      notify.error("Avatar must be 5MB or smaller.");
       e.target.value = "";
       return;
     }
@@ -93,7 +94,7 @@ const AddNewDoctor = () => {
     if (submitting) return;
 
     if (!avatar) {
-      toast.error("Please choose a profile photo for the doctor.");
+      notify.error("Please choose a profile photo for the doctor.");
       return;
     }
 
@@ -107,16 +108,13 @@ const AddNewDoctor = () => {
 
       const { data } = await api.post("/user/doctor/addnew", formData);
 
-      toast.success(data.message);
+      notify.success(data.message);
       setForm(initialForm);
       setAvatar(null);
       setAvatarPreview("");
       navigateTo("/doctors");
     } catch (error) {
-      toast.error(
-        error.response?.data?.message ||
-          "Could not reach the server. Please try again."
-      );
+      notify.apiError(error, "Could not reach the server. Please try again.");
     } finally {
       setSubmitting(false);
     }

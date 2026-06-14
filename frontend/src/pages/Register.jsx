@@ -1,8 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import {
+  ,
   Input,
+  notify,
   NumericInput,
   PasswordInput,
   PhoneInput,
@@ -52,15 +53,12 @@ const Register = () => {
       const { data } = await api.post("/user/patient/register", form, {
         headers: { "Content-Type": "application/json" },
       });
-      toast.success(data.message);
+      notify.success(data.message);
       setForm(initialForm);
       setIsAuthenticated(true);
       navigateTo("/");
     } catch (error) {
-      toast.error(
-        error.response?.data?.message ||
-          "Could not create your account. Please try again."
-      );
+      notify.apiError(error, "Could not create your account. Please try again.");
     } finally {
       setSubmitting(false);
     }

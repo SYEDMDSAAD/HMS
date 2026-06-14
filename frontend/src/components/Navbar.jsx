@@ -2,8 +2,7 @@ import { useContext, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { FaXmark } from "react-icons/fa6";
-import { toast } from "react-toastify";
-import { Logo } from "@uc/ui";
+import { Logo, notify } from "@uc/ui";
 import { Context, api } from "@uc/client";
 
 const NAV_LINKS = [
@@ -36,11 +35,9 @@ const Navbar = () => {
       // POST — the backend route is POST-only so a third-party page cannot
       // force a logout with an <img> tag.
       const { data } = await api.post("/user/patient/logout", {});
-      toast.success(data.message);
+      notify.success(data.message);
     } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Could not log out. Please try again."
-      );
+      notify.apiError(error, "Could not log out. Please try again.");
     } finally {
       // Clear local session either way — if the cookie already expired the
       // request fails, and staying "logged in" would trap the user.

@@ -1,13 +1,11 @@
 /* Public surface of @uc/ui.
  *
- * Everything both apps render in common lives here. Part 5 adds the layout and
- * feedback primitives — Button, Card, StatusPill, Table, EmptyState, Skeleton,
- * Modal, Alert, PageHeader.
+ * Everything both apps render in common lives here.
  *
- * Components here are consumed as source — Vite compiles them as part of
- * whichever app imports them, so there is no build step for this package. That
- * also means any Tailwind class used in here has to be visible to each app's
- * `@source` directive; see frontend/src/App.css.
+ * Components are consumed as source — Vite compiles them as part of whichever
+ * app imports them, so there is no build step for this package. That also means
+ * any Tailwind class used in here has to be visible to each app's `@source`
+ * directive; see frontend/src/App.css.
  *
  * Every component is written in semantic tokens only (surface, fg, line,
  * accent-solid, focus), never in ramp steps, so they are already correct under
@@ -28,3 +26,16 @@ export { Checkbox } from "./Checkbox.jsx";
 export { PasswordInput } from "./PasswordInput.jsx";
 export { PhoneInput } from "./PhoneInput.jsx";
 export { controlClass } from "./field-styles.js";
+
+// Layout and feedback.
+export { Button } from "./Button.jsx";
+export { Card } from "./Card.jsx";
+export { PageHeader } from "./PageHeader.jsx";
+export { Alert } from "./Alert.jsx";
+export { StatusPill } from "./StatusPill.jsx";
+export { EmptyState } from "./EmptyState.jsx";
+export { Skeleton, SkeletonText, SkeletonGroup } from "./Skeleton.jsx";
+export { Table } from "./Table.jsx";
+export { Modal } from "./Modal.jsx";
+export { Toaster } from "./Toaster.jsx";
+export { notify } from "./notify.js";
