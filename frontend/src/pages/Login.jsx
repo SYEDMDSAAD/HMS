@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, Navigate } from "react-router-dom";
-import { Input, notify, PasswordInput } from "@uc/ui";
+import { Button, Card, Input, notify, PasswordInput } from "@uc/ui";
 import { Context, api } from "@uc/client";
 
 const Login = () => {
@@ -46,7 +46,7 @@ const Login = () => {
   return (
     <div className="bg-ink-50 px-4 py-16">
       <div className="mx-auto w-full max-w-md">
-        <div className="rounded-2xl border border-line bg-white p-6 shadow-e1 sm:p-8">
+        <Card className="sm:p-8">
           <div className="text-center">
             <h1 className="text-2xl font-semibold tracking-tight text-ink-900">
               Sign in
@@ -77,16 +77,14 @@ const Login = () => {
               disabled={submitting}
             />
 
-            <button
+            <Button
               type="submit"
-              disabled={submitting}
-              className="w-full rounded-lg bg-accent-700 px-6 py-3 text-sm font-semibold text-white
-                shadow-e1 transition hover:bg-accent-800 focus:outline-none focus-visible:ring-2
-                focus-visible:ring-accent-600 focus-visible:ring-offset-2
-                disabled:cursor-not-allowed disabled:opacity-60"
+              fullWidth
+              loading={submitting}
+              loadingText="Signing in…"
             >
-              {submitting ? "Signing in…" : "Sign in"}
-            </button>
+              Sign in
+            </Button>
           </form>
 
           <p className="mt-6 text-center text-sm text-ink-600">
@@ -98,7 +96,7 @@ const Login = () => {
               Create an account
             </Link>
           </p>
-        </div>
+        </Card>
       </div>
     </div>
   );

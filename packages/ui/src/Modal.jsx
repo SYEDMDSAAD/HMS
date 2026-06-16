@@ -39,14 +39,26 @@ export const Modal = ({
     };
   }, [open]);
 
+  // A native listener, not React's onClose prop.
+  //
+  // React 18 does not wire a synthetic handler for the dialog `close` event —
+  // `close` does not bubble, and this is not one of the non-bubbling events
+  // React special-cases. So <dialog onClose={…}> silently never fires, and
+  // pressing Escape leaves the DOM closed while React still believes it is
+  // open. The visible symptoms are that the page stays scroll-locked forever
+  // and the dialog can never be reopened, because `setOpen(true)` is a no-op
+  // when the state is already true. Both were reproduced before this existed.
+  useEffect(() => {
+    const dialog = ref.current;
+    if (!dialog) return;
+    const handleClose = () => onClose?.();
+    dialog.addEventListener("close", handleClose);
+    return () => dialog.removeEventListener("close", handleClose);
+  }, [onClose]);
+
   return (
     <dialog
       ref={ref}
-      // Fires for Escape as well as for close(); routing both through onClose
-      // keeps React's `open` in step with the DOM's. Without this, Escape
-      // closes the dialog while the parent still thinks it is open, and it
-      // cannot be reopened.
-      onClose={onClose}
       // A click whose target is the dialog itself landed on the backdrop —
       // the content sits in a child element.
       onClick={(event) => {

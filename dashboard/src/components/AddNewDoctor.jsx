@@ -1,7 +1,8 @@
 import { useContext, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import {
-  ,
+  Button,
+  Card,
   Input,
   Logo,
   notify,
@@ -127,7 +128,7 @@ const AddNewDoctor = () => {
   return (
     <section className="min-h-screen bg-ink-50 px-4 py-10 md:pl-28">
       <div className="mx-auto w-full max-w-4xl">
-        <div className="rounded-2xl border border-line bg-white p-6 shadow-e1 sm:p-8">
+        <Card className="sm:p-8">
           <header className="mb-8 flex flex-col items-center text-center">
             <Logo size="lg" />
             <h1 className="mt-4 text-2xl font-semibold tracking-tight text-ink-900">
@@ -261,19 +262,17 @@ const AddNewDoctor = () => {
             </div>
 
             <div className="mt-8 flex justify-center">
-              <button
+              <Button
                 type="submit"
-                disabled={submitting}
-                className="inline-flex w-full items-center justify-center rounded-lg bg-accent-700 px-6 py-3
-                  text-sm font-semibold text-white shadow-e1 transition hover:bg-accent-800
-                  focus:outline-none focus:ring-2 focus:ring-accent-600 focus:ring-offset-2
-                  disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+                className="w-full sm:w-auto"
+                loading={submitting}
+                loadingText="Registering doctor…"
               >
-                {submitting ? "Registering doctor…" : "Register new doctor"}
-              </button>
+                Register new doctor
+              </Button>
             </div>
           </form>
-        </div>
+        </Card>
       </div>
     </section>
   );

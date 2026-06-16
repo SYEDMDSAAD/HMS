@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import { Input, Logo, notify, PasswordInput } from "@uc/ui";
+import { Button, Card, Input, Logo, notify, PasswordInput } from "@uc/ui";
 import { Context, api } from "@uc/client";
 
 const Login = () => {
@@ -42,7 +42,7 @@ const Login = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-ink-50 px-4 py-12">
       <div className="w-full max-w-md">
-        <div className="rounded-2xl border border-line bg-white p-8 shadow-e1">
+        <Card className="p-8">
           <div className="flex flex-col items-center text-center">
             <Logo size="lg" />
             <h1 className="mt-5 text-2xl font-semibold tracking-tight text-ink-900">
@@ -74,18 +74,16 @@ const Login = () => {
               disabled={submitting}
             />
 
-            <button
+            <Button
               type="submit"
-              disabled={submitting}
-              className="w-full rounded-lg bg-accent-700 px-6 py-3 text-sm font-semibold text-white
-                shadow-e1 transition hover:bg-accent-800 focus:outline-none focus:ring-2
-                focus:ring-accent-600 focus:ring-offset-2 disabled:cursor-not-allowed
-                disabled:opacity-60"
+              fullWidth
+              loading={submitting}
+              loadingText="Signing in…"
             >
-              {submitting ? "Signing in…" : "Sign in"}
-            </button>
+              Sign in
+            </Button>
           </form>
-        </div>
+        </Card>
 
         <p className="mt-6 text-center text-xs text-ink-500">
           Patients should book appointments on the main website.

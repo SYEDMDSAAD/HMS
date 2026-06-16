@@ -1,7 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import {
-  ,
+  Button,
+  Card,
   Input,
   notify,
   NumericInput,
@@ -71,7 +72,7 @@ const Register = () => {
   return (
     <div className="bg-ink-50 px-4 py-16">
       <div className="mx-auto w-full max-w-2xl">
-        <div className="rounded-2xl border border-line bg-white p-6 shadow-e1 sm:p-8">
+        <Card className="sm:p-8">
           <div className="text-center">
             <h1 className="text-2xl font-semibold tracking-tight text-ink-900">
               Create an account
@@ -172,16 +173,15 @@ const Register = () => {
               records at UC Healthcare.
             </p>
 
-            <button
+            <Button
               type="submit"
-              disabled={submitting}
-              className="mt-6 w-full rounded-lg bg-accent-700 px-6 py-3 text-sm font-semibold text-white
-                shadow-e1 transition hover:bg-accent-800 focus:outline-none focus-visible:ring-2
-                focus-visible:ring-accent-600 focus-visible:ring-offset-2
-                disabled:cursor-not-allowed disabled:opacity-60"
+              className="mt-6"
+              fullWidth
+              loading={submitting}
+              loadingText="Creating account…"
             >
-              {submitting ? "Creating account…" : "Create account"}
-            </button>
+              Create account
+            </Button>
           </form>
 
           <p className="mt-6 text-center text-sm text-ink-600">
@@ -193,7 +193,7 @@ const Register = () => {
               Sign in
             </Link>
           </p>
-        </div>
+        </Card>
       </div>
     </div>
   );

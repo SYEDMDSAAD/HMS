@@ -1,11 +1,14 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  ,
+  Alert,
+  Button,
+  Card,
   Checkbox,
   Input,
   notify,
   NumericInput,
+  PageHeader,
   PhoneInput,
   Select,
   Textarea,
@@ -129,38 +132,33 @@ const AppointmentForm = () => {
   };
 
   return (
-    <section className="bg-ink-50 px-4 py-16">
+    <section className="bg-canvas px-4 py-16">
       <div className="mx-auto w-full max-w-4xl">
-        <div className="mb-8 text-center">
-          <h2 className="text-3xl font-semibold tracking-tight text-ink-900">
-            Book an Appointment
-          </h2>
-          <p className="mx-auto mt-3 max-w-xl text-ink-600">
-            Choose a department and doctor, and our front desk will confirm your
-            slot shortly.
-          </p>
-        </div>
+        <PageHeader
+          className="mb-8"
+          align="center"
+          size="lg"
+          title="Book an Appointment"
+          description="Choose a department and doctor, and our front desk will confirm your slot shortly."
+        />
 
         {!isAuthenticated && (
-          <div className="mb-6 rounded-xl border border-warning-200 bg-warning-50 px-5 py-4 text-sm text-warning-900">
+          <Alert tone="warning" className="mb-6">
             Please{" "}
             <Link to="/login" className="font-semibold underline">
               sign in
             </Link>{" "}
             before booking so we can attach the appointment to your record.
-          </div>
+          </Alert>
         )}
 
         {doctorsError && (
-          <div className="mb-6 rounded-xl border border-danger-200 bg-danger-50 px-5 py-4 text-sm text-danger-800">
+          <Alert tone="danger" live className="mb-6">
             {doctorsError}
-          </div>
+          </Alert>
         )}
 
-        <form
-          onSubmit={handleAppointment}
-          className="rounded-2xl border border-line bg-white p-6 shadow-e1 sm:p-8"
-        >
+        <Card as="form" onSubmit={handleAppointment} className="sm:p-8">
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <Input
               label="First name"
@@ -295,18 +293,16 @@ const AppointmentForm = () => {
           />
 
           <div className="mt-8">
-            <button
+            <Button
               type="submit"
-              disabled={submitting}
-              className="w-full rounded-lg bg-accent-700 px-6 py-3 text-sm font-semibold text-white
-                shadow-e1 transition hover:bg-accent-800 focus:outline-none focus:ring-2
-                focus:ring-accent-600 focus:ring-offset-2 disabled:cursor-not-allowed
-                disabled:opacity-60 sm:w-auto"
+              className="w-full sm:w-auto"
+              loading={submitting}
+              loadingText="Booking appointment…"
             >
-              {submitting ? "Booking appointment…" : "Get appointment"}
-            </button>
+              Get appointment
+            </Button>
           </div>
-        </form>
+        </Card>
       </div>
     </section>
   );

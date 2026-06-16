@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { FaXmark } from "react-icons/fa6";
-import { Logo, notify } from "@uc/ui";
+import { Button, Logo, notify } from "@uc/ui";
 import { Context, api } from "@uc/client";
 
 const NAV_LINKS = [
@@ -67,26 +67,21 @@ const Navbar = () => {
           ))}
 
           {isAuthenticated ? (
-            <button
-              type="button"
+            <Button
+              variant="secondary"
+              size="md"
               onClick={handleLogout}
-              disabled={loggingOut}
-              className="rounded-lg border border-line-control px-5 py-2 text-sm font-semibold
-                text-ink-700 transition hover:bg-ink-50 focus:outline-none
-                focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2
-                disabled:opacity-60"
+              loading={loggingOut}
+              loadingText="Logging out…"
             >
-              {loggingOut ? "Logging out…" : "Logout"}
-            </button>
+              Logout
+            </Button>
           ) : (
-            <Link
-              to="/login"
-              className="rounded-lg bg-accent-700 px-5 py-2 text-sm font-semibold text-white
-                transition hover:bg-accent-800 focus:outline-none focus-visible:ring-2
-                focus-visible:ring-accent-600 focus-visible:ring-offset-2"
-            >
+            // A control that navigates stays a link, so middle-click and
+            // "copy link address" keep working. Button only lends it the look.
+            <Button as={Link} to="/login" size="md">
               Login
-            </Link>
+            </Button>
           )}
         </div>
 
@@ -96,9 +91,9 @@ const Navbar = () => {
           onClick={() => setOpen((value) => !value)}
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
-          className="flex h-10 w-10 items-center justify-center rounded-lg text-ink-700
-            transition hover:bg-ink-100 focus:outline-none focus-visible:ring-2
-            focus-visible:ring-accent-600 md:hidden"
+          className="flex h-10 w-10 items-center justify-center rounded-lg text-fg-muted
+            transition hover:bg-surface-muted focus:outline-none focus-visible:ring-2
+            focus-visible:ring-focus md:hidden"
         >
           {open ? <FaXmark /> : <GiHamburgerMenu />}
         </button>
@@ -121,26 +116,24 @@ const Navbar = () => {
             ))}
 
             {isAuthenticated ? (
-              <button
-                type="button"
+              <Button
+                variant="secondary"
+                className="mt-2"
                 onClick={handleLogout}
-                disabled={loggingOut}
-                className="mt-2 rounded-lg border border-line-control px-4 py-3 text-sm font-semibold
-                  text-ink-700 transition hover:bg-ink-50 focus:outline-none
-                  focus-visible:ring-2 focus-visible:ring-accent-600 disabled:opacity-60"
+                loading={loggingOut}
+                loadingText="Logging out…"
               >
-                {loggingOut ? "Logging out…" : "Logout"}
-              </button>
+                Logout
+              </Button>
             ) : (
-              <Link
+              <Button
+                as={Link}
                 to="/login"
+                className="mt-2"
                 onClick={() => setOpen(false)}
-                className="mt-2 rounded-lg bg-accent-700 px-4 py-3 text-center text-sm font-semibold
-                  text-white transition hover:bg-accent-800 focus:outline-none
-                  focus-visible:ring-2 focus-visible:ring-accent-600"
               >
                 Login
-              </Link>
+              </Button>
             )}
           </div>
         </div>

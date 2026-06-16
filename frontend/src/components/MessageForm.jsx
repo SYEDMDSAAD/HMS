@@ -1,5 +1,13 @@
 import { useState } from "react";
-import { Input, notify, PhoneInput, Textarea } from "@uc/ui";
+import {
+  Button,
+  Card,
+  Input,
+  notify,
+  PageHeader,
+  PhoneInput,
+  Textarea,
+} from "@uc/ui";
 import { api } from "@uc/client";
 
 const initialForm = {
@@ -38,23 +46,16 @@ const MessageForm = () => {
   return (
     <section className="bg-white px-4 py-16 sm:py-20">
       <div className="mx-auto w-full max-w-3xl">
-        <div className="mb-8 text-center">
-          <p className="text-sm font-semibold uppercase tracking-wider text-accent-700">
-            Get in touch
-          </p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight text-ink-900 sm:text-4xl">
-            Send Us a Message
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-ink-600">
-            Questions about a department, a report or your visit? Write to us and
-            our team will get back to you.
-          </p>
-        </div>
+        <PageHeader
+          className="mb-8"
+          align="center"
+          size="lg"
+          eyebrow="Get in touch"
+          title="Send Us a Message"
+          description="Questions about a department, a report or your visit? Write to us and our team will get back to you."
+        />
 
-        <form
-          onSubmit={handleMessage}
-          className="rounded-2xl border border-line bg-white p-6 shadow-e1 sm:p-8"
-        >
+        <Card as="form" onSubmit={handleMessage} className="sm:p-8">
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <Input
               label="First name"
@@ -116,18 +117,16 @@ const MessageForm = () => {
           </div>
 
           <div className="mt-8 flex justify-center">
-            <button
+            <Button
               type="submit"
-              disabled={submitting}
-              className="w-full rounded-lg bg-accent-700 px-6 py-3 text-sm font-semibold text-white
-                shadow-e1 transition hover:bg-accent-800 focus:outline-none focus-visible:ring-2
-                focus-visible:ring-accent-600 focus-visible:ring-offset-2
-                disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+              className="w-full sm:w-auto"
+              loading={submitting}
+              loadingText="Sending…"
             >
-              {submitting ? "Sending…" : "Send message"}
-            </button>
+              Send message
+            </Button>
           </div>
-        </form>
+        </Card>
       </div>
     </section>
   );
