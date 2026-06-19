@@ -244,7 +244,11 @@ const Dashboard = () => {
                         onValueChange={(status) =>
                           handleUpdateStatus(a._id, status)
                         }
-                        className="w-auto px-2.5 py-1 text-xs"
+                        // No width override here on purpose: `w-auto` would
+                        // collide with the `w-full` inside controlClass, and
+                        // which one wins is decided by Tailwind's output order,
+                        // not by the order they are written.
+                        className="px-2.5 py-1 text-xs"
                       />
                     </div>
                   ),

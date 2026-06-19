@@ -39,22 +39,31 @@ export const Modal = ({
     };
   }, [open]);
 
-  // A native listener, not React's onClose prop.
+  // Escape is handled here rather than left to the platform.
   //
-  // React 18 does not wire a synthetic handler for the dialog `close` event —
-  // `close` does not bubble, and this is not one of the non-bubbling events
-  // React special-cases. So <dialog onClose={…}> silently never fires, and
-  // pressing Escape leaves the DOM closed while React still believes it is
-  // open. The visible symptoms are that the page stays scroll-locked forever
-  // and the dialog can never be reopened, because `setOpen(true)` is a no-op
-  // when the state is already true. Both were reproduced before this existed.
+  // <dialog> closes itself on Escape, which sounds like a feature until you
+  // pair it with React: the DOM closes, the `open` prop stays true, and the two
+  // are now out of step. Observed symptoms, both reproduced in the browser
+  // before this existed — the page stays permanently scroll-locked, and the
+  // dialog can never be reopened, because `setOpen(true)` is a no-op when the
+  // state is already true.
+  //
+  // The usual fix is to listen for the dialog's `close` event and mirror it
+  // into state. That did not fire here, in this React 18 + Chrome combination,
+  // via React's onClose prop or a native listener, so the reliable route is to
+  // intercept the keystroke in the capture phase, cancel the platform's own
+  // close, and let React drive: state flips, the effect above calls close(),
+  // and the DOM follows the prop instead of racing it.
   useEffect(() => {
-    const dialog = ref.current;
-    if (!dialog) return;
-    const handleClose = () => onClose?.();
-    dialog.addEventListener("close", handleClose);
-    return () => dialog.removeEventListener("close", handleClose);
-  }, [onClose]);
+    if (!open) return undefined;
+    const handleKey = (event) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      onClose?.();
+    };
+    document.addEventListener("keydown", handleKey, true);
+    return () => document.removeEventListener("keydown", handleKey, true);
+  }, [open, onClose]);
 
   return (
     <dialog
