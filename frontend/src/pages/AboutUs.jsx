@@ -12,17 +12,21 @@ const AboutUs = () => {
   return (
     <>
       <Hero
-        title="About UC Healthcare"
-        imageUrl="/about.png"
+        eyebrow="About us"
+        title="A hospital built around the people in it"
+        description="Thirteen departments, an emergency room that never closes, and a front desk that answers the phone."
         showActions={false}
+        showHighlights={false}
       />
 
-      <Biography imageUrl="/whoweare.png" />
+      <Biography />
 
-      <section className="bg-accent-800 px-4 py-14">
+      {/* The one inverted band on the site. It is the closing call to action,
+          and being the only dark surface is what makes it read as one. */}
+      <section className="bg-accent-900 px-4 py-16">
         <div className="mx-auto flex w-full max-w-4xl flex-col items-center gap-6 text-center sm:flex-row sm:justify-between sm:text-left">
           <div>
-            <h2 className="text-2xl font-semibold tracking-tight text-white">
+            <h2 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
               Ready to see a specialist?
             </h2>
             <p className="mt-2 text-accent-100">
@@ -31,10 +35,13 @@ const AboutUs = () => {
           </div>
           <Link
             to="/appointment"
-            className="shrink-0 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-accent-800
+            // Not <Button>: on an accent-900 band the button's own focus-ring
+            // offset colour would be wrong, and the inverted fill is specific
+            // to this one placement.
+            className="shrink-0 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-accent-900
               shadow-e1 transition hover:bg-accent-50 focus:outline-none focus-visible:ring-2
               focus-visible:ring-white focus-visible:ring-offset-2
-              focus-visible:ring-offset-accent-800"
+              focus-visible:ring-offset-accent-900"
           >
             Book an appointment
           </Link>

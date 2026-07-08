@@ -10,9 +10,11 @@ const Appointment = () => {
   return (
     <>
       <Hero
-        title="Schedule Your Appointment"
-        imageUrl="/signin.png"
+        eyebrow="Appointments"
+        title="Schedule your appointment"
+        description="Tell us who you are and which department you need. Our front desk confirms every request personally."
         showActions={false}
+        showHighlights={false}
       />
       <AppointmentForm />
     </>

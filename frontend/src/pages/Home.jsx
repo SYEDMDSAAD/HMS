@@ -13,11 +13,12 @@ const Home = () => {
   return (
     <>
       <Hero
+        eyebrow="UC Healthcare"
         title="Expert care, when you need it most"
-        imageUrl="/hero.png"
+        description="Specialists, diagnostics and emergency services in one place. Book a consultation online and our front desk will confirm your slot — no queueing, no paperwork before you arrive."
       />
       <Departments />
-      <Biography imageUrl="/about.png" />
+      <Biography />
       <MessageForm />
     </>
   );

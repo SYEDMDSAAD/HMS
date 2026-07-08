@@ -13,12 +13,12 @@ const NAV_LINKS = [
 
 const linkClass = ({ isActive }) =>
   `text-sm font-medium transition ${
-    isActive ? "text-accent-700" : "text-ink-600 hover:text-accent-700"
+    isActive ? "text-accent-text" : "text-fg-muted hover:text-accent-text"
   }`;
 
 const mobileLinkClass = ({ isActive }) =>
   `rounded-lg px-4 py-3 text-sm font-medium transition ${
-    isActive ? "bg-accent-50 text-accent-700" : "text-ink-700 hover:bg-ink-100"
+    isActive ? "bg-accent-tint text-accent-text" : "text-fg-muted hover:bg-surface-muted"
   }`;
 
 const Navbar = () => {
@@ -49,7 +49,7 @@ const Navbar = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-line bg-surface/95 backdrop-blur">
       <nav
         aria-label="Main navigation"
         className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3"
@@ -101,7 +101,7 @@ const Navbar = () => {
 
       {/* Mobile panel */}
       {open && (
-        <div className="border-t border-line bg-white md:hidden">
+        <div className="border-t border-line bg-surface md:hidden">
           <div className="mx-auto flex w-full max-w-6xl flex-col gap-1 px-4 py-3">
             {NAV_LINKS.map(({ to, label, end }) => (
               <NavLink
