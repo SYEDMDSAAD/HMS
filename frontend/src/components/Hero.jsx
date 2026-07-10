@@ -59,8 +59,12 @@ const Hero = ({
         </>
       )}
 
+      {/* max-w-6xl matches every other section on the site. The measure is
+          capped further in on the text itself — if the hero used its own
+          narrower container, its left edge would not line up with the
+          departments grid below it, and the page would read as two grids. */}
       <div
-        className={`mx-auto w-full max-w-3xl py-20 sm:py-24 ${
+        className={`mx-auto w-full max-w-6xl py-20 sm:py-24 ${
           onImage ? "text-white" : ""
         }`}
       >
@@ -74,11 +78,11 @@ const Hero = ({
           </p>
         )}
 
-        {/* The measure is capped rather than left to the container: a headline
-            running the full width of a 1440px viewport is unreadable, and that
-            is what the old two-column layout was accidentally preventing. */}
+        {/* Capped rather than left to the container: a headline running the
+            full width of a 1440px viewport is unreadable, and the old
+            two-column layout was only preventing that by accident. */}
         <h1
-          className={`mt-4 max-w-2xl text-4xl font-semibold leading-[1.1] tracking-tight
+          className={`mt-4 max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight
             sm:text-5xl lg:text-6xl ${onImage ? "text-white" : "text-fg"}`}
         >
           {title}
@@ -108,7 +112,7 @@ const Hero = ({
 
       {showHighlights && (
         <div
-          className={`mx-auto w-full max-w-3xl border-t pb-16 pt-10 ${
+          className={`mx-auto w-full max-w-6xl border-t pb-16 pt-10 ${
             onImage ? "border-white/20" : "border-line"
           }`}
         >

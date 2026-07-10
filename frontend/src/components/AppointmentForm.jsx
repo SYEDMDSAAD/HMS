@@ -8,7 +8,6 @@ import {
   Input,
   notify,
   NumericInput,
-  PageHeader,
   PhoneInput,
   Select,
   Textarea,
@@ -134,14 +133,6 @@ const AppointmentForm = () => {
   return (
     <section className="bg-canvas px-4 py-16">
       <div className="mx-auto w-full max-w-4xl">
-        <PageHeader
-          className="mb-8"
-          align="center"
-          size="lg"
-          title="Book an Appointment"
-          description="Choose a department and doctor, and our front desk will confirm your slot shortly."
-        />
-
         {!isAuthenticated && (
           <Alert tone="warning" className="mb-6">
             Please{" "}

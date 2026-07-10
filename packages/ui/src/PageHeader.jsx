@@ -29,7 +29,16 @@ export const PageHeader = ({
   return (
     <div
       className={[
-        centred ? "text-center" : "sm:flex sm:items-end sm:justify-between sm:gap-6",
+        centred
+          ? "text-center"
+          : // The flex row exists to sit `actions` beside the title and align
+            // their baselines. With no actions there is nothing to align, and
+            // `items-end` then pushes the whole header to the bottom of
+            // whatever box it is in — which is exactly what happened when one
+            // was dropped into a stretched grid cell.
+            actions
+            ? "sm:flex sm:items-end sm:justify-between sm:gap-6"
+            : "",
         className,
       ]
         .filter(Boolean)
