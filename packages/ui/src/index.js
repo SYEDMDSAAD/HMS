@@ -39,3 +39,16 @@ export { Table } from "./Table.jsx";
 export { Modal } from "./Modal.jsx";
 export { Toaster } from "./Toaster.jsx";
 export { notify } from "./notify.js";
+
+// Colour theme. The resolved theme lives on <html data-theme>; each app's
+// index.html carries an inline script that sets it before first paint.
+export { ThemeToggle } from "./ThemeToggle.jsx";
+export { useTheme } from "./use-theme.js";
+export {
+  THEME_STORAGE_KEY,
+  THEME_PREFERENCES,
+  applyTheme,
+  getThemePreference,
+  resolveTheme,
+  setThemePreference,
+} from "./theme.js";

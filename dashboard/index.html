@@ -12,6 +12,26 @@
     />
     <meta name="theme-color" content="#0d9488" />
     <title>Admin Dashboard · UC Healthcare</title>
+    <!-- Resolve the colour theme before first paint.
+
+         This has to be an inline, blocking script in <head>: if the theme were
+         applied from React instead, the page would paint light, then snap to
+         dark once the bundle ran. The key must stay in step with
+         THEME_STORAGE_KEY in packages/ui/src/theme.js. -->
+    <script>
+      (function () {
+        try {
+          var pref = localStorage.getItem("uc-theme") || "system";
+          var dark =
+            pref === "dark" ||
+            (pref === "system" &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches);
+          document.documentElement.dataset.theme = dark ? "dark" : "light";
+        } catch (e) {
+          document.documentElement.dataset.theme = "light";
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

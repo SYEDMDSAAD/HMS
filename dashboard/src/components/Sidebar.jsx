@@ -20,17 +20,17 @@ const NAV_ITEMS = [
 
 const railLink = ({ isActive }) =>
   `group relative flex h-12 w-12 items-center justify-center rounded-xl transition
-   focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 ${
+   focus:outline-none focus-visible:ring-2 focus-visible:ring-focus ${
      isActive
        ? "bg-accent-700 text-white shadow-e1"
-       : "text-ink-500 hover:bg-ink-100 hover:text-accent-700"
+       : "text-fg-subtle hover:bg-surface-muted hover:text-accent-text"
    }`;
 
 const panelLink = ({ isActive }) =>
   `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition ${
     isActive
       ? "bg-accent-700 text-white"
-      : "text-ink-600 hover:bg-ink-100 hover:text-accent-700"
+      : "text-fg-muted hover:bg-surface-muted hover:text-accent-text"
   }`;
 
 const Sidebar = () => {
@@ -69,7 +69,7 @@ const Sidebar = () => {
       <nav
         aria-label="Dashboard navigation"
         className="fixed inset-y-0 left-0 z-30 hidden w-20 flex-col items-center gap-2
-          border-r border-line bg-white py-6 md:flex"
+          border-r border-line bg-surface py-6 md:flex"
       >
         <LogoMark className="mb-4 h-9 w-9" title="UC Healthcare" />
 
@@ -94,7 +94,7 @@ const Sidebar = () => {
           disabled={loggingOut}
           title="Log out"
           className="group relative mt-auto flex h-12 w-12 items-center justify-center rounded-xl
-            text-ink-500 transition hover:bg-danger-50 hover:text-danger-700
+            text-fg-subtle transition hover:bg-danger-50 hover:text-danger-700
             focus:outline-none focus-visible:ring-2 focus-visible:ring-danger-500
             disabled:opacity-50"
         >
@@ -117,9 +117,9 @@ const Sidebar = () => {
         aria-label="Open navigation menu"
         aria-expanded={open}
         className="fixed left-4 top-4 z-30 flex h-11 w-11 items-center justify-center rounded-xl
-          border border-line bg-white text-ink-700 shadow-e1 transition
-          hover:bg-ink-50 focus:outline-none focus-visible:ring-2
-          focus-visible:ring-accent-600 md:hidden"
+          border border-line bg-surface text-fg-muted shadow-e1 transition
+          hover:bg-surface-muted focus:outline-none focus-visible:ring-2
+          focus-visible:ring-focus md:hidden"
       >
         <GiHamburgerMenu />
       </button>
@@ -135,7 +135,7 @@ const Sidebar = () => {
           <nav
             aria-label="Dashboard navigation"
             className="absolute inset-y-0 left-0 flex w-72 max-w-[80%] flex-col
-              border-r border-line bg-white p-4 shadow-e3"
+              border-r border-line bg-surface p-4 shadow-e3"
           >
             <div className="mb-6 flex items-center justify-between">
               <Logo size="sm" />
@@ -143,9 +143,9 @@ const Sidebar = () => {
                 type="button"
                 onClick={() => setOpen(false)}
                 aria-label="Close navigation menu"
-                className="flex h-9 w-9 items-center justify-center rounded-lg text-ink-500
-                  transition hover:bg-ink-100 focus:outline-none
-                  focus-visible:ring-2 focus-visible:ring-accent-600"
+                className="flex h-9 w-9 items-center justify-center rounded-lg text-fg-subtle
+                  transition hover:bg-surface-muted focus:outline-none
+                  focus-visible:ring-2 focus-visible:ring-focus"
               >
                 <FaXmark />
               </button>

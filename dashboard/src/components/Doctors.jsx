@@ -52,7 +52,7 @@ const Doctors = () => {
   }
 
   return (
-    <section className="min-h-screen bg-ink-50 px-4 py-8 md:pl-28">
+    <section className="min-h-screen bg-surface-muted px-4 py-8 md:pl-28">
       <div className="mx-auto w-full max-w-6xl">
         <PageHeader
           level={1}
@@ -109,7 +109,7 @@ const Doctors = () => {
                   className="h-24 w-24 rounded-full object-cover ring-1 ring-line"
                 />
 
-                <h2 className="mt-4 text-base font-semibold text-ink-900">
+                <h2 className="mt-4 text-base font-semibold text-fg">
                   Dr. {doctor.firstName} {doctor.lastName}
                 </h2>
 
@@ -118,18 +118,18 @@ const Doctors = () => {
                 </span>
 
                 <dl className="mt-5 w-full space-y-2.5 text-left text-sm">
-                  <div className="flex items-center gap-2.5 text-ink-600">
-                    <MdEmail className="shrink-0 text-ink-400" />
+                  <div className="flex items-center gap-2.5 text-fg-muted">
+                    <MdEmail className="shrink-0 text-fg-subtle" />
                     <dd className="min-w-0 truncate" title={doctor.email}>
                       {doctor.email}
                     </dd>
                   </div>
-                  <div className="flex items-center gap-2.5 text-ink-600">
-                    <FaPhone className="shrink-0 text-ink-400" />
+                  <div className="flex items-center gap-2.5 text-fg-muted">
+                    <FaPhone className="shrink-0 text-fg-subtle" />
                     <dd>{formatPhone(doctor.phone)}</dd>
                   </div>
-                  <div className="flex items-center justify-between border-t border-ink-100 pt-2.5 text-ink-600">
-                    <dt className="text-ink-500">Gender</dt>
+                  <div className="flex items-center justify-between border-t border-line pt-2.5 text-fg-muted">
+                    <dt className="text-fg-subtle">Gender</dt>
                     <dd>{doctor.gender || "—"}</dd>
                   </div>
                 </dl>

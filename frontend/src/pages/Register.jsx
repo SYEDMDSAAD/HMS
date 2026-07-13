@@ -70,14 +70,14 @@ const Register = () => {
   }
 
   return (
-    <div className="bg-ink-50 px-4 py-16">
+    <div className="bg-surface-muted px-4 py-16">
       <div className="mx-auto w-full max-w-2xl">
         <Card className="sm:p-8">
           <div className="text-center">
-            <h1 className="text-2xl font-semibold tracking-tight text-ink-900">
+            <h1 className="text-2xl font-semibold tracking-tight text-fg">
               Create an account
             </h1>
-            <p className="mt-2 text-sm text-ink-500">
+            <p className="mt-2 text-sm text-fg-subtle">
               Register once to book appointments across all our departments.
             </p>
           </div>
@@ -168,7 +168,7 @@ const Register = () => {
               />
             </div>
 
-            <p className="mt-6 text-xs text-ink-500">
+            <p className="mt-6 text-xs text-fg-subtle">
               Your details are used only to manage your appointments and medical
               records at UC Healthcare.
             </p>
@@ -184,11 +184,11 @@ const Register = () => {
             </Button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-ink-600">
+          <p className="mt-6 text-center text-sm text-fg-muted">
             Already registered?{" "}
             <Link
               to="/login"
-              className="font-semibold text-accent-700 transition hover:text-accent-800"
+              className="font-semibold text-accent-text transition hover:text-accent-text"
             >
               Sign in
             </Link>

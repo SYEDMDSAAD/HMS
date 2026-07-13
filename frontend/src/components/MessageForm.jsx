@@ -44,7 +44,7 @@ const MessageForm = () => {
   };
 
   return (
-    <section className="bg-white px-4 py-16 sm:py-20">
+    <section className="bg-surface px-4 py-16 sm:py-20">
       <div className="mx-auto w-full max-w-3xl">
         <PageHeader
           className="mb-8"

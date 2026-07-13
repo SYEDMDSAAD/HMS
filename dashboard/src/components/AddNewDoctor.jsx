@@ -126,15 +126,15 @@ const AddNewDoctor = () => {
   }
 
   return (
-    <section className="min-h-screen bg-ink-50 px-4 py-10 md:pl-28">
+    <section className="min-h-screen bg-surface-muted px-4 py-10 md:pl-28">
       <div className="mx-auto w-full max-w-4xl">
         <Card className="sm:p-8">
           <header className="mb-8 flex flex-col items-center text-center">
             <Logo size="lg" />
-            <h1 className="mt-4 text-2xl font-semibold tracking-tight text-ink-900">
+            <h1 className="mt-4 text-2xl font-semibold tracking-tight text-fg">
               Register a New Doctor
             </h1>
-            <p className="mt-1.5 text-sm text-ink-500">
+            <p className="mt-1.5 text-sm text-fg-subtle">
               Doctors appear in the patient booking form for their department.
             </p>
           </header>
@@ -146,11 +146,11 @@ const AddNewDoctor = () => {
                 <img
                   src={avatarPreview || "/docHolder.jpg"}
                   alt="Doctor avatar preview"
-                  className="h-40 w-40 rounded-full border-4 border-white object-cover shadow-e2 ring-1 ring-ink-200"
+                  className="h-40 w-40 rounded-full border-4 border-white object-cover shadow-e2 ring-1 ring-line"
                 />
                 <label
-                  className="mt-4 cursor-pointer rounded-lg border border-accent-700 px-4 py-2 text-sm
-                    font-medium text-accent-700 transition hover:bg-accent-50
+                  className="mt-4 cursor-pointer rounded-lg border border-accent-solid px-4 py-2 text-sm
+                    font-medium text-accent-text transition hover:bg-accent-tint
                     focus-within:ring-2 focus-within:ring-accent-600 focus-within:ring-offset-2"
                 >
                   {avatar ? "Change photo" : "Choose photo"}
@@ -162,7 +162,7 @@ const AddNewDoctor = () => {
                     disabled={submitting}
                   />
                 </label>
-                <p className="mt-2 text-center text-xs text-ink-500">
+                <p className="mt-2 text-center text-xs text-fg-subtle">
                   PNG, JPEG or WEBP · up to 5MB
                 </p>
               </div>

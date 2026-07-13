@@ -20,12 +20,15 @@
 /* -------------------------------------------------------------------------
  * Dark mode
  *
- * Opt-in only, keyed on <html data-theme="dark">. Deliberately NOT wired to
- * prefers-color-scheme yet: most components still hard-code ramp steps
- * (text-ink-900, bg-white), so a system-dark user would get a half-converted
- * screen. Part 7 moves components onto the semantic tokens and turns the
- * media query on. The values below are defined now so that is a switch, not a
- * retrofit.
+ * Keyed on <html data-theme="dark">, and that attribute is always present:
+ * each app's index.html carries an inline script that resolves the stored
+ * preference — light, dark, or follow the OS — before first paint.
+ *
+ * There is deliberately no prefers-color-scheme media query here. Supporting
+ * "system" in CSS would mean writing the dark palette twice, once under the
+ * attribute and once under the query, and eighteen values kept in two places
+ * are eighteen values that drift. Resolving the preference in JavaScript keeps
+ * one block. See packages/ui/src/theme.js.
  * ---------------------------------------------------------------------- */
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 

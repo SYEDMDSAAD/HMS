@@ -111,7 +111,7 @@ const Dashboard = () => {
     .length;
 
   return (
-    <section className="min-h-screen bg-ink-50 px-4 py-8 md:pl-28">
+    <section className="min-h-screen bg-surface-muted px-4 py-8 md:pl-28">
       <div className="mx-auto w-full max-w-6xl">
         {/* Welcome + stats */}
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
@@ -134,12 +134,12 @@ const Dashboard = () => {
           <StatCard
             label="Total appointments"
             value={loading ? "—" : appointments.length}
-            tone="text-ink-900"
+            tone="text-fg"
           />
           <StatCard
             label="Pending approval"
             value={loading ? "—" : pendingCount}
-            tone={pendingCount > 0 ? "text-warning-600" : "text-ink-900"}
+            tone={pendingCount > 0 ? "text-warning-600" : "text-fg"}
           />
         </div>
 
@@ -147,7 +147,7 @@ const Dashboard = () => {
           <StatCard
             label="Registered doctors"
             value={doctorCount === null ? "—" : doctorCount}
-            tone="text-accent-700"
+            tone="text-accent-text"
           />
           <StatCard
             label="Accepted appointments"
@@ -156,7 +156,7 @@ const Dashboard = () => {
                 ? "—"
                 : appointments.filter((a) => a.status === "Accepted").length
             }
-            tone="text-accent-700"
+            tone="text-accent-text"
           />
         </div>
 

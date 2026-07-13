@@ -44,14 +44,14 @@ const Login = () => {
   }
 
   return (
-    <div className="bg-ink-50 px-4 py-16">
+    <div className="bg-surface-muted px-4 py-16">
       <div className="mx-auto w-full max-w-md">
         <Card className="sm:p-8">
           <div className="text-center">
-            <h1 className="text-2xl font-semibold tracking-tight text-ink-900">
+            <h1 className="text-2xl font-semibold tracking-tight text-fg">
               Sign in
             </h1>
-            <p className="mt-2 text-sm text-ink-500">
+            <p className="mt-2 text-sm text-fg-subtle">
               Sign in to book appointments and view your details.
             </p>
           </div>
@@ -87,11 +87,11 @@ const Login = () => {
             </Button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-ink-600">
+          <p className="mt-6 text-center text-sm text-fg-muted">
             Not registered yet?{" "}
             <Link
               to="/register"
-              className="font-semibold text-accent-700 transition hover:text-accent-800"
+              className="font-semibold text-accent-text transition hover:text-accent-text"
             >
               Create an account
             </Link>

@@ -64,15 +64,15 @@ const AddNewAdmin = () => {
   }
 
   return (
-    <section className="min-h-screen bg-ink-50 px-4 py-10 md:pl-28">
+    <section className="min-h-screen bg-surface-muted px-4 py-10 md:pl-28">
       <div className="mx-auto w-full max-w-3xl">
         <Card className="sm:p-8">
           <header className="mb-8 flex flex-col items-center text-center">
             <Logo size="lg" />
-            <h1 className="mt-4 text-2xl font-semibold tracking-tight text-ink-900">
+            <h1 className="mt-4 text-2xl font-semibold tracking-tight text-fg">
               Add New Admin
             </h1>
-            <p className="mt-1.5 text-sm text-ink-500">
+            <p className="mt-1.5 text-sm text-fg-subtle">
               Admins can manage doctors, appointments and patient enquiries.
             </p>
           </header>

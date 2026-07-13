@@ -40,15 +40,15 @@ const Login = () => {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-ink-50 px-4 py-12">
+    <div className="flex min-h-screen items-center justify-center bg-surface-muted px-4 py-12">
       <div className="w-full max-w-md">
         <Card className="p-8">
           <div className="flex flex-col items-center text-center">
             <Logo size="lg" />
-            <h1 className="mt-5 text-2xl font-semibold tracking-tight text-ink-900">
+            <h1 className="mt-5 text-2xl font-semibold tracking-tight text-fg">
               Admin Dashboard
             </h1>
-            <p className="mt-2 text-sm text-ink-500">
+            <p className="mt-2 text-sm text-fg-subtle">
               UC Healthcare · staff access only
             </p>
           </div>
@@ -85,7 +85,7 @@ const Login = () => {
           </form>
         </Card>
 
-        <p className="mt-6 text-center text-xs text-ink-500">
+        <p className="mt-6 text-center text-xs text-fg-subtle">
           Patients should book appointments on the main website.
         </p>
       </div>

@@ -66,7 +66,7 @@ const Messages = () => {
   }
 
   return (
-    <section className="min-h-screen bg-ink-50 px-4 py-8 md:pl-28">
+    <section className="min-h-screen bg-surface-muted px-4 py-8 md:pl-28">
       <div className="mx-auto w-full max-w-5xl">
         <PageHeader
           level={1}
@@ -109,33 +109,33 @@ const Messages = () => {
               return (
                 <Card as="article" key={message._id} className="flex flex-col">
                   <div className="flex items-start justify-between gap-4">
-                    <h2 className="text-base font-semibold text-ink-900">
+                    <h2 className="text-base font-semibold text-fg">
                       {message.firstName} {message.lastName}
                     </h2>
                     {received && (
-                      <time className="shrink-0 text-xs text-ink-400">
+                      <time className="shrink-0 text-xs text-fg-subtle">
                         {received}
                       </time>
                     )}
                   </div>
 
-                  <p className="mt-4 whitespace-pre-line break-words text-sm leading-relaxed text-ink-700">
+                  <p className="mt-4 whitespace-pre-line break-words text-sm leading-relaxed text-fg-muted">
                     {message.message}
                   </p>
 
-                  <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 border-t border-ink-100 pt-4 text-sm">
+                  <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 border-t border-line pt-4 text-sm">
                     <a
                       href={`mailto:${message.email}`}
-                      className="inline-flex min-w-0 items-center gap-2 text-ink-600 transition hover:text-accent-700"
+                      className="inline-flex min-w-0 items-center gap-2 text-fg-muted transition hover:text-accent-text"
                     >
-                      <MdEmail className="shrink-0 text-ink-400" />
+                      <MdEmail className="shrink-0 text-fg-subtle" />
                       <span className="truncate">{message.email}</span>
                     </a>
                     <a
                       href={`tel:+91${String(message.phone || "").slice(-10)}`}
-                      className="inline-flex items-center gap-2 text-ink-600 transition hover:text-accent-700"
+                      className="inline-flex items-center gap-2 text-fg-muted transition hover:text-accent-text"
                     >
-                      <FaPhone className="shrink-0 text-ink-400" />
+                      <FaPhone className="shrink-0 text-fg-subtle" />
                       {formatPhone(message.phone)}
                     </a>
                   </div>
