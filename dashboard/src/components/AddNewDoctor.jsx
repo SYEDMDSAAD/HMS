@@ -146,12 +146,12 @@ const AddNewDoctor = () => {
                 <img
                   src={avatarPreview || "/docHolder.jpg"}
                   alt="Doctor avatar preview"
-                  className="h-40 w-40 rounded-full border-4 border-white object-cover shadow-e2 ring-1 ring-line"
+                  className="h-40 w-40 rounded-full border-4 border-surface object-cover shadow-e2 ring-1 ring-line"
                 />
                 <label
                   className="mt-4 cursor-pointer rounded-lg border border-accent-solid px-4 py-2 text-sm
                     font-medium text-accent-text transition hover:bg-accent-tint
-                    focus-within:ring-2 focus-within:ring-accent-600 focus-within:ring-offset-2"
+                    focus-within:ring-2 focus-within:ring-focus focus-within:ring-offset-2"
                 >
                   {avatar ? "Change photo" : "Choose photo"}
                   <input

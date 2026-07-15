@@ -15,7 +15,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
-import { Toaster } from "@uc/ui";
+import { Button, Toaster } from "@uc/ui";
 import { Context, api } from "@uc/client";
 
 const NotFound = () => {
@@ -33,15 +33,9 @@ const NotFound = () => {
         <p className="mt-3 text-fg-muted">
           The page you are looking for does not exist or has moved.
         </p>
-        <Link
-          to="/"
-          className="mt-8 inline-flex items-center justify-center rounded-lg bg-accent-700 px-6 py-3
-            text-sm font-semibold text-white shadow-e1 transition hover:bg-accent-800
-            focus:outline-none focus-visible:ring-2 focus-visible:ring-focus
-            focus-visible:ring-offset-2"
-        >
-          Back to home
-        </Link>
+        <Button as={Link} to="/" size="md" className="mt-6">
+        Back to home
+      </Button>
       </div>
     </section>
   );

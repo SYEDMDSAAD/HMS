@@ -188,7 +188,7 @@ const Register = () => {
             Already registered?{" "}
             <Link
               to="/login"
-              className="font-semibold text-accent-text transition hover:text-accent-text"
+              className="font-semibold text-accent-text underline-offset-4 transition hover:underline"
             >
               Sign in
             </Link>

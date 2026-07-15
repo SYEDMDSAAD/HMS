@@ -7,7 +7,7 @@ import { FaUserDoctor, FaXmark } from "react-icons/fa6";
 import { MdAddModerator } from "react-icons/md";
 import { IoPersonAddSharp } from "react-icons/io5";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Logo, LogoMark, notify } from "@uc/ui";
+import { Logo, LogoMark, notify, ThemeToggle } from "@uc/ui";
 import { Context, api } from "@uc/client";
 
 const NAV_ITEMS = [
@@ -22,14 +22,14 @@ const railLink = ({ isActive }) =>
   `group relative flex h-12 w-12 items-center justify-center rounded-xl transition
    focus:outline-none focus-visible:ring-2 focus-visible:ring-focus ${
      isActive
-       ? "bg-accent-700 text-white shadow-e1"
+       ? "bg-accent-solid text-accent-on-solid shadow-e1"
        : "text-fg-subtle hover:bg-surface-muted hover:text-accent-text"
    }`;
 
 const panelLink = ({ isActive }) =>
   `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition ${
     isActive
-      ? "bg-accent-700 text-white"
+      ? "bg-accent-solid text-accent-on-solid"
       : "text-fg-muted hover:bg-surface-muted hover:text-accent-text"
   }`;
 
@@ -80,7 +80,7 @@ const Sidebar = () => {
             {/* Hover tooltip, since an icon on its own is ambiguous. */}
             <span
               className="pointer-events-none absolute left-full ml-3 hidden whitespace-nowrap
-                rounded-md bg-ink-900 px-2.5 py-1.5 text-xs font-medium text-white
+                rounded-md bg-surface-inverted px-2.5 py-1.5 text-xs font-medium text-fg-inverted
                 group-hover:block"
             >
               {label}
@@ -88,12 +88,14 @@ const Sidebar = () => {
           </NavLink>
         ))}
 
+        <ThemeToggle orientation="vertical" className="mt-auto" />
+
         <button
           type="button"
           onClick={handleLogout}
           disabled={loggingOut}
           title="Log out"
-          className="group relative mt-auto flex h-12 w-12 items-center justify-center rounded-xl
+          className="group relative mt-3 flex h-12 w-12 items-center justify-center rounded-xl
             text-fg-subtle transition hover:bg-danger-50 hover:text-danger-700
             focus:outline-none focus-visible:ring-2 focus-visible:ring-danger-500
             disabled:opacity-50"
@@ -102,7 +104,7 @@ const Sidebar = () => {
           <span className="sr-only">Log out</span>
           <span
             className="pointer-events-none absolute left-full ml-3 hidden whitespace-nowrap
-              rounded-md bg-ink-900 px-2.5 py-1.5 text-xs font-medium text-white
+              rounded-md bg-surface-inverted px-2.5 py-1.5 text-xs font-medium text-fg-inverted
               group-hover:block"
           >
             Log out
@@ -128,7 +130,7 @@ const Sidebar = () => {
       {open && (
         <div className="fixed inset-0 z-40 md:hidden">
           <div
-            className="absolute inset-0 bg-ink-900/40"
+            className="absolute inset-0 bg-ink-950/50"
             onClick={() => setOpen(false)}
             aria-hidden="true"
           />
@@ -166,11 +168,13 @@ const Sidebar = () => {
               ))}
             </div>
 
+            <ThemeToggle className="mt-auto self-start" />
+
             <button
               type="button"
               onClick={handleLogout}
               disabled={loggingOut}
-              className="mt-auto flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium
+              className="mt-3 flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium
                 text-danger-700 transition hover:bg-danger-50 focus:outline-none
                 focus-visible:ring-2 focus-visible:ring-danger-500 disabled:opacity-50"
             >

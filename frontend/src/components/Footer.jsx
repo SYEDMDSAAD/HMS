@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { FaLocationDot, FaPhone } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
-import { Logo } from "@uc/ui";
+import { Logo, ThemeToggle } from "@uc/ui";
 
 // PLACEHOLDER CONTACT DETAILS — replace all of these with the hospital's real
 // address, phone numbers and email before this goes live.
@@ -137,7 +137,8 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-line pt-6">
+        <div className="mt-12 flex flex-col items-center gap-4 border-t border-line pt-6 sm:flex-row sm:justify-between">
+          <ThemeToggle />
           <p className="text-center text-xs text-fg-subtle">
             © {new Date().getFullYear()} UC Healthcare. All rights
             reserved.

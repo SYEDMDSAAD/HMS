@@ -113,7 +113,7 @@ const Doctors = () => {
                   Dr. {doctor.firstName} {doctor.lastName}
                 </h2>
 
-                <span className="mt-2 inline-flex items-center rounded-full bg-accent-tint px-3 py-1 text-xs font-medium text-accent-text ring-1 ring-inset ring-accent-200">
+                <span className="mt-2 inline-flex items-center rounded-full bg-accent-tint px-3 py-1 text-xs font-medium text-accent-text ring-1 ring-inset ring-accent-600/25">
                   {doctor.doctorDepartment || "Unassigned"}
                 </span>
 

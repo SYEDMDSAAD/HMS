@@ -134,6 +134,11 @@ const STATUS = {
     ["--color-danger-300", "--ui-surface", TEXT, "error text on a card"],
     ["--color-warning-300", "--ui-surface", TEXT, "warning text on a card"],
     ["--color-success-300", "--ui-surface", TEXT, "success text on a card"],
+    // The tinted status surfaces Alert and StatusPill switch to in dark.
+    ["--color-danger-200", "--color-danger-950", TEXT, "error text on error tint"],
+    ["--color-warning-200", "--color-warning-950", TEXT, "warning text on warning tint"],
+    ["--color-success-200", "--color-success-950", TEXT, "success text on success tint"],
+    ["--color-accent-200", "--color-accent-950", TEXT, "info text on accent tint"],
   ],
 };
 

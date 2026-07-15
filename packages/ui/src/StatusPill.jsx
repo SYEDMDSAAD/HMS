@@ -11,10 +11,18 @@
  * should not break when the backend grows a fourth one.
  */
 
+// See the note in Alert.jsx on why these name ramp steps and carry their own
+// dark variants.
 const TONES = {
-  Pending: "border-warning-300 bg-warning-50 text-warning-900",
-  Accepted: "border-success-200 bg-success-50 text-success-800",
-  Rejected: "border-danger-200 bg-danger-50 text-danger-800",
+  Pending:
+    "border-warning-300 bg-warning-50 text-warning-900 " +
+    "dark:border-warning-800 dark:bg-warning-950 dark:text-warning-200",
+  Accepted:
+    "border-success-200 bg-success-50 text-success-800 " +
+    "dark:border-success-800 dark:bg-success-950 dark:text-success-200",
+  Rejected:
+    "border-danger-200 bg-danger-50 text-danger-800 " +
+    "dark:border-danger-800 dark:bg-danger-950 dark:text-danger-200",
 };
 
 const DOTS = {

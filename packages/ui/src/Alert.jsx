@@ -21,26 +21,42 @@ import {
  *    interrupt: there is nothing new about it.
  */
 
+/* Status tints are the one place components name ramp steps directly rather
+ * than semantic tokens: the tone IS the meaning here, and a "danger surface"
+ * token per tone would be twelve more tokens for four components.
+ *
+ * They do still have to follow the theme, which the `dark:` variants do. A
+ * light pink banner on a dark dashboard is not a subtle wrongness — it is a
+ * glowing rectangle, and it was exactly what shipped before this existed.
+ * Every pair below is checked by packages/theme/check-contrast.mjs. */
 const TONES = {
   info: {
     icon: MdInfo,
-    className: "border-accent-200 bg-accent-50 text-accent-900",
-    iconClass: "text-accent-700",
+    className:
+      "border-accent-200 bg-accent-50 text-accent-900 " +
+      "dark:border-accent-800 dark:bg-accent-950 dark:text-accent-200",
+    iconClass: "text-accent-700 dark:text-accent-300",
   },
   success: {
     icon: MdCheckCircle,
-    className: "border-success-200 bg-success-50 text-success-900",
-    iconClass: "text-success-700",
+    className:
+      "border-success-200 bg-success-50 text-success-900 " +
+      "dark:border-success-800 dark:bg-success-950 dark:text-success-200",
+    iconClass: "text-success-700 dark:text-success-300",
   },
   warning: {
     icon: MdWarning,
-    className: "border-warning-300 bg-warning-50 text-warning-900",
-    iconClass: "text-warning-700",
+    className:
+      "border-warning-300 bg-warning-50 text-warning-900 " +
+      "dark:border-warning-800 dark:bg-warning-950 dark:text-warning-200",
+    iconClass: "text-warning-700 dark:text-warning-300",
   },
   danger: {
     icon: MdError,
-    className: "border-danger-200 bg-danger-50 text-danger-800",
-    iconClass: "text-danger-700",
+    className:
+      "border-danger-200 bg-danger-50 text-danger-800 " +
+      "dark:border-danger-800 dark:bg-danger-950 dark:text-danger-200",
+    iconClass: "text-danger-700 dark:text-danger-300",
   },
 };
 

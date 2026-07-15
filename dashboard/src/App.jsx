@@ -14,7 +14,7 @@ import Doctors from "./components/Doctors";
 import Sidebar from "./components/Sidebar";
 import AddNewAdmin from "./components/AddNewAdmin";
 import "./App.css";
-import { Toaster } from "@uc/ui";
+import { Button, Toaster } from "@uc/ui";
 import { Context, api } from "@uc/client";
 
 const NotFound = () => (
@@ -27,14 +27,9 @@ const NotFound = () => (
       <p className="mt-2 text-sm text-fg-subtle">
         That page does not exist in the dashboard.
       </p>
-      <Link
-        to="/"
-        className="mt-6 inline-flex items-center justify-center rounded-lg bg-accent-700 px-5 py-2.5
-          text-sm font-semibold text-white transition hover:bg-accent-800
-          focus:outline-none focus:ring-2 focus:ring-focus focus:ring-offset-2"
-      >
+      <Button as={Link} to="/" size="md" className="mt-6">
         Back to dashboard
-      </Link>
+      </Button>
     </div>
   </section>
 );
