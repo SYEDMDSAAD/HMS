@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import {
   deleteAppointment,
   getAllAppointments,
+  getAvailability,
   postAppointment,
   updateAppointmentStatus,
 } from "../controller/appointmentController.js";
@@ -22,6 +23,10 @@ router.param("id", (req, res, next, value) => {
   }
   next();
 });
+
+// Public, like GET /user/doctors: someone deciding whether to register should
+// be able to see whether the doctor they want has any free time at all.
+router.get("/availability", getAvailability);
 
 router.post("/post", isPatientAuthenticated, postAppointment);
 router.get("/getall", isAdminAuthenticated, getAllAppointments);

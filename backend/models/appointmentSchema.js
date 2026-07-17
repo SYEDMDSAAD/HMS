@@ -74,10 +74,29 @@ const appointmentSchema = new mongoose.Schema(
       required: [true, "Gender Is Required!"],
       enum: { values: GENDERS, message: "Select A Valid Gender!" },
     },
-    appointment_date: {
-      type: String,
-      required: [true, "Appointment Date Is Required!"],
-      trim: true,
+    // The instant the consultation starts, in UTC. This replaced a bare
+    // "YYYY-MM-DD" string, which could not express a time, could not be
+    // compared or sorted correctly, and made double-booking undetectable —
+    // every appointment on a given day looked identical to every other.
+    // backend/scripts/migrate-appointment-slots.js backfills it.
+    startsAt: {
+      type: Date,
+      required: [true, "Appointment Time Is Required!"],
+      index: true,
+    },
+    endsAt: {
+      type: Date,
+      required: [true, "Appointment End Time Is Required!"],
+    },
+    // Mirrors "this appointment is not Rejected", maintained by the hooks
+    // below. It exists so the unique index can be a *partial* one: a rejected
+    // appointment must stop holding its slot, and MongoDB's partial filters
+    // support $eq but not $ne, so the negation has to be precomputed into a
+    // field rather than expressed in the index.
+    slotHeld: {
+      type: Boolean,
+      default: true,
+      index: true,
     },
     department: {
       type: String,
@@ -124,6 +143,46 @@ const appointmentSchema = new mongoose.Schema(
     },
   },
   { timestamps: true }
+);
+
+/* Keep slotHeld in step with status, on both write paths.
+ *
+ * save() and findOneAndUpdate() do not share hooks, and the admin status
+ * endpoint uses the second — so a rejection through the dashboard would leave
+ * slotHeld true and the slot permanently blocked if only the save hook existed.
+ */
+const heldFor = (status) => status !== "Rejected";
+
+appointmentSchema.pre("save", function (next) {
+  this.slotHeld = heldFor(this.status);
+  next();
+});
+
+appointmentSchema.pre("findOneAndUpdate", function (next) {
+  const update = this.getUpdate() || {};
+  const status = update.status ?? update.$set?.status;
+  if (status !== undefined) {
+    this.set({ slotHeld: heldFor(status) });
+  }
+  next();
+});
+
+/* One doctor cannot be in two places at once.
+ *
+ * This is the actual guarantee — not the availability check in the controller,
+ * which two simultaneous requests can both pass before either writes. The
+ * database rejects the loser of that race with E11000, and the controller turns
+ * that into "someone just took this slot".
+ *
+ * Partial, so that rejecting an appointment frees the slot for rebooking.
+ */
+appointmentSchema.index(
+  { doctorId: 1, startsAt: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { slotHeld: true },
+    name: "one_appointment_per_doctor_per_slot",
+  }
 );
 
 export const Appointment = mongoose.model("Appointment", appointmentSchema);

@@ -5,6 +5,64 @@ import {
   APPOINTMENT_STATUSES,
 } from "../models/appointmentSchema.js";
 import { User } from "../models/userSchema.js";
+import {
+  CLINIC_TIME_ZONE,
+  generateSlots,
+  isDateString,
+  isSlotStart,
+  slotEndFor,
+} from "../models/availability.js";
+
+/**
+ * Which slots a doctor has free on a clinic-local date.
+ *
+ * Public, like the doctor list it accompanies: someone deciding whether to
+ * register should be able to see whether there is any point.
+ */
+export const getAvailability = catchAsyncErrors(async (req, res, next) => {
+  const { doctorId, date } = req.query;
+
+  if (!isDateString(date)) {
+    return next(new ErrorHandler("Provide a date as YYYY-MM-DD.", 400));
+  }
+
+  const doctor = await User.findOne({ _id: doctorId, role: "Doctor" }).select(
+    "availability firstName lastName"
+  );
+  if (!doctor) {
+    return next(new ErrorHandler("Doctor not found.", 404));
+  }
+
+  const slots = generateSlots(doctor.availability, date);
+
+  // One query for the whole day rather than one per slot.
+  const taken = await Appointment.find({
+    doctorId,
+    slotHeld: true,
+    startsAt: {
+      $gte: slots[0]?.startsAt ?? new Date(0),
+      $lte: slots.at(-1)?.startsAt ?? new Date(0),
+    },
+  }).select("startsAt");
+
+  const takenTimes = new Set(taken.map((a) => a.startsAt.getTime()));
+  const now = Date.now();
+
+  res.status(200).json({
+    success: true,
+    timeZone: CLINIC_TIME_ZONE,
+    doctor: { firstName: doctor.firstName, lastName: doctor.lastName },
+    slots: slots.map((slot) => ({
+      startsAt: slot.startsAt,
+      endsAt: slot.endsAt,
+      // A slot earlier today is gone, not merely booked. Saying so keeps the
+      // patient from clicking it and being told it is unavailable.
+      available:
+        !takenTimes.has(slot.startsAt.getTime()) &&
+        slot.startsAt.getTime() > now,
+    })),
+  });
+});
 
 export const postAppointment = catchAsyncErrors(async (req, res, next) => {
   const {
@@ -15,7 +73,7 @@ export const postAppointment = catchAsyncErrors(async (req, res, next) => {
     aadhaar,
     dob,
     gender,
-    appointment_date,
+    startsAt,
     department,
     doctor_firstName,
     doctor_lastName,
@@ -30,7 +88,7 @@ export const postAppointment = catchAsyncErrors(async (req, res, next) => {
     !aadhaar ||
     !dob ||
     !gender ||
-    !appointment_date ||
+    !startsAt ||
     !department ||
     !doctor_firstName ||
     !doctor_lastName ||
@@ -44,7 +102,7 @@ export const postAppointment = catchAsyncErrors(async (req, res, next) => {
     lastName: doctor_lastName,
     role: "Doctor",
     doctorDepartment: department,
-  }).select("_id");
+  }).select("_id availability");
 
   if (matchingDoctors.length === 0) {
     return next(new ErrorHandler("Doctor not found", 404));
@@ -66,7 +124,7 @@ export const postAppointment = catchAsyncErrors(async (req, res, next) => {
     aadhaar,
     dob,
     gender,
-    appointment_date,
+    startsAt,
     department,
     doctor: {
       firstName: doctor_firstName,

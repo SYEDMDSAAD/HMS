@@ -3,6 +3,7 @@ import validator from "validator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { DEPARTMENTS, GENDERS } from "./appointmentSchema.js";
+import { availabilitySchema } from "./availability.js";
 
 export const ROLES = ["Patient", "Doctor", "Admin"];
 
@@ -90,6 +91,19 @@ const userSchema = new mongoose.Schema(
     docAvatar: {
       public_id: String,
       url: String,
+    },
+    // Doctors only. Left undefined for patients and admins rather than given a
+    // default, so that "has no availability" and "works the default hours" stay
+    // distinguishable — a doctor row created before this field existed should
+    // not silently start accepting bookings at hours nobody set.
+    availability: {
+      type: availabilitySchema,
+      required: [
+        function () {
+          return this.role === "Doctor";
+        },
+        "Availability Is Required For A Doctor!",
+      ],
     },
   },
   { timestamps: true }
