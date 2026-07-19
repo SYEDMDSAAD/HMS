@@ -129,11 +129,21 @@ export const clinicDayOfWeek = (dateString) => {
 export const generateSlots = (availability, dateString) => {
   if (!isDateString(dateString)) return [];
 
+  // No availability at all is a data defect, not a doctor who works the usual
+  // hours — the schema requires this field. Falling back to defaults here would
+  // invent consultation hours nobody set, and a patient could be sent to the
+  // hospital at a time the doctor is not there. An unbookable doctor is the
+  // safe failure; run scripts/migrate-appointment-slots.js to set real hours.
+  //
+  // Defaults still apply *within* an availability object, where a missing
+  // slotMinutes is an omission rather than an absence.
+  if (!availability) return [];
+
   const {
     slotMinutes = DEFAULT_SLOT_MINUTES,
     weekly = DEFAULT_WEEKLY_HOURS,
     closedDates = [],
-  } = availability || {};
+  } = availability;
 
   if (closedDates.includes(dateString)) return [];
 

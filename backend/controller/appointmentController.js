@@ -51,6 +51,10 @@ export const getAvailability = catchAsyncErrors(async (req, res, next) => {
   res.status(200).json({
     success: true,
     timeZone: CLINIC_TIME_ZONE,
+    // Lets the caller distinguish "fully booked" from "this doctor has no
+    // consultation hours set", which look identical as an empty slot list and
+    // need completely different actions from the front desk.
+    configured: Boolean(doctor.availability),
     doctor: { firstName: doctor.firstName, lastName: doctor.lastName },
     slots: slots.map((slot) => ({
       startsAt: slot.startsAt,

@@ -42,6 +42,9 @@ const initialForm = {
   dob: "",
   gender: "",
   appointmentDate: "",
+  // The chosen slot, as the ISO instant the API returns. The date above only
+  // narrows which slots to fetch; this is what actually gets booked.
+  startsAt: "",
   department: "",
   doctorId: "",
   address: "",
@@ -50,12 +53,25 @@ const initialForm = {
 
 const today = () => new Date().toISOString().split("T")[0];
 
+// Slots arrive as UTC instants and must be shown in the hospital's zone, not
+// the browser's — a patient booking from abroad should see the time they will
+// actually be seen at, not that instant translated into their own morning.
+const formatSlot = (iso) =>
+  new Date(iso).toLocaleTimeString("en-IN", {
+    timeZone: "Asia/Kolkata",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
 const AppointmentForm = () => {
   const { isAuthenticated } = useContext(Context);
 
   const [form, setForm] = useState(initialForm);
   const [doctors, setDoctors] = useState([]);
   const [doctorsError, setDoctorsError] = useState("");
+  const [slots, setSlots] = useState([]);
+  const [slotsConfigured, setSlotsConfigured] = useState(true);
+  const [slotsLoading, setSlotsLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -75,9 +91,52 @@ const AppointmentForm = () => {
     fetchDoctors();
   }, []);
 
+  // Slots depend on both the doctor and the day, so this refetches whenever
+  // either changes — and clears the previous pick, which belonged to a
+  // different doctor or a different date.
+  useEffect(() => {
+    if (!form.doctorId || !form.appointmentDate) {
+      setSlots([]);
+      return undefined;
+    }
+
+    let cancelled = false;
+    setSlotsLoading(true);
+
+    api
+      .get("/appointment/availability", {
+        params: { doctorId: form.doctorId, date: form.appointmentDate },
+      })
+      .then(({ data }) => {
+        if (cancelled) return;
+        setSlots(data.slots || []);
+        setSlotsConfigured(data.configured !== false);
+      })
+      .catch(() => {
+        if (!cancelled) setSlots([]);
+      })
+      .finally(() => {
+        if (!cancelled) setSlotsLoading(false);
+      });
+
+    // A slow response for a doctor the patient has already moved away from
+    // must not overwrite the slots for the one they are looking at now.
+    return () => {
+      cancelled = true;
+    };
+  }, [form.doctorId, form.appointmentDate]);
+
   const departmentDoctors = useMemo(
     () => doctors.filter((doctor) => doctor.doctorDepartment === form.department),
     [doctors, form.department]
+  );
+
+  // The API returns every slot the doctor works with an `available` flag, so
+  // that a future step can show taken times greyed out rather than hiding them.
+  // Until then only the bookable ones are offered.
+  const availableSlots = useMemo(
+    () => slots.filter((slot) => slot.available),
+    [slots]
   );
 
   // The controls hand back the value, not the event — and the digit-only
@@ -87,8 +146,15 @@ const AppointmentForm = () => {
     setForm((prev) => ({ ...prev, [field]: value }));
 
   const handleDepartmentChange = (department) =>
-    // Clear the doctor too — the previous pick belongs to another department.
-    setForm((prev) => ({ ...prev, department, doctorId: "" }));
+    // Clear the doctor and the slot too — both belonged to another department.
+    setForm((prev) => ({ ...prev, department, doctorId: "", startsAt: "" }));
+
+  // Changing the doctor or the day invalidates the chosen time.
+  const handleDoctorChange = (doctorId) =>
+    setForm((prev) => ({ ...prev, doctorId, startsAt: "" }));
+
+  const handleDateChange = (appointmentDate) =>
+    setForm((prev) => ({ ...prev, appointmentDate, startsAt: "" }));
 
   const handleAppointment = async (e) => {
     e.preventDefault();
@@ -97,6 +163,10 @@ const AppointmentForm = () => {
     const doctor = doctors.find((entry) => entry._id === form.doctorId);
     if (!doctor) {
       notify.error("Please select a doctor.");
+      return;
+    }
+    if (!form.startsAt) {
+      notify.error("Please choose a consultation time.");
       return;
     }
 
@@ -112,7 +182,7 @@ const AppointmentForm = () => {
           aadhaar: form.aadhaar,
           dob: form.dob,
           gender: form.gender,
-          appointment_date: form.appointmentDate,
+          startsAt: form.startsAt,
           department: form.department,
           doctor_firstName: doctor.firstName,
           doctor_lastName: doctor.lastName,
@@ -224,7 +294,7 @@ const AppointmentForm = () => {
               label="Preferred date"
               type="date"
               value={form.appointmentDate}
-              onValueChange={update("appointmentDate")}
+              onValueChange={handleDateChange}
               min={today()}
               required
               disabled={submitting}
@@ -256,9 +326,44 @@ const AppointmentForm = () => {
                 label: `Dr. ${doctor.firstName} ${doctor.lastName}`,
               }))}
               value={form.doctorId}
-              onValueChange={update("doctorId")}
+              onValueChange={handleDoctorChange}
               required
               disabled={submitting || !form.department}
+            />
+
+            <Select
+              label="Consultation time"
+              // The placeholder is the only place a patient will look for why
+              // the list is empty, so it carries the reason rather than sitting
+              // there blank.
+              placeholder={
+                !form.doctorId || !form.appointmentDate
+                  ? "Choose a doctor and date first"
+                  : slotsLoading
+                  ? "Loading times…"
+                  : !slotsConfigured
+                  ? "This doctor has no consultation hours set yet"
+                  : availableSlots.length === 0
+                  ? "No free times on this date"
+                  : "Select a time"
+              }
+              options={availableSlots.map((slot) => ({
+                value: slot.startsAt,
+                label: formatSlot(slot.startsAt),
+              }))}
+              value={form.startsAt}
+              onValueChange={update("startsAt")}
+              hint={
+                availableSlots.length > 0
+                  ? `${availableSlots.length} free · times are IST`
+                  : undefined
+              }
+              required
+              disabled={
+                submitting ||
+                slotsLoading ||
+                availableSlots.length === 0
+              }
             />
 
             <Textarea

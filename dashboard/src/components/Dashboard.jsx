@@ -19,16 +19,24 @@ import { Context, api } from "@uc/client";
 
 const STATUSES = ["Pending", "Accepted", "Rejected"];
 
-// appointment_date is stored as a plain "YYYY-MM-DD" string, so parse
-// defensively and fall back to showing it raw rather than crashing.
-const formatDate = (value) => {
+// startsAt is a real instant now, so it carries a time as well as a date, and
+// both are shown in the hospital's zone rather than the admin's browser zone —
+// a doctor's 09:00 slot must read as 09:00 on the front desk's screen wherever
+// that screen happens to be.
+//
+// Still defensive: appointments migrated from the old bare-date field, or any
+// that predate the migration, may have nothing here.
+const formatSlot = (value) => {
   if (!value) return "—";
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
-  return date.toLocaleDateString("en-IN", {
+  if (Number.isNaN(date.getTime())) return String(value);
+  return date.toLocaleString("en-IN", {
+    timeZone: "Asia/Kolkata",
     day: "2-digit",
     month: "short",
     year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 };
 
@@ -206,9 +214,9 @@ const Dashboard = () => {
                 },
                 {
                   key: "date",
-                  header: "Date",
+                  header: "Date & time",
                   className: "whitespace-nowrap text-fg-muted",
-                  render: (a) => formatDate(a.appointment_date),
+                  render: (a) => formatSlot(a.startsAt),
                 },
                 {
                   key: "doctor",
