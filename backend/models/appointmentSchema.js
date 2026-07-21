@@ -54,12 +54,13 @@ const appointmentSchema = new mongoose.Schema(
         "Provide A Valid 10-Digit Indian Mobile Number!",
       ],
     },
-    aadhaar: {
+    // See userSchema for why this is four digits and not twelve. The
+    // appointment kept its own copy of the full number, so the same data was
+    // exposed twice over.
+    aadhaarLast4: {
       type: String,
-      required: [true, "Aadhaar Number Is Required!"],
       trim: true,
-      // 12 digits, never starting with 0 or 1.
-      match: [/^[2-9]\d{11}$/, "Provide A Valid 12-Digit Aadhaar Number!"],
+      match: [/^\d{4}$/, "Provide The Last 4 Digits Of The Aadhaar Number!"],
     },
     dob: {
       type: Date,

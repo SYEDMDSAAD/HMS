@@ -38,7 +38,7 @@ const initialForm = {
   lastName: "",
   email: "",
   phone: "",
-  aadhaar: "",
+  aadhaarLast4: "",
   dob: "",
   gender: "",
   appointmentDate: "",
@@ -179,7 +179,7 @@ const AppointmentForm = () => {
           lastName: form.lastName,
           email: form.email,
           phone: form.phone,
-          aadhaar: form.aadhaar,
+          aadhaarLast4: form.aadhaarLast4,
           dob: form.dob,
           gender: form.gender,
           startsAt: form.startsAt,
@@ -259,14 +259,14 @@ const AppointmentForm = () => {
             />
 
             <NumericInput
-              label="Aadhaar number"
-              hint="12 digits, as printed on the card"
-              maxLength={12}
-              value={form.aadhaar}
-              onValueChange={update("aadhaar")}
-              pattern="[2-9][0-9]{11}"
-              title="12-digit Aadhaar number"
-              required
+              label="Aadhaar"
+              optional
+              hint="Last 4 digits only, so the front desk can match the card"
+              maxLength={4}
+              value={form.aadhaarLast4}
+              onValueChange={update("aadhaarLast4")}
+              pattern="[0-9]{4}"
+              title="The last 4 digits of the Aadhaar number"
               disabled={submitting}
             />
 

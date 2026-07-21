@@ -34,7 +34,7 @@ const removeTempFile = async (filePath) => {
 };
 
 export const patientRegister = catchAsyncErrors(async (req, res, next) => {
-  const { firstName, lastName, phone, aadhaar, dob, gender, password } =
+  const { firstName, lastName, phone, aadhaarLast4, dob, gender, password } =
     req.body;
   const email = normalizeEmail(req.body.email);
 
@@ -43,7 +43,6 @@ export const patientRegister = catchAsyncErrors(async (req, res, next) => {
     !lastName ||
     !email ||
     !phone ||
-    !aadhaar ||
     !dob ||
     !gender ||
     !password
@@ -61,7 +60,7 @@ export const patientRegister = catchAsyncErrors(async (req, res, next) => {
     lastName,
     email,
     phone,
-    aadhaar,
+    aadhaarLast4,
     dob,
     gender,
     password,
@@ -98,7 +97,7 @@ export const login = catchAsyncErrors(async (req, res, next) => {
 });
 
 export const addNewAdmin = catchAsyncErrors(async (req, res, next) => {
-  const { firstName, lastName, phone, aadhaar, dob, gender, password } =
+  const { firstName, lastName, phone, aadhaarLast4, dob, gender, password } =
     req.body;
   const email = normalizeEmail(req.body.email);
 
@@ -107,7 +106,6 @@ export const addNewAdmin = catchAsyncErrors(async (req, res, next) => {
     !lastName ||
     !email ||
     !phone ||
-    !aadhaar ||
     !dob ||
     !gender ||
     !password
@@ -125,7 +123,7 @@ export const addNewAdmin = catchAsyncErrors(async (req, res, next) => {
     lastName,
     email,
     phone,
-    aadhaar,
+    aadhaarLast4,
     dob,
     gender,
     password,
@@ -153,7 +151,7 @@ export const addNewDoctor = catchAsyncErrors(async (req, res, next) => {
     firstName,
     lastName,
     phone,
-    aadhaar,
+    aadhaarLast4,
     dob,
     gender,
     password,
@@ -166,7 +164,6 @@ export const addNewDoctor = catchAsyncErrors(async (req, res, next) => {
     !lastName ||
     !email ||
     !phone ||
-    !aadhaar ||
     !dob ||
     !gender ||
     !password ||
@@ -204,7 +201,7 @@ export const addNewDoctor = catchAsyncErrors(async (req, res, next) => {
     lastName,
     email,
     phone,
-    aadhaar,
+    aadhaarLast4,
     dob,
     gender,
     password,

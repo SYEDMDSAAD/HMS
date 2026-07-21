@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { DEPARTMENTS, GENDERS } from "./appointmentSchema.js";
 import { availabilitySchema } from "./availability.js";
+import { nextPatientId } from "./counterSchema.js";
 
 export const ROLES = ["Patient", "Doctor", "Admin"];
 
@@ -39,13 +40,28 @@ const userSchema = new mongoose.Schema(
         "Provide A Valid 10-Digit Indian Mobile Number!",
       ],
     },
-    aadhaar: {
+    // The hospital's own identifier, and the one a patient is known by. It
+    // replaced Aadhaar in this role: a national ID should not be a primary key,
+    // and the uniqueness Aadhaar was providing here was already guaranteed by
+    // the unique email above, so the full number bought nothing.
+    patientId: {
       type: String,
-      required: [true, "Aadhaar Number Is Required!"],
       unique: true,
+      sparse: true, // doctors and admins have none
       trim: true,
-      // 12 digits, never starting with 0 or 1.
-      match: [/^[2-9]\d{11}$/, "Provide A Valid 12-Digit Aadhaar Number!"],
+    },
+    // Four digits, not twelve.
+    //
+    // Storing full Aadhaar numbers is restricted for private entities under the
+    // Aadhaar Act, and this application never read the other eight: no lookup,
+    // no verification, no display. What a front desk actually does is check the
+    // last four against the card the patient is holding, and that is all this
+    // supports. Optional, because a patient without a card must still be able
+    // to book.
+    aadhaarLast4: {
+      type: String,
+      trim: true,
+      match: [/^\d{4}$/, "Provide The Last 4 Digits Of The Aadhaar Number!"],
     },
     dob: {
       type: Date,
@@ -116,6 +132,15 @@ userSchema.set("toJSON", {
     delete ret.password;
     return ret;
   },
+});
+
+// Patients get an identifier on first save. Doctors and admins do not — they
+// are staff, and a patient number would imply a medical record that is not there.
+userSchema.pre("save", async function (next) {
+  if (this.role === "Patient" && !this.patientId) {
+    this.patientId = await nextPatientId();
+  }
+  next();
 });
 
 userSchema.pre("save", async function (next) {
