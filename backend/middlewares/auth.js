@@ -45,6 +45,13 @@ export const isPatientAuthenticated = authenticate(
   "User"
 );
 
+// Middleware to authenticate the doctor portal
+export const isDoctorAuthenticated = authenticate(
+  "doctorToken",
+  "Doctor",
+  "Doctor"
+);
+
 export const isAuthorized = (...roles) => {
   return (req, res, next) => {
     if (!req.user) {

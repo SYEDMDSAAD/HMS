@@ -19,7 +19,19 @@ export const DEPARTMENTS = [
   "ENT",
 ];
 
-export const APPOINTMENT_STATUSES = ["Pending", "Accepted", "Rejected"];
+export const APPOINTMENT_STATUSES = [
+  "Pending",
+  "Accepted",
+  "Rejected",
+  "Cancelled",
+  "Completed",
+];
+
+// Statuses that release the slot back for someone else to book. A rejection by
+// the front desk and a cancellation by the patient both mean nobody is coming;
+// a completed appointment still occupied its slot and must keep holding it, or
+// the history would let a second booking appear at a time already used.
+export const SLOT_RELEASING_STATUSES = ["Rejected", "Cancelled"];
 
 export const GENDERS = ["Male", "Female", "Other"];
 
@@ -152,7 +164,7 @@ const appointmentSchema = new mongoose.Schema(
  * endpoint uses the second — so a rejection through the dashboard would leave
  * slotHeld true and the slot permanently blocked if only the save hook existed.
  */
-const heldFor = (status) => status !== "Rejected";
+const heldFor = (status) => !SLOT_RELEASING_STATUSES.includes(status);
 
 appointmentSchema.pre("save", function (next) {
   this.slotHeld = heldFor(this.status);

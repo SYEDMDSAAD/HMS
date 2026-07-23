@@ -6,11 +6,13 @@ import {
   getUserDetails,
   login,
   logoutAdmin,
+  logoutDoctor,
   logoutPatient,
   patientRegister,
 } from "../controller/userController.js";
 import {
   isAdminAuthenticated,
+  isDoctorAuthenticated,
   isPatientAuthenticated,
 } from "../middlewares/auth.js";
 
@@ -28,9 +30,13 @@ router.get("/doctors", getAllDoctors);
 // otherwise an expired token leaves the user unable to log out at all.
 router.post("/patient/logout", logoutPatient);
 router.post("/admin/logout", logoutAdmin);
+router.post("/doctor/logout", logoutDoctor);
 
 // --- Patient ---
 router.get("/patient/me", isPatientAuthenticated, getUserDetails);
+
+// --- Doctor ---
+router.get("/doctor/me", isDoctorAuthenticated, getUserDetails);
 
 // --- Admin ---
 router.get("/admin/me", isAdminAuthenticated, getUserDetails);

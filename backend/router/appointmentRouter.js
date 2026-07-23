@@ -1,14 +1,19 @@
 import express from "express";
 import mongoose from "mongoose";
 import {
+  cancelMyAppointment,
+  completeAppointment,
   deleteAppointment,
   getAllAppointments,
   getAvailability,
+  getDoctorAppointments,
+  getMyAppointments,
   postAppointment,
   updateAppointmentStatus,
 } from "../controller/appointmentController.js";
 import {
   isAdminAuthenticated,
+  isDoctorAuthenticated,
   isPatientAuthenticated,
 } from "../middlewares/auth.js";
 import ErrorHandler from "../middlewares/error.js";
@@ -29,6 +34,16 @@ router.param("id", (req, res, next, value) => {
 router.get("/availability", getAvailability);
 
 router.post("/post", isPatientAuthenticated, postAppointment);
+
+// A patient's own bookings. `/mine` before `/:id` routes would matter if there
+// were a GET /:id — there is not, but keeping the literal path first is the
+// habit that stops a future one being shadowed.
+router.get("/mine", isPatientAuthenticated, getMyAppointments);
+router.patch("/mine/:id/cancel", isPatientAuthenticated, cancelMyAppointment);
+
+// The doctor portal.
+router.get("/doctor/mine", isDoctorAuthenticated, getDoctorAppointments);
+router.patch("/doctor/:id/complete", isDoctorAuthenticated, completeAppointment);
 router.get("/getall", isAdminAuthenticated, getAllAppointments);
 router.put("/update/:id", isAdminAuthenticated, updateAppointmentStatus);
 router.delete("/delete/:id", isAdminAuthenticated, deleteAppointment);

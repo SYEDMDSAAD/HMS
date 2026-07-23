@@ -253,6 +253,19 @@ export const logoutAdmin = catchAsyncErrors(async (req, res, next) => {
 });
 
 // Logout function for frontend patient
+export const logoutDoctor = catchAsyncErrors(async (req, res, next) => {
+  res
+    .status(200)
+    .cookie("doctorToken", "", {
+      ...authCookieOptions(),
+      expires: new Date(0),
+    })
+    .json({
+      success: true,
+      message: "Doctor Logged Out Successfully.",
+    });
+});
+
 export const logoutPatient = catchAsyncErrors(async (req, res, next) => {
   res
     .status(200)

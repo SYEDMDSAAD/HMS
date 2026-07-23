@@ -13,10 +13,16 @@ export const authCookieOptions = () => {
   };
 };
 
-// Doctors have no portal yet, so they fall through to the patient cookie and
-// will be rejected by isPatientAuthenticated's role check.
-const cookieNameFor = (role) =>
-  role === "Admin" ? "adminToken" : "patientToken";
+// One cookie per role, deliberately not one shared session cookie: a doctor
+// signed into the staff portal must not thereby be signed into the patient site
+// as themselves, and being signed into one portal grants nothing in another.
+const COOKIE_BY_ROLE = {
+  Admin: "adminToken",
+  Doctor: "doctorToken",
+  Patient: "patientToken",
+};
+
+const cookieNameFor = (role) => COOKIE_BY_ROLE[role] || "patientToken";
 
 export const generateToken = (user, message, statusCode, res) => {
   const token = user.generateJsonWebToken();
