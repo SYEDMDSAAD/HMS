@@ -7,9 +7,13 @@ import { Context, api } from "@uc/client";
 
 const NAV_LINKS = [
   { to: "/", label: "Home", end: true },
-  { to: "/appointment", label: "Appointment" },
+  { to: "/appointment", label: "Book" },
   { to: "/about", label: "About Us" },
 ];
+
+// Only meaningful once there is a session to have appointments under, so it is
+// appended rather than sitting there sending signed-out visitors to a redirect.
+const PATIENT_LINKS = [{ to: "/appointments", label: "My appointments" }];
 
 const linkClass = ({ isActive }) =>
   `text-sm font-medium transition ${
@@ -60,7 +64,7 @@ const Navbar = () => {
 
         {/* Desktop */}
         <div className="hidden items-center gap-8 md:flex">
-          {NAV_LINKS.map(({ to, label, end }) => (
+          {[...NAV_LINKS, ...(isAuthenticated ? PATIENT_LINKS : [])].map(({ to, label, end }) => (
             <NavLink key={to} to={to} end={end} className={linkClass}>
               {label}
             </NavLink>
@@ -103,7 +107,7 @@ const Navbar = () => {
       {open && (
         <div className="border-t border-line bg-surface md:hidden">
           <div className="mx-auto flex w-full max-w-6xl flex-col gap-1 px-4 py-3">
-            {NAV_LINKS.map(({ to, label, end }) => (
+            {[...NAV_LINKS, ...(isAuthenticated ? PATIENT_LINKS : [])].map(({ to, label, end }) => (
               <NavLink
                 key={to}
                 to={to}

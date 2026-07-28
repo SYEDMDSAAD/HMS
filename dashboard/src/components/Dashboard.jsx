@@ -5,7 +5,9 @@ import { AiFillCloseCircle } from "react-icons/ai";
 import { MdEventNote } from "react-icons/md";
 import {
   Alert,
+  Button,
   Card,
+  Input,
   EmptyState,
   PageHeader,
   Select,
@@ -17,7 +19,14 @@ import {
 } from "@uc/ui";
 import { Context, api } from "@uc/client";
 
-const STATUSES = ["Pending", "Accepted", "Rejected"];
+const STATUSES = ["Pending", "Accepted", "Rejected", "Cancelled", "Completed"];
+
+const SORTS = [
+  { value: "soonest", label: "Soonest first" },
+  { value: "latest", label: "Latest first" },
+  { value: "newest", label: "Recently booked" },
+  { value: "oldest", label: "Booked earliest" },
+];
 
 // startsAt is a real instant now, so it carries a time as well as a date, and
 // both are shown in the hospital's zone rather than the admin's browser zone —
@@ -61,18 +70,50 @@ const Dashboard = () => {
   const [loadError, setLoadError] = useState("");
   const [updatingId, setUpdatingId] = useState(null);
 
+  // Query state. `search` is what the box holds; `debouncedSearch` is what the
+  // server has been asked for — typing "Ananya" should be one request, not six.
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [status, setStatus] = useState("");
+  const [sort, setSort] = useState("soonest");
+  const [page, setPage] = useState(1);
+  const [pages, setPages] = useState(1);
+  const [total, setTotal] = useState(0);
+
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search.trim());
+      setPage(1); // a new search starts at the beginning, not on page 4
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  useEffect(() => {
+    let cancelled = false;
+
     const load = async () => {
       setLoading(true);
       setLoadError("");
       try {
         const [appointmentsRes, doctorsRes] = await Promise.all([
-          api.get("/appointment/getall"),
+          api.get("/appointment/getall", {
+            params: {
+              page,
+              limit: 20,
+              sort,
+              ...(status ? { status } : {}),
+              ...(debouncedSearch ? { search: debouncedSearch } : {}),
+            },
+          }),
           api.get("/user/doctors"),
         ]);
+        if (cancelled) return;
         setAppointments(appointmentsRes.data.appointments || []);
+        setPages(appointmentsRes.data.pages || 1);
+        setTotal(appointmentsRes.data.total || 0);
         setDoctorCount((doctorsRes.data.doctors || []).length);
       } catch (error) {
+        if (cancelled) return;
         setAppointments([]);
         // Distinguish "nothing booked yet" from "we could not load anything".
         setLoadError(
@@ -80,11 +121,17 @@ const Dashboard = () => {
             "Could not load dashboard data. Please refresh."
         );
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
     load();
-  }, []);
+
+    // Typing quickly can leave several requests in flight; only the newest may
+    // write, or the table flickers back to an older result set.
+    return () => {
+      cancelled = true;
+    };
+  }, [page, sort, status, debouncedSearch]);
 
   const handleUpdateStatus = async (appointmentId, status) => {
     setUpdatingId(appointmentId);
@@ -141,11 +188,11 @@ const Dashboard = () => {
 
           <StatCard
             label="Total appointments"
-            value={loading ? "—" : appointments.length}
+            value={loading ? "—" : total}
             tone="text-fg"
           />
           <StatCard
-            label="Pending approval"
+            label="Pending on this page"
             value={loading ? "—" : pendingCount}
             tone={pendingCount > 0 ? "text-warning-600" : "text-fg"}
           />
@@ -158,7 +205,7 @@ const Dashboard = () => {
             tone="text-accent-text"
           />
           <StatCard
-            label="Accepted appointments"
+            label="Accepted on this page"
             value={
               loading
                 ? "—"
@@ -172,6 +219,41 @@ const Dashboard = () => {
         <Card className="mt-8" padded={false}>
           <div className="border-b border-line px-6 py-4">
             <h2 className="text-lg font-semibold text-fg">Appointments</h2>
+            <p className="mt-1 text-sm text-fg-subtle">
+              {loading ? "Loading…" : `${total} matching`}
+            </p>
+
+            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <Input
+                label={null}
+                type="search"
+                placeholder="Search patient, email, phone or doctor"
+                value={search}
+                onValueChange={setSearch}
+                aria-label="Search appointments"
+              />
+              <Select
+                label={null}
+                aria-label="Filter by status"
+                placeholder="All statuses"
+                options={STATUSES}
+                value={status}
+                onValueChange={(next) => {
+                  setStatus(next);
+                  setPage(1);
+                }}
+              />
+              <Select
+                label={null}
+                aria-label="Sort appointments"
+                options={SORTS}
+                value={sort}
+                onValueChange={(next) => {
+                  setSort(next);
+                  setPage(1);
+                }}
+              />
+            </div>
           </div>
 
           {loadError ? (
@@ -280,8 +362,33 @@ const Dashboard = () => {
               ]}
             />
           )}
-        </Card>
 
+          {!loading && !loadError && pages > 1 && (
+            <div className="flex items-center justify-between gap-4 border-t border-line px-6 py-4">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setPage((current) => Math.max(1, current - 1))}
+                disabled={page <= 1}
+              >
+                Previous
+              </Button>
+              {/* aria-live, so a screen reader hears the page change — the
+                  table contents updating below is silent otherwise. */}
+              <p aria-live="polite" className="text-sm text-fg-subtle">
+                Page {page} of {pages}
+              </p>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setPage((current) => Math.min(pages, current + 1))}
+                disabled={page >= pages}
+              >
+                Next
+              </Button>
+            </div>
+          )}
+        </Card>
       </div>
     </section>
   );

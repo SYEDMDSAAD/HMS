@@ -9,6 +9,7 @@ import {
 // Directory is lowercase "pages" — the old "./Pages/..." specifiers resolved on
 // case-insensitive filesystems but failed the build on Linux and in CI.
 import Home from "./pages/Home";
+import MyAppointments from "./pages/MyAppointments";
 import Appointment from "./pages/Appointment";
 import AboutUs from "./pages/AboutUs";
 import Register from "./pages/Register";
@@ -82,6 +83,7 @@ const App = () => {
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<Home />} />
+        <Route path="/appointments" element={<MyAppointments />} />
             <Route path="/appointment" element={<Appointment />} />
             <Route path="/about" element={<AboutUs />} />
             <Route path="/register" element={<Register />} />
