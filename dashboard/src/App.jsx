@@ -7,6 +7,7 @@ import {
   Link,
 } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
+import DoctorSchedule from "./components/DoctorSchedule";
 import Login from "./components/Login";
 import AddNewDoctor from "./components/AddNewDoctor";
 import Messages from "./components/Messages";
@@ -35,24 +36,33 @@ const NotFound = () => (
 );
 
 const App = () => {
-  const { isAuthenticated, setIsAuthenticated, setUser } = useContext(Context);
+  const { isAuthenticated, setIsAuthenticated, user, setUser } =
+    useContext(Context);
   // Until /admin/me answers we do not know whether there is a session, and
   // guessing "logged out" bounces a signed-in admin to the login screen on
   // every page refresh.
   const [checkingSession, setCheckingSession] = useState(true);
 
   useEffect(() => {
+    // Two staff roles share this app and each has its own cookie, so the
+    // session check asks both. Sequential rather than Promise.any: an admin
+    // should not have a doctor lookup fired at them on every page load, and the
+    // common case answers on the first request.
     const fetchUser = async () => {
-      try {
-        const { data } = await api.get("/user/admin/me");
-        setIsAuthenticated(true);
-        setUser(data.user);
-      } catch {
-        setIsAuthenticated(false);
-        setUser({});
-      } finally {
-        setCheckingSession(false);
+      for (const path of ["/user/admin/me", "/user/doctor/me"]) {
+        try {
+          const { data } = await api.get(path);
+          setIsAuthenticated(true);
+          setUser(data.user);
+          setCheckingSession(false);
+          return;
+        } catch {
+          // Not this role — try the next.
+        }
       }
+      setIsAuthenticated(false);
+      setUser({});
+      setCheckingSession(false);
     };
     fetchUser();
   }, [isAuthenticated, setIsAuthenticated, setUser]);
@@ -77,7 +87,13 @@ const App = () => {
       <Sidebar />
       <main>
         <Routes>
-        <Route path="/" element={<Dashboard />} />
+        {/* One route, two homes. A doctor signing in lands on their schedule;
+            an admin lands on the appointments desk. */}
+        <Route
+          path="/"
+          element={user?.role === "Doctor" ? <DoctorSchedule /> : <Dashboard />}
+        />
+        <Route path="/schedule" element={<DoctorSchedule />} />
         <Route path="/login" element={<Login />} />
         <Route path="/doctor/addnew" element={<AddNewDoctor />} />
         <Route path="/admin/addnew" element={<AddNewAdmin />} />

@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import { Button, Card, Input, Logo, notify, PasswordInput } from "@uc/ui";
+import { Button, Card, Input, Logo, notify, PasswordInput, Select } from "@uc/ui";
 import { Context, api } from "@uc/client";
 
 const Login = () => {
@@ -8,6 +8,7 @@ const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("Admin");
   const [submitting, setSubmitting] = useState(false);
 
   const navigateTo = useNavigate();
@@ -20,7 +21,7 @@ const Login = () => {
     try {
       const { data } = await api.post(
         "/user/login",
-        { email, password, role: "Admin" },
+        { email, password, role },
         { headers: { "Content-Type": "application/json" } }
       );
       notify.success(data.message);
@@ -62,6 +63,15 @@ const Login = () => {
               value={email}
               onValueChange={setEmail}
               required
+              disabled={submitting}
+            />
+
+            <Select
+              label="Signing in as"
+              options={["Admin", "Doctor"]}
+              value={role}
+              onValueChange={setRole}
+              hint="Doctors see their own schedule; admins see the whole desk."
               disabled={submitting}
             />
 

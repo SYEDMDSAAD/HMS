@@ -10,12 +10,26 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Logo, LogoMark, notify, ThemeToggle } from "@uc/ui";
 import { Context, api } from "@uc/client";
 
+// Two roles share this portal, and a doctor has no business on the pages that
+// create staff or read patient enquiries. Filtering the nav is presentation
+// only — the routes it hides are still guarded server-side by role.
 const NAV_ITEMS = [
-  { to: "/", label: "Dashboard", icon: TiHome, end: true },
-  { to: "/doctors", label: "Doctors", icon: FaUserDoctor },
-  { to: "/doctor/addnew", label: "Add Doctor", icon: IoPersonAddSharp },
-  { to: "/admin/addnew", label: "Add Admin", icon: MdAddModerator },
-  { to: "/messages", label: "Messages", icon: AiFillMessage },
+  { to: "/", label: "Dashboard", icon: TiHome, end: true, roles: ["Admin"] },
+  { to: "/", label: "My schedule", icon: TiHome, end: true, roles: ["Doctor"] },
+  { to: "/doctors", label: "Doctors", icon: FaUserDoctor, roles: ["Admin"] },
+  {
+    to: "/doctor/addnew",
+    label: "Add Doctor",
+    icon: IoPersonAddSharp,
+    roles: ["Admin"],
+  },
+  {
+    to: "/admin/addnew",
+    label: "Add Admin",
+    icon: MdAddModerator,
+    roles: ["Admin"],
+  },
+  { to: "/messages", label: "Messages", icon: AiFillMessage, roles: ["Admin"] },
 ];
 
 const railLink = ({ isActive }) =>
@@ -34,7 +48,7 @@ const panelLink = ({ isActive }) =>
   }`;
 
 const Sidebar = () => {
-  const { isAuthenticated, setIsAuthenticated } = useContext(Context);
+  const { isAuthenticated, setIsAuthenticated, user } = useContext(Context);
   const [open, setOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
 
@@ -46,7 +60,11 @@ const Sidebar = () => {
     try {
       // POST, not GET — a state-changing endpoint reachable by GET can be
       // triggered by any third-party page.
-      const { data } = await api.post("/user/admin/logout", {});
+      // Each role has its own cookie, so logging out has to clear the right one.
+      const { data } = await api.post(
+        user?.role === "Doctor" ? "/user/doctor/logout" : "/user/admin/logout",
+        {}
+      );
       notify.success(data.message);
     } catch (error) {
       notify.apiError(error, "Could not log out. Please try again.");
@@ -63,6 +81,10 @@ const Sidebar = () => {
   // Nothing to navigate when signed out — the login screen is standalone.
   if (!isAuthenticated) return null;
 
+  const navItems = NAV_ITEMS.filter((item) =>
+    item.roles.includes(user?.role || "Admin")
+  );
+
   return (
     <>
       {/* Desktop icon rail */}
@@ -73,7 +95,7 @@ const Sidebar = () => {
       >
         <LogoMark className="mb-4 h-9 w-9" title="UC Healthcare" />
 
-        {NAV_ITEMS.map(({ to, label, icon: Icon, end }) => (
+        {navItems.map(({ to, label, icon: Icon, end }) => (
           <NavLink key={to} to={to} end={end} className={railLink} title={label}>
             <Icon className="text-xl" aria-hidden="true" />
             <span className="sr-only">{label}</span>
@@ -154,7 +176,7 @@ const Sidebar = () => {
             </div>
 
             <div className="flex flex-col gap-1">
-              {NAV_ITEMS.map(({ to, label, icon: Icon, end }) => (
+              {navItems.map(({ to, label, icon: Icon, end }) => (
                 <NavLink
                   key={to}
                   to={to}

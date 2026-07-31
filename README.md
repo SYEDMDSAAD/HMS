@@ -148,8 +148,10 @@ Promoting an existing account rather than inserting a document directly matters:
 passwords are hashed by a `pre("save")` hook on the model, so a hand-inserted
 user would have a plaintext password that can never match at login.
 
-Doctors are created by an admin from the dashboard and have no portal of their
-own — there is nowhere for a doctor to sign in yet.
+Doctors sign in at the **same dashboard** as admins, choosing "Doctor" on the
+login form, and land on their own schedule instead of the appointments desk. Each
+role has its own cookie (`adminToken`, `doctorToken`, `patientToken`), so being
+signed into one portal grants nothing in another.
 
 ## API
 
@@ -166,13 +168,23 @@ All routes are under `/api/v1`.
 | GET    | `/user/admin/me`             | admin   |
 | POST   | `/user/admin/addnew`         | admin   |
 | POST   | `/user/doctor/addnew`        | admin   |
-| GET    | `/appointment/availability`  | public  |
-| POST   | `/appointment/post`          | patient |
-| GET    | `/appointment/getall`        | admin   |
+| POST   | `/user/doctor/logout`             | public  |
+| GET    | `/user/doctor/me`                 | doctor  |
+| GET    | `/appointment/availability`       | public  |
+| POST   | `/appointment/post`               | patient |
+| GET    | `/appointment/mine`               | patient |
+| PATCH  | `/appointment/mine/:id/cancel`    | patient |
+| GET    | `/appointment/doctor/mine`        | doctor  |
+| PATCH  | `/appointment/doctor/:id/complete`| doctor  |
+| GET    | `/appointment/getall`             | admin   |
 | PUT    | `/appointment/update/:id`    | admin   |
 | DELETE | `/appointment/delete/:id`    | admin   |
 | POST   | `/message/send`              | public  |
 | GET    | `/message/getall`            | admin   |
+
+Appointment statuses are `Pending`, `Accepted`, `Rejected`, `Cancelled` and
+`Completed`. `Rejected` and `Cancelled` release the slot for rebooking;
+`Completed` keeps holding it, because that time really was used.
 
 `GET /appointment/availability?doctorId=<id>&date=YYYY-MM-DD` returns every slot
 that doctor works on that clinic-local day, each flagged `available`. A
@@ -255,4 +267,9 @@ those times rather than trusting them.
 - Appointment times migrated from the old bare-date field are marked
   `slotWasInferred: true`. Those times were reconstructed, not chosen by the
   patient, and should be confirmed before being treated as real.
-- No automated tests in any package.
+- No automated tests in any package. The flows added in Part 9 were verified by
+  driving the API over HTTP against a throwaway database, but that harness was
+  not kept.
+- `GET /appointment/getall` searches with a case-insensitive regex. The input is
+  escaped, but an unanchored regex cannot use an index — at real volume this
+  wants a text index or Atlas Search.

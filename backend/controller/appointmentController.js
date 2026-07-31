@@ -120,31 +120,69 @@ export const postAppointment = catchAsyncErrors(async (req, res, next) => {
     );
   }
 
-  const appointment = await Appointment.create({
-    firstName,
-    lastName,
-    email,
-    phone,
-    aadhaarLast4,
-    dob,
-    gender,
-    startsAt,
-    department,
-    doctor: {
-      firstName: doctor_firstName,
-      lastName: doctor_lastName,
-    },
-    hasVisited: Boolean(hasVisited),
-    address,
-    doctorId: matchingDoctors[0]._id,
-    patientId: req.user._id,
-  });
+  const doctor = matchingDoctors[0];
+  const requestedStart = new Date(startsAt);
 
-  res.status(201).json({
-    success: true,
-    appointment,
-    message: "Appointment booked successfully!",
-  });
+  // The client sends a time, and a time is trivially editable, so it is checked
+  // against the doctor's real working hours rather than trusted. Without this a
+  // crafted request books 03:00 on a Sunday and the unique index is perfectly
+  // happy — it prevents two bookings at one instant, not one booking at a
+  // nonsense instant.
+  if (!isSlotStart(doctor.availability, requestedStart)) {
+    return next(
+      new ErrorHandler(
+        "That time is not one of the doctor's consultation slots.",
+        400
+      )
+    );
+  }
+
+  if (requestedStart.getTime() <= Date.now()) {
+    return next(new ErrorHandler("That slot is in the past.", 400));
+  }
+
+  try {
+    const appointment = await Appointment.create({
+      firstName,
+      lastName,
+      email,
+      phone,
+      aadhaarLast4,
+      dob,
+      gender,
+      startsAt: requestedStart,
+      endsAt: slotEndFor(doctor.availability, requestedStart),
+      department,
+      doctor: {
+        firstName: doctor_firstName,
+        lastName: doctor_lastName,
+      },
+      hasVisited: Boolean(hasVisited),
+      address,
+      doctorId: doctor._id,
+      patientId: req.user._id,
+    });
+
+    res.status(201).json({
+      success: true,
+      appointment,
+      message: "Appointment booked successfully!",
+    });
+  } catch (error) {
+    // Two patients can both pass the availability check above before either
+    // writes; the unique index is what actually decides, and this is the loser
+    // of that race. 409 rather than a validation error, with a message that
+    // tells them what to do about it.
+    if (error?.code === 11000) {
+      return next(
+        new ErrorHandler(
+          "Someone just booked that slot. Please choose another time.",
+          409
+        )
+      );
+    }
+    throw error;
+  }
 });
 
 const SORTS = {
