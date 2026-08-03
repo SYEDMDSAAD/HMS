@@ -1,7 +1,7 @@
 /* Tailwind v4 — single entry point. Imported by src/App.jsx.
    Requires the @tailwindcss/vite plugin in vite.config.js.
 
-   Tokens, base styles and the .field/.card/.btn-* classes live in @uc/theme,
+   Tokens and base element styles live in @uc/theme,
    which the public site imports too. This file holds only what is genuinely
    specific to the staff app — if a change would also be right for the public
    site, it belongs in packages/theme. */

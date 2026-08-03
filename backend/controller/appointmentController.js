@@ -312,13 +312,16 @@ export const cancelMyAppointment = catchAsyncErrors(async (req, res, next) => {
 export const getDoctorAppointments = catchAsyncErrors(async (req, res, next) => {
   const filter = { doctorId: req.user._id };
 
+  // The day's boundaries do not depend on the doctor's working hours, and
+  // gating on them was a bug: on a Sunday, or any date the doctor does not
+  // work, generateSlots returned nothing, the filter was skipped, and the
+  // endpoint answered with the doctor's entire appointment history instead of
+  // an empty day.
   if (isDateString(req.query.date)) {
-    const [start] = generateSlots(req.user.availability, req.query.date);
-    if (start) {
-      const dayStart = clinicTimeToInstant(req.query.date, 0);
-      const dayEnd = clinicTimeToInstant(req.query.date, 24 * 60);
-      filter.startsAt = { $gte: dayStart, $lt: dayEnd };
-    }
+    filter.startsAt = {
+      $gte: clinicTimeToInstant(req.query.date, 0),
+      $lt: clinicTimeToInstant(req.query.date, 24 * 60),
+    };
   }
 
   const appointments = await Appointment.find(filter).sort({ startsAt: 1 });
@@ -371,9 +374,13 @@ export const updateAppointmentStatus = catchAsyncErrors(
 
     // Only the status is writable here — taking req.body wholesale would let a
     // caller rewrite patientId, doctorId or any other field on the record.
+    //
+    // hasVisited rides along with Completed so that the front desk closing out
+    // a visit records the same thing the doctor's own "mark complete" does.
+    // Without it the two paths disagree about whether the patient turned up.
     const appointment = await Appointment.findByIdAndUpdate(
       id,
-      { status },
+      status === "Completed" ? { status, hasVisited: true } : { status },
       { new: true, runValidators: true }
     );
     if (!appointment) {

@@ -1,6 +1,10 @@
 import fs from "fs/promises";
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import { User } from "../models/userSchema.js";
+import {
+  DEFAULT_SLOT_MINUTES,
+  DEFAULT_WEEKLY_HOURS,
+} from "../models/availability.js";
 import ErrorHandler from "../middlewares/error.js";
 import { authCookieOptions, generateToken } from "../utils/jwtToken.js";
 import cloudinary from "cloudinary";
@@ -207,6 +211,19 @@ export const addNewDoctor = catchAsyncErrors(async (req, res, next) => {
     password,
     role: "Doctor",
     doctorDepartment,
+    // Required by the schema, so omitting it fails validation — and fails it
+    // *after* the Cloudinary upload above has succeeded, orphaning the image.
+    //
+    // Setting the default here is not the same as the fallback deliberately
+    // removed from generateSlots: an admin filling this form is configuring a
+    // doctor now, so the documented OPD hours are a choice being made rather
+    // than hours invented for a record nobody has looked at. There is no UI to
+    // edit them yet — that is the next thing this form needs.
+    availability: {
+      slotMinutes: DEFAULT_SLOT_MINUTES,
+      weekly: DEFAULT_WEEKLY_HOURS,
+      closedDates: [],
+    },
     docAvatar: {
       public_id: cloudinaryResponse.public_id,
       url: cloudinaryResponse.secure_url,

@@ -1,38 +1,13 @@
-/* Shared class-based primitives.
+/* No class-based component primitives remain.
  *
- * Written entirely in semantic tokens, so they are already correct in dark mode.
+ * `.label` and `.field` went in Part 4, `.card` and `.btn-primary` /
+ * `.btn-secondary` in Part 5 — each replaced by a React component in @uc/ui
+ * that carries the state, variants and ARIA wiring a CSS class cannot. Nothing
+ * imports these classes any more, and leaving them would be a second way to
+ * style a card that could drift from the first.
  *
- * `.label` and `.field` used to live here as the interim answer for form
- * controls. They are gone: @uc/ui now exports Field, Input, Select, Textarea,
- * Checkbox, PasswordInput and PhoneInput, which carry the label binding,
- * aria-describedby wiring and error state that a CSS class cannot. Two ways to
- * style a control is one too many, so the classes went rather than lingering as
- * a second source of truth.
+ * If you find yourself wanting to add one back, the question to ask is whether
+ * it can be a component instead. It almost always can.
  *
- * What is left is the interim answer for buttons and cards, which Part 5
- * replaces the same way.
+ * Base element styles still live in base.css; tokens in tokens.css.
  */
-
-@layer components {
-  .card {
-    @apply rounded-2xl border border-line bg-surface shadow-e1;
-  }
-
-  .btn-primary {
-    @apply inline-flex items-center justify-center rounded-lg bg-accent-solid px-6 py-3
-      text-sm font-semibold text-accent-on-solid shadow-e1 transition
-      hover:bg-accent-solid-hover focus:outline-none focus-visible:ring-2
-      focus-visible:ring-focus focus-visible:ring-offset-2
-      focus-visible:ring-offset-canvas
-      disabled:cursor-not-allowed disabled:opacity-60;
-  }
-
-  .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-lg border border-line-control
-      bg-surface px-6 py-3 text-sm font-semibold text-fg shadow-e1 transition
-      hover:bg-surface-muted focus:outline-none focus-visible:ring-2
-      focus-visible:ring-focus focus-visible:ring-offset-2
-      focus-visible:ring-offset-canvas
-      disabled:cursor-not-allowed disabled:opacity-60;
-  }
-}
