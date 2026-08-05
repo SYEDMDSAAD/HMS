@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import {
+  Avatar,
   Button,
   Card,
   Input,
@@ -143,11 +144,22 @@ const AddNewDoctor = () => {
             <div className="grid grid-cols-1 gap-8 md:grid-cols-[220px_1fr]">
               {/* Avatar */}
               <div className="flex flex-col items-center">
-                <img
-                  src={avatarPreview || "/docHolder.jpg"}
-                  alt="Doctor avatar preview"
-                  className="h-40 w-40 rounded-full border-4 border-surface object-cover shadow-e2 ring-1 ring-line"
-                />
+                {/* Before a file is chosen there is no photograph to preview,
+                    and the initials of whatever name has been typed so far are
+                    a more honest placeholder than a stock face. */}
+                {avatarPreview ? (
+                  <img
+                    src={avatarPreview}
+                    alt="Doctor avatar preview"
+                    className="h-40 w-40 rounded-full border-4 border-surface object-cover shadow-e2 ring-1 ring-line"
+                  />
+                ) : (
+                  <Avatar
+                    name={`${form.firstName} ${form.lastName}`}
+                    size="xl"
+                    className="h-40 w-40 text-4xl"
+                  />
+                )}
                 <label
                   className="mt-4 cursor-pointer rounded-lg border border-accent-solid px-4 py-2 text-sm
                     font-medium text-accent-text transition hover:bg-accent-tint

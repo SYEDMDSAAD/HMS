@@ -28,6 +28,8 @@ export { PhoneInput } from "./PhoneInput.jsx";
 export { controlClass } from "./field-styles.js";
 
 // Layout and feedback.
+export { Avatar } from "./Avatar.jsx";
+export { initialsFor } from "./initials.js";
 export { Button } from "./Button.jsx";
 export { Card } from "./Card.jsx";
 export { PageHeader } from "./PageHeader.jsx";

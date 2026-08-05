@@ -4,6 +4,7 @@ import { MdEmail, MdPersonAddAlt1 } from "react-icons/md";
 import { FaPhone } from "react-icons/fa6";
 import {
   Alert,
+  Avatar,
   Card,
   EmptyState,
   PageHeader,
@@ -100,13 +101,10 @@ const Doctors = () => {
                 interactive
                 className="flex flex-col items-center text-center"
               >
-                <img
-                  src={doctor.docAvatar?.url || "/docHolder.jpg"}
-                  alt={`Dr. ${doctor.firstName} ${doctor.lastName}`}
-                  onError={(e) => {
-                    e.currentTarget.src = "/docHolder.jpg";
-                  }}
-                  className="h-24 w-24 rounded-full object-cover ring-1 ring-line"
+                <Avatar
+                  name={`${doctor.firstName} ${doctor.lastName}`}
+                  src={doctor.docAvatar?.url}
+                  size="xl"
                 />
 
                 <h2 className="mt-4 text-base font-semibold text-fg">

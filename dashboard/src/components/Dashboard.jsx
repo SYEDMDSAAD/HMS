@@ -5,17 +5,18 @@ import { AiFillCloseCircle } from "react-icons/ai";
 import { MdEventNote } from "react-icons/md";
 import {
   Alert,
+  Avatar,
   Button,
   Card,
-  Input,
   EmptyState,
+  Input,
+  notify,
   PageHeader,
   Select,
   Skeleton,
   SkeletonGroup,
   StatusPill,
   Table,
-  notify,
 } from "@uc/ui";
 import { Context, api } from "@uc/client";
 
@@ -171,11 +172,7 @@ const Dashboard = () => {
         {/* Welcome + stats */}
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
           <Card elevation="flat" className="flex items-center gap-5 lg:col-span-1">
-            <img
-              src="/doc.png"
-              alt=""
-              className="h-16 w-16 shrink-0 rounded-full object-cover ring-1 ring-line"
-            />
+            <Avatar name={adminName} size="lg" />
             <PageHeader
               level={1}
               size="sm"
