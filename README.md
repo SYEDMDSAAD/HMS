@@ -260,6 +260,13 @@ appointment the first free slot of its day, in creation order, and marks
 everything it touched `slotWasInferred: true` so the front desk can confirm
 those times rather than trusting them.
 
+## What's next
+
+[`docs/ROADMAP.md`](docs/ROADMAP.md) is the systematic to-do: everything
+outstanding, tiered by what actually gates a launch, plus the product thesis
+that decides *how* the clinical record gets built rather than just whether it
+does. Read Part A before starting anything in its Tier 2.
+
 ## Known gaps
 
 - `POST /message/send` is the only unauthenticated write endpoint and has no
